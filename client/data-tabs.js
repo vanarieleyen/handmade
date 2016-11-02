@@ -2,15 +2,6 @@ console.log("data.js (create subtabs) processed");
 
 // creates the data-entry subtabs
 
-// the tabs used by ui-tabs
-var subtabContents = [
-	m("#rolling_sub_tab", m.component(rolling_content)),
-	m("#wrapping_sub_tab", m.component(wrapping_content)),
-	m("#cutting_sub_tab", m.component(cutting_content)),
-	m("#storage_sub_tab", m.component(storage_content)),
-	m("#defects_sub_tab", m.component(defects_content))
-]
-
 var data_content = {
 	subTabs: [
 		m("#tabs1.subtabs1", [
@@ -41,7 +32,13 @@ var data_content = {
 					])
 				)
 			]),
-			subtabContents
+			[	// the tabs used by ui-tabs
+				m("#rolling_sub_tab", m.component(rolling_content)),
+				m("#wrapping_sub_tab", m.component(wrapping_content)),
+				m("#cutting_sub_tab", m.component(cutting_content)),
+				m("#storage_sub_tab", m.component(storage_content)),
+				m("#defects_sub_tab", m.component(defects_content))
+			]
 		])
 	],
 	controller: function (element, isInitialized) {

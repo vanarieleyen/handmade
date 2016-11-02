@@ -47,14 +47,17 @@ var flagBox = [
 
 // read and evaluate the tab-scripts 
 // childs first, then the parents
-eval(require('script!./rolling.js'));
+eval(require('script!./rolling.js'));		// children of data-tab
 eval(require('script!./wrapping.js'));
 eval(require('script!./cutting.js'));
 eval(require('script!./storage.js'));
 eval(require('script!./defects.js'));
-eval(require('script!./data.js'));
+eval(require('script!./data-tabs.js'));	// parent
 
 eval(require('script!./history.js'));
+
+eval(require('script!./users.js'));					// children of settings-tab
+eval(require('script!./settings-tabs.js'));	// parent
 
 
 // the tabs used by ui-tabs
@@ -62,7 +65,7 @@ var tabContents = [
 	m("#data_tab", m.component(data_content)),
 	m("#history_tab", m.component(history_content)),
 	m("#export_tab", "export"),
-	m("#settings_tab", "settings")
+	m("#settings_tab", m.component(settings_content))
 ]
 
 var uiTabs = [

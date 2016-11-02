@@ -111,6 +111,12 @@ input[type=button]:hover:enabled {
 	width:600px;
 }
 
+/* larger checkboxes */
+input[type='checkbox'] {
+	width: 20px;
+	height: 20px;
+}
+
 /* display elements evenly in a row/column */
 .flex-row {
 	display:-webkit-flex;
