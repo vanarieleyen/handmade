@@ -1,6 +1,6 @@
 console.log("rolling.js processed");
 
-// the rolling process input pages
+// the rolling process input page
 
 var rolling_content = {
 	header: [
