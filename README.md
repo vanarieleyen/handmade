@@ -30,6 +30,9 @@ build: webpack -p
 copy de build naar de running server
 copy index.html naar de running server
 
+de server folder wordt door remote server gehost (voor php)
+deze folder moet na build op server worden gezet
+
 ++ updates +++
 language table
 
