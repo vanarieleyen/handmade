@@ -16,9 +16,9 @@ require("script!functions");
 
 // the complete handmade component
 var handmade = {
-	controller: function (element, isInitialized) {	// used for placing the flags
+	controller: function (element, isInitialized) {	
 	    if (!isInitialized) {
-		    $(element).css({
+		    $(element).css({				// place the flags in the upper right corner
 				"position": "absolute",
 				"width": "90px",
 				"height": "27px",
@@ -56,7 +56,9 @@ eval(require('script!./data-tabs.js'));	// parent
 
 eval(require('script!./history.js'));
 
-eval(require('script!./users.js'));					// children of settings-tab
+eval(require('script!./specs.js'));					// children of settings-tab
+eval(require('script!./formulas.js'));	
+eval(require('script!./users.js'));	
 eval(require('script!./settings-tabs.js'));	// parent
 
 
@@ -100,26 +102,26 @@ m.mount(document.body, handmade );
 
 $(document).ready(function() {
 
-	if ($.jStorage.get("handmade_tab") == null)
-		$.jStorage.set("handmade_tab", 0);
+	if ($.jStorage.get("handmade_maintab") == null)
+		$.jStorage.set("handmade_maintab", 0);
+	if ($.jStorage.get("handmade_subtab") == null)
+		$.jStorage.set("handmade_subtab", 0);
 
-	console.log($.jStorage.get("handmade_tab"));
-	
 	fill_labels();
 
 	$( "#tabs" ).tabs({
-		active: $.jStorage.get("handmade_tab"),			// default tab when page is first loaded
+		active: $.jStorage.get("handmade_maintab"),			// default tab when page is first loaded
 		activate: function( event, ui ) {
 			keus = ui.newPanel[0].id;
 			console.log(ui);
 			switch (keus) {
-				case "data_tab":		$.jStorage.set("handmade_tab", 0);
+				case "data_tab":		$.jStorage.set("handmade_maintab", 0);
 											break;
-				case "history_tab": 	$.jStorage.set("handmade_tab", 1);
+				case "history_tab": 	$.jStorage.set("handmade_maintab", 1);
 											break;
-				case "export_tab": 	$.jStorage.set("handmade_tab", 2);
+				case "export_tab": 	$.jStorage.set("handmade_maintab", 2);
 											break;
-				case "settings_tab": $.jStorage.set("handmade_tab", 3);
+				case "settings_tab": $.jStorage.set("handmade_maintab", 3);
 											break;
 			}
 		}

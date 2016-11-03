@@ -45,7 +45,25 @@ var data_content = {
 		if (isInitialized)
 			return;
 		
-		$( "#tabs1" ).tabs();
+		$( "#tabs1" ).tabs({
+			active: $.jStorage.get("handmade_subtab"),			// default tab when page is first loaded
+			activate: function( event, ui ) {
+				keus = ui.newPanel[0].id;
+				console.log(ui);
+				switch (keus) {
+					case "rolling_sub_tab":		$.jStorage.set("handmade_subtab", 0);
+												break;
+					case "wrapping_sub_tab": 	$.jStorage.set("handmade_subtab", 1);
+												break;
+					case "cutting_sub_tab": 	$.jStorage.set("handmade_subtab", 2);
+												break;
+					case "storage_sub_tab": $.jStorage.set("handmade_subtab", 3);
+												break;
+					case "defects_sub_tab": $.jStorage.set("handmade_subtab", 4);
+												break;
+				}
+			}
+		});
 	},
 	view: function () {
 		return m("div", this.subTabs);
