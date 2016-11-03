@@ -78,9 +78,9 @@ var storage_content = {
 				m("table", {width: "100%"}, [
 					m("tr", [
 						m("td",	m("label.LOWER_LIMIT")),
-						m("td",	m("input.number", {name: "moistmin", style: "width:3em"})),
+						m("td",	m("input.number", {name: "moistmin"})),
 						m("td",	m("label.UPPER_LIMIT")),
-						m("td",	m("input.number", {name: "moistmax", style: "width:3em"}))
+						m("td",	m("input.number", {name: "moistmax"}))
 					])
 				])
 			])
@@ -97,21 +97,21 @@ var storage_content = {
 					]),
 					m("tr", [
 						m("td",	m("label.HEADEND")),
-						m("td",	m("input.number", {name: "headend", style: "width:3em"})),
+						m("td",	m("input.number", {name: "headend"})),
 						m("td",	m("label.HEAD_EMPTY")),
-						m("td",	m("input.number", {name: "empty", style: "width:3em"}))
+						m("td",	m("input.number", {name: "empty"}))
 					]),
 					m("tr", [
 						m("td",	m("label.SEAMS")),
-						m("td",	m("input.number", {name: "seam", style: "width:3em"})),
+						m("td",	m("input.number", {name: "seam"})),
 						m("td",	m("label.HOLES")),
-						m("td",	m("input.number", {name: "hole", style: "width:3em"}))
+						m("td",	m("input.number", {name: "hole"}))
 					]),
 					m("tr", [
 						m("td",	m("label.DOPANT")),
-						m("td",	m("input.number", {name: "dopant", style: "width:3em"})),
+						m("td",	m("input.number", {name: "dopant"})),
 						m("td",	m("label.CRACKS")),
-						m("td",	m("input.number", {name: "break", style: "width:3em"}))
+						m("td",	m("input.number", {name: "break"}))
 					])
 				])
 			]),
@@ -121,20 +121,20 @@ var storage_content = {
 				),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [
-						m("td",	m("input.number", {name: "m1", style: "width:3em"})),
-						m("td",	m("input.number", {name: "m2", style: "width:3em"}))
+						m("td",	m("input.number", {name: "m1"})),
+						m("td",	m("input.number", {name: "m2"}))
 					]),
 					m("tr", [
-						m("td",	m("input.number", {name: "m3", style: "width:3em"})),
-						m("td",	m("input.number", {name: "m4", style: "width:3em"}))
+						m("td",	m("input.number", {name: "m3"})),
+						m("td",	m("input.number", {name: "m4"}))
 					]),
 					m("tr", [
-						m("td",	m("input.number", {name: "m5", style: "width:3em"})),
-						m("td",	m("input.number", {name: "m6", style: "width:3em"}))
+						m("td",	m("input.number", {name: "m5"})),
+						m("td",	m("input.number", {name: "m6"}))
 					]),
 					m("tr", [
-						m("td",	m("input.number", {name: "m7", style: "width:3em"})),
-						m("td",	m("input.number", {name: "m8", style: "width:3em"}))
+						m("td",	m("input.number", {name: "m7"})),
+						m("td",	m("input.number", {name: "m8"}))
 					])
 				])
 			])

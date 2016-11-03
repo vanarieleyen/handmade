@@ -64,18 +64,18 @@ var rolling_content = {
 				),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [
-						m("td",	m("input.number", {name: "l1", style: "width:3em"})),
-						m("td",	m("input.number", {name: "l2", style: "width:3em"})),
-						m("td",	m("input.number", {name: "l3", style: "width:3em"})),
-						m("td",	m("input.number", {name: "l4", style: "width:3em"})),
-						m("td",	m("input.number", {name: "l5", style: "width:3em"}))
+						m("td",	m("input.number", {name: "l1"})),
+						m("td",	m("input.number", {name: "l2"})),
+						m("td",	m("input.number", {name: "l3"})),
+						m("td",	m("input.number", {name: "l4"})),
+						m("td",	m("input.number", {name: "l5"}))
 					]),
 					m("tr", [
-						m("td",	m("input.number", {name: "l6", style: "width:3em"})),
-						m("td",	m("input.number", {name: "l7", style: "width:3em"})),
-						m("td",	m("input.number", {name: "l8", style: "width:3em"})),
-						m("td",	m("input.number", {name: "l9", style: "width:3em"})),
-						m("td",	m("input.number", {name: "l10", style: "width:3em"}))
+						m("td",	m("input.number", {name: "l6"})),
+						m("td",	m("input.number", {name: "l7"})),
+						m("td",	m("input.number", {name: "l8"})),
+						m("td",	m("input.number", {name: "l9"})),
+						m("td",	m("input.number", {name: "l10"}))
 					]),
 					m("tr", [
 						m("td",	{colspan:"5"}, m("hr"))
@@ -91,18 +91,18 @@ var rolling_content = {
 				),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [
-						m("td",	m("input.number", {name: "d1", style: "width:3em"})),
-						m("td",	m("input.number", {name: "d2", style: "width:3em"})),
-						m("td",	m("input.number", {name: "d3", style: "width:3em"})),
-						m("td",	m("input.number", {name: "d4", style: "width:3em"})),
-						m("td",	m("input.number", {name: "d5", style: "width:3em"}))
+						m("td",	m("input.number", {name: "d1"})),
+						m("td",	m("input.number", {name: "d2"})),
+						m("td",	m("input.number", {name: "d3"})),
+						m("td",	m("input.number", {name: "d4"})),
+						m("td",	m("input.number", {name: "d5"}))
 					]),
 					m("tr", [
-						m("td",	m("input.number", {name: "d6", style: "width:3em"})),
-						m("td",	m("input.number", {name: "d7", style: "width:3em"})),
-						m("td",	m("input.number", {name: "d8", style: "width:3em"})),
-						m("td",	m("input.number", {name: "d9", style: "width:3em"})),
-						m("td",	m("input.number", {name: "d10", style: "width:3em"}))
+						m("td",	m("input.number", {name: "d6"})),
+						m("td",	m("input.number", {name: "d7"})),
+						m("td",	m("input.number", {name: "d8"})),
+						m("td",	m("input.number", {name: "d9"})),
+						m("td",	m("input.number", {name: "d10"}))
 					]),
 					m("tr", [
 						m("td",	{colspan:"5"}, m("hr"))
@@ -120,18 +120,18 @@ var rolling_content = {
 				),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [
-						m("td",	m("input.number", {name: "w1", style: "width:3em"})),
-						m("td",	m("input.number", {name: "w2", style: "width:3em"})),
-						m("td",	m("input.number", {name: "w3", style: "width:3em"})),
-						m("td",	m("input.number", {name: "w4", style: "width:3em"})),
-						m("td",	m("input.number", {name: "w5", style: "width:3em"}))
+						m("td",	m("input.number", {name: "w1"})),
+						m("td",	m("input.number", {name: "w2"})),
+						m("td",	m("input.number", {name: "w3"})),
+						m("td",	m("input.number", {name: "w4"})),
+						m("td",	m("input.number", {name: "w5"}))
 					]),
 					m("tr", [
-						m("td",	m("input.number", {name: "w6", style: "width:3em"})),
-						m("td",	m("input.number", {name: "w7", style: "width:3em"})),
-						m("td",	m("input.number", {name: "w8", style: "width:3em"})),
-						m("td",	m("input.number", {name: "w9", style: "width:3em"})),
-						m("td",	m("input.number", {name: "w10", style: "width:3em"}))
+						m("td",	m("input.number", {name: "w6"})),
+						m("td",	m("input.number", {name: "w7"})),
+						m("td",	m("input.number", {name: "w8"})),
+						m("td",	m("input.number", {name: "w9"})),
+						m("td",	m("input.number", {name: "w10"}))
 					]),
 					m("tr", [
 						m("td",	{colspan:"5"}, m("hr"))
@@ -147,18 +147,18 @@ var rolling_content = {
 				),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [
-						m("td",	m("input.number", {name: "p1", style: "width:3em"})),
-						m("td",	m("input.number", {name: "p2", style: "width:3em"})),
-						m("td",	m("input.number", {name: "p3", style: "width:3em"})),
-						m("td",	m("input.number", {name: "p4", style: "width:3em"})),
-						m("td",	m("input.number", {name: "p5", style: "width:3em"}))
+						m("td",	m("input.number", {name: "p1"})),
+						m("td",	m("input.number", {name: "p2"})),
+						m("td",	m("input.number", {name: "p3"})),
+						m("td",	m("input.number", {name: "p4"})),
+						m("td",	m("input.number", {name: "p5"}))
 					]),
 					m("tr", [
-						m("td",	m("input.number", {name: "p6", style: "width:3em"})),
-						m("td",	m("input.number", {name: "p7", style: "width:3em"})),
-						m("td",	m("input.number", {name: "p8", style: "width:3em"})),
-						m("td",	m("input.number", {name: "p9", style: "width:3em"})),
-						m("td",	m("input.number", {name: "p10", style: "width:3em"}))
+						m("td",	m("input.number", {name: "p6"})),
+						m("td",	m("input.number", {name: "p7"})),
+						m("td",	m("input.number", {name: "p8"})),
+						m("td",	m("input.number", {name: "p9"})),
+						m("td",	m("input.number", {name: "p10"}))
 					]),
 					m("tr", [
 						m("td",	{colspan:"5"}, m("hr"))
@@ -173,13 +173,13 @@ var rolling_content = {
 			m("table", {width: "100%", border: "0"}, [
 				m("tr", [
 					m("td",	m("label.SURFACE_OUT")),
-					m("td",	m("input.number", {name: "surfout", style: "width:3em"})),
+					m("td",	m("input.number", {name: "surfout"})),
 					m("td",	m("label.TIGHTNESS_OUT")),
-					m("td",	m("input.number", {name: "thightout", style: "width:3em"})),
+					m("td",	m("input.number", {name: "thightout"})),
 					m("td",	m("label.BLEND_ACC")),
-					m("td",	m("input.number", {name: "blendacc", style: "width:3em"})),
+					m("td",	m("input.number", {name: "blendacc"})),
 					m("td",	m("label.PD_ACC")),
-					m("td",	m("input.number", {name: "pdacc", style: "width:3em"}))
+					m("td",	m("input.number", {name: "pdacc"}))
 				])
 			])
 		]),

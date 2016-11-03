@@ -65,9 +65,9 @@ var cutting_content = {
 				m("table", {width: "100%"}, [
 					m("tr", [
 						m("td",	m("label.CREASE")),
-						m("td",	m("input.number", {name: "crease", style: "width:3em"})),
+						m("td",	m("input.number", {name: "crease"})),
 						m("td",	m("label.BLOTS")),
-						m("td",	m("input.number", {name: "blot", style: "width:3em"}))
+						m("td",	m("input.number", {name: "blot"}))
 					])
 				])
 			]),
@@ -78,9 +78,9 @@ var cutting_content = {
 				m("table", {width: "100%"}, [
 					m("tr", [
 						m("td",	m("label.SEAMS")),
-						m("td",	m("input.number", {name: "seam", style: "width:3em"})),
+						m("td",	m("input.number", {name: "seam"})),
 						m("td",	m("label.CRACKS")),
-						m("td",	m("input.number", {name: "break", style: "width:3em"}))
+						m("td",	m("input.number", {name: "break"}))
 					])
 				])
 			])
@@ -93,11 +93,11 @@ var cutting_content = {
 				m("table", {width: "100%"}, [
 					m("tr", [
 						m("td",	m("label.HEADEND")),
-						m("td",	m("input.number", {name: "headend", style: "width:3em"})),
+						m("td",	m("input.number", {name: "headend"})),
 						m("td",	m("label.INCISSION")),
-						m("td",	m("input.number", {name: "incision", style: "width:3em"})),
+						m("td",	m("input.number", {name: "incision"})),
 						m("td",	m("label.HEAD_EMPTY")),
-						m("td",	m("input.number", {name: "empty", style: "width:3em"}))
+						m("td",	m("input.number", {name: "empty"}))
 					])
 				])
 			])

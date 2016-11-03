@@ -3,39 +3,82 @@ console.log("specs.js processed");
 // the specs page
 
 var specs_content = {
-	header: [
+	contents: [
 		m("span.flex-row#data_header", {style: "background-color:rgba(0,255,255,0.05)"}, 
-			m("fieldset.fieldset_header", {style: "width:98%"}, [
-				m("legend", {class: "SPECS"}),
-				m("table", {width: "100%"}, [
-					m("tr", [
-						m("td",	"Last Login"),
-						m("td",	m("span", {id: "date"}, "--"))
-					]),
-					m("tr", [
-						m("td",	"Login IP"),
-						m("td",	m("span", {id: "identity"}, "--"))
-					]),
-					m("tr", [
-						m("td",	"Logins"),
-						m("td",	m("span", {id: "gebruik"}, "--"))
+			m("span.flex-col", [
+				m("fieldset.fieldset_header", {style: "width:95%"}, [
+					m("legend", {class: "ROLLING_PROCESS"}),						
+					m("table", {width: "100%"}, [
+						m("tr", {align: "center"}, [
+							m("td",	m("label.LENGTH")),
+							m("td",	m("input[type=text].number", {name: "rol_l_min"})),
+							m("td",	 m("hr")),
+							m("td",	m("input[type=text].number", {name: "rol_l_max"}))
+						]),
+						m("tr", {align: "center"}, [
+							m("td",	m("label.CIRCUMFERENCE")),
+							m("td",	m("input[type=text].number", {name: "rol_c_min"})),
+							m("td",	 m("hr")),
+							m("td",	m("input[type=text].number", {name: "rol_c_max"}))
+						]),
+						m("tr", {align: "center"}, [
+							m("td",	m("label.WEIGHT")),
+							m("td",	m("input[type=text].number", {name: "rol_w_min"})),
+							m("td",	 m("hr")),
+							m("td",	m("input[type=text].number", {name: "rol_w_max"}))
+						]),
+						m("tr", {align: "center"}, [
+							m("td",	m("label.PRESSUREDROP")),
+							m("td",	m("input[type=text].number", {name: "rol_p_min"})),
+							m("td",	 m("hr")),
+							m("td",	m("input[type=text].number", {name: "rol_p_max"}))
+						]),
+						m("tr", {align: "center"}, [
+							m("td",	m("label.BLEND_ACC")),
+							m("td",	{colspan: "3"}, m("input[type=text].number", {name: "rol_blendacc"}))
+						]),
+						m("tr", {align: "center"}, [
+							m("td",	m("label.PD_ACC")),
+							m("td",	{colspan: "3"}, m("input[type=text].number", {name: "rol_pdacc"}))
+						])
 					])
+				]),
+				m("fieldset.fieldset_header", {style: "width:95%"}, [
+					m("legend", {class: "WRAPPING_PROCESS"}),
+					m("div", {style: "height: 5em"})
+				]),
+				m("fieldset.fieldset_header", {style: "width:95%"}, [
+					m("legend", {class: "MACHINE_CUTTING"}),
+					m("div", {style: "height: 5em"})
+				]),
+				m("fieldset.fieldset_header", {style: "width:95%"}, [
+					m("legend", {class: "STORAGE_PROCESS"}),
+					m("div", {style: "height: 5em"})
 				])
 			]),
-			m("fieldset.fieldset_header", {style: "width:98%"}, [
-				m("legend", {class: "PRODUCT"}),
-				m("div", {style: "height:20em; overflow:auto"}, 
-					m("table#userlist", {width: "100%", border: "1"}, [
-						m("thead", {valign: "top"}, [
-							m("th", {"data-dynatable-column":"id"}),
-							m("th", {"data-dynatable-column":"date"}),
-							m("th", {"data-dynatable-column":"name"}),
-							m("th", {"data-dynatable-column":"gebruik"})
-						]),
-						m("tbody", {style:"height:20em; overflow:auto"})					
-					])
-				)
-			])
+			m("span.flex-col#data_header",
+				m("fieldset.fieldset_header", {style: "width:95%"}, [
+					m("legend", {class: "PRODUCT"}),
+					m("div", {style: "height:20em; overflow:auto"}, 
+						m("table#productlist", {width: "100%", border: "1"}, [
+							m("thead", {valign: "top"}, [
+								m("th", {"data-dynatable-column":"id"}),
+								m("th", {"data-dynatable-column":"name"})
+							]),
+							m("tbody", {style:"height:20em; overflow:auto"})					
+						])
+					),
+					m("div", {style: "height:10em; overflow:auto"}, 
+						m("table#productlist", {width: "100%", border: "1"}, [
+							m("thead", {valign: "top"}, [
+								m("th", {"data-dynatable-column":"id"}),
+								m("th", {"data-dynatable-column":"name"})
+							]),
+							m("tbody", {style:"height:20em; overflow:auto"})					
+						])
+					)
+				])
+			)
 		),
 		m("div.buttonrow", [
 			m("input[type=button].save", {tabindex:"-1"}),
@@ -50,18 +93,10 @@ var specs_content = {
 		if (isInitialized) 
 			return;
 			
-		$('[name=login').hover(function() {	// verberg of toon een login on hover
-			var lbl = '[name='+ this.name + ']';
-			$(lbl).attr('type', '');
-			$(lbl).css('width', '148');
-		}, function(){
-			var lbl = '[name='+ this.name + ']';
-			$(lbl).attr('type', 'password');
-			$(lbl).css('width', '150');
-		});
+		// application code
 	},
 	view: function () {
-		return m("div", [this.header, this.contents]);
+		return m("div", this.contents);
 	}
 }
 

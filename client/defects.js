@@ -69,9 +69,9 @@ var defects_content = {
 				m("table", {width: "100%"}, [
 					m('tr', [
 						m("td", m("label.JOBNR")),
-						m("td",	m("input.number", {name: "sjob", style: "width:3em"})),
+						m("td",	m("input.number", {name: "sjob"})),
 						m("td", m("label.DETERMINATION")),
-						m("td",	m("input.number", {name: "sjudge", style: "width:3em"})),
+						m("td",	m("input.number", {name: "sjudge"})),
 						m("td",	m("label.REMARK")),
 						m("td",	m("textarea", {style: "height:1.5em; width:20em; resize:none", name: "sremarks"})),
 						m("td", {colspan: "2"})
@@ -86,15 +86,15 @@ var defects_content = {
 								m("table", {width: "100%"}, [
 									m('tr', [
 										m("td",	m("select", {name: "srd1"})),
-										m("td",	m("input.number", {name: "srd1_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "srd1_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "srd2"})),
-										m("td",	m("input.number", {name: "srd2_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "srd2_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "srd3"})),
-										m("td",	m("input.number", {name: "srd3_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "srd3_nr"}))
 									])
 								])
 							])
@@ -106,15 +106,15 @@ var defects_content = {
 								m("table", {width: "100%"}, [
 									m('tr', [
 										m("td",	m("select", {name: "scd1"})),
-										m("td",	m("input.number", {name: "scd1_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "scd1_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "scd2"})),
-										m("td",	m("input.number", {name: "scd2_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "scd2_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "scd3"})),
-										m("td",	m("input.number", {name: "scd3_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "scd3_nr"}))
 									])
 								])
 							])
@@ -126,15 +126,15 @@ var defects_content = {
 								m("table", {width: "100%"}, [
 									m('tr', [
 										m("td",	m("select", {name: "ssd1"})),
-										m("td",	m("input.number", {name: "ssd1_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "ssd1_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "ssd2"})),
-										m("td",	m("input.number", {name: "ssd2_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "ssd2_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "ssd3"})),
-										m("td",	m("input.number", {name: "ssd3_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "ssd3_nr"}))
 									])
 								])
 							])
@@ -146,15 +146,15 @@ var defects_content = {
 								m("table", {width: "100%"}, [
 									m('tr', [
 										m("td",	m("select", {name: "spd1"})),
-										m("td",	m("input.number", {name: "spd1_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "spd1_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "spd2"})),
-										m("td",	m("input.number", {name: "spd2_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "spd2_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "spd3"})),
-										m("td",	m("input.number", {name: "spd3_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "spd3_nr"}))
 									])
 								])
 							])
@@ -169,9 +169,9 @@ var defects_content = {
 				m("table", {width: "100%"}, [
 					m('tr', [
 						m("td", m("label.JOBNR")),
-						m("td",	m("input.number", {name: "pjob", style: "width:3em"})),
+						m("td",	m("input.number", {name: "pjob"})),
 						m("td", m("label.DETERMINATION")),
-						m("td",	m("input.number", {name: "pjudge", style: "width:3em"})),
+						m("td",	m("input.number", {name: "pjudge"})),
 						m("td",	m("label.REMARK")),
 						m("td",	m("textarea", {style: "height:1.5em; width:20em; resize:none", name: "premarks"})),
 						m("td", {colspan: "2"})
@@ -186,15 +186,15 @@ var defects_content = {
 								m("table", {width: "100%"}, [
 									m('tr', [
 										m("td",	m("select", {name: "ppd1"})),
-										m("td",	m("input.number", {name: "ppd1_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "ppd1_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "ppd2"})),
-										m("td",	m("input.number", {name: "ppd2_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "ppd2_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "ppd3"})),
-										m("td",	m("input.number", {name: "ppd3_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "ppd3_nr"}))
 									])
 								])
 							])
@@ -206,15 +206,15 @@ var defects_content = {
 								m("table", {width: "100%"}, [
 									m('tr', [
 										m("td",	m("select", {name: "bmd1"})),
-										m("td",	m("input.number", {name: "bmd1_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "bmd1_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "bmd2"})),
-										m("td",	m("input.number", {name: "bmd2_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "bmd2_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "bmd3"})),
-										m("td",	m("input.number", {name: "bmd3_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "bmd3_nr"}))
 									])
 								])
 							])
@@ -229,9 +229,9 @@ var defects_content = {
 				m("table", {width: "100%"}, [
 					m('tr', [
 						m("td", m("label.JOBNR")),
-						m("td",	m("input.number", {name: "pjob", style: "width:3em"})),
+						m("td",	m("input.number", {name: "pjob"})),
 						m("td", m("label.DETERMINATION")),
-						m("td",	m("input.number", {name: "pjudge", style: "width:3em"})),
+						m("td",	m("input.number", {name: "pjudge"})),
 						m("td",	m("label.REMARK")),
 						m("td",	m("textarea", {style: "height:1.5em; width:20em; resize:none", name: "premarks"})),
 						m("td", {colspan: "2"})
@@ -246,15 +246,15 @@ var defects_content = {
 								m("table", {width: "100%"}, [
 									m('tr', [
 										m("td",	m("select", {name: "bsd1"})),
-										m("td",	m("input.number", {name: "bsd1_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "bsd1_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "bsd2"})),
-										m("td",	m("input.number", {name: "bsd2_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "bsd2_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "bsd3"})),
-										m("td",	m("input.number", {name: "bsd3_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "bsd3_nr"}))
 									])
 								])
 							])
@@ -266,15 +266,15 @@ var defects_content = {
 								m("table", {width: "100%"}, [
 									m('tr', [
 										m("td",	m("select", {name: "bbd1"})),
-										m("td",	m("input.number", {name: "bbd1_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "bbd1_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "bbd2"})),
-										m("td",	m("input.number", {name: "bbd2_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "bbd2_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "bbd3"})),
-										m("td",	m("input.number", {name: "bbd3_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "bbd3_nr"}))
 									])
 								])
 							])
@@ -286,15 +286,15 @@ var defects_content = {
 								m("table", {width: "100%"}, [
 									m('tr', [
 										m("td",	m("select", {name: "pmd1"})),
-										m("td",	m("input.number", {name: "pmd1_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "pmd1_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "pmd2"})),
-										m("td",	m("input.number", {name: "pmd2_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "pmd2_nr"}))
 									]),
 									m('tr', [
 										m("td",	m("select", {name: "pmd3"})),
-										m("td",	m("input.number", {name: "pmd3_nr", style: "width:3em"}))
+										m("td",	m("input.number", {name: "pmd3_nr"}))
 									])
 								])
 							])

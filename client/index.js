@@ -16,6 +16,9 @@ require("script!functions");
 
 // the complete handmade component
 var handmade = {
+	setStyle: function() {		// dynamically create style - called by (m)config
+		document.styleSheets[0].insertRule('.number {	width: 5em;	}', 0);		// create .number style
+	},	
 	controller: function (element, isInitialized) {	
 	    if (!isInitialized) {
 		    $(element).css({				// place the flags in the upper right corner
@@ -47,12 +50,12 @@ var flagBox = [
 
 // read and evaluate the tab-scripts 
 // childs first, then the parents
-eval(require('script!./rolling.js'));		// children of data-tab
+eval(require('script!./rolling.js'));				// children of data-tab
 eval(require('script!./wrapping.js'));
 eval(require('script!./cutting.js'));
 eval(require('script!./storage.js'));
 eval(require('script!./defects.js'));
-eval(require('script!./data-tabs.js'));	// parent
+eval(require('script!./data-tabs.js'));			// parent
 
 eval(require('script!./history.js'));
 
@@ -64,10 +67,10 @@ eval(require('script!./settings-tabs.js'));	// parent
 
 // the tabs used by ui-tabs
 var tabContents = [
-	m("#data_tab", m.component(data_content)),
+	m("#data_tab", {config: handmade.setStyle}, m.component(data_content)),
 	m("#history_tab", m.component(history_content)),
 	m("#export_tab", "export"),
-	m("#settings_tab", m.component(settings_content))
+	m("#settings_tab", {config: handmade.setStyle}, m.component(settings_content))
 ]
 
 var uiTabs = [
@@ -115,13 +118,13 @@ $(document).ready(function() {
 			keus = ui.newPanel[0].id;
 			console.log(ui);
 			switch (keus) {
-				case "data_tab":		$.jStorage.set("handmade_maintab", 0);
+				case "data_tab":			$.jStorage.set("handmade_maintab", 0);
 											break;
 				case "history_tab": 	$.jStorage.set("handmade_maintab", 1);
 											break;
-				case "export_tab": 	$.jStorage.set("handmade_maintab", 2);
+				case "export_tab": 		$.jStorage.set("handmade_maintab", 2);
 											break;
-				case "settings_tab": $.jStorage.set("handmade_maintab", 3);
+				case "settings_tab": 	$.jStorage.set("handmade_maintab", 3);
 											break;
 			}
 		}

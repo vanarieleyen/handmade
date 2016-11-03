@@ -65,15 +65,15 @@ var wrapping_content = {
 				m("table", {width: "100%"}, [
 					m("tr", [
 						m("td",	m("label.INCISSION")),
-						m("td",	m("input.number", {name: "incision", style: "width:3em"})),
+						m("td",	m("input.number", {name: "incision"})),
 						m("td",	m("label.HEAD_EMPTY")),
-						m("td",	m("input.number", {name: "empty", style: "width:3em"}))
+						m("td",	m("input.number", {name: "empty"}))
 					]),
 					m("tr", [
 						m("td",	m("label.SEAMS")),
-						m("td",	m("input.number", {name: "seam", style: "width:3em"})),
+						m("td",	m("input.number", {name: "seam"})),
 						m("td",	m("label.HOLES")),
-						m("td",	m("input.number", {name: "hole", style: "width:3em"}))
+						m("td",	m("input.number", {name: "hole"}))
 					])
 				])
 			]),
@@ -84,15 +84,15 @@ var wrapping_content = {
 				m("table", {width: "100%"}, [
 					m("tr", [
 						m("td",	m("label.TIGHTNESS")),
-						m("td",	m("input.number", {name: "tightness", style: "width:3em"})),
+						m("td",	m("input.number", {name: "tightness"})),
 						m("td",	m("label.VEIN_LINES")),
-						m("td",	m("input.number", {name: "veins", style: "width:3em"}))
+						m("td",	m("input.number", {name: "veins"}))
 					]),
 					m("tr", [
 						m("td",	m("label.CRACKS")),
-						m("td",	m("input.number", {name: "crack", style: "width:3em"})),
+						m("td",	m("input.number", {name: "crack"})),
 						m("td",	m("label.SPLICES")),
-						m("td",	m("input.number", {name: "splice", style: "width:3em"}))
+						m("td",	m("input.number", {name: "splice"}))
 					])
 				])
 			])
@@ -105,21 +105,21 @@ var wrapping_content = {
 				m("table", {width: "100%"}, [
 					m("tr", [
 						m("td",	m("label.WRAPPER_COLOR")),
-						m("td",	m("input.number", {name: "color", style: "width:3em"})),
+						m("td",	m("input.number", {name: "color"})),
 						m("td",	m("label.HEADEND")),
-						m("td",	m("input.number", {name: "headend", style: "width:3em"}))
+						m("td",	m("input.number", {name: "headend"}))
 					]),
 					m("tr", [
 						m("td",	m("label.WRAPPED_OK")),
-						m("td",	m("input.number", {name: "wrapok", style: "width:3em"})),
+						m("td",	m("input.number", {name: "wrapok"})),
 						m("td",	m("label.CREASE")),
-						m("td",	m("input.number", {name: "crease", style: "width:3em"}))
+						m("td",	m("input.number", {name: "crease"}))
 					]),
 					m("tr", [
 						m("td",	m("label.SPOTS")),
-						m("td",	m("input.number", {name: "spot", style: "width:3em"})),
+						m("td",	m("input.number", {name: "spot"})),
 						m("td",	m("label.BLOTS")),
-						m("td",	m("input.number", {name: "blot", style: "width:3em"}))
+						m("td",	m("input.number", {name: "blot"}))
 					])
 				])
 			])
