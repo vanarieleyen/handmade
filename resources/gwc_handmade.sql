@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 03, 2016 at 04:14 PM
+-- Generation Time: Nov 04, 2016 at 11:56 AM
 -- Server version: 5.6.31-0ubuntu0.15.10.1
 -- PHP Version: 5.6.11-1ubuntu3.4
 
@@ -485,7 +485,8 @@ CREATE TABLE IF NOT EXISTS `specs` (
   `pid` int(11) NOT NULL,
   `start` datetime NOT NULL,
   `end` datetime NOT NULL,
-  `name` varchar(16) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `nr` varchar(20) NOT NULL,
   `rol_l_min` varchar(4) NOT NULL,
   `rol_l_max` varchar(4) NOT NULL,
   `rol_c_min` varchar(4) NOT NULL,
