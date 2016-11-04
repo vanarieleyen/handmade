@@ -79,6 +79,7 @@ var formulas_content = {
 							m("tr", [	m("td", {width: "20%"}, m("", "S6 (max)")),	m("td", m("label.WEIGHT" )) ]),
 							m("tr", [	m("td", {width: "20%"}, m("", "S7 (min)")),	m("td", m("label.PRESSUREDROP" )) ]),
 							m("tr", [	m("td", {width: "20%"}, m("", "S8 (max)")),	m("td", m("label.PRESSUREDROP" )) ])
+							
 						])
 					])
 				)

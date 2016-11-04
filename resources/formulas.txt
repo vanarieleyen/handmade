@@ -15,6 +15,11 @@ A14 = AB4 = blendacc - 配方 精度%(Blend accuracy %)
 A15 = AC4 = pdacc - 吸阻合格率%(pd accuracy %)
 A16 = AP6 = batch score (see formula below)
 A17 = AA4 = tightness - 松紧度（支）tightness - nr out of spec
+
+// letop: B1, C1, D1 en E1 moeten worden gevuld met ranges
+// B1=l1, B2=l2, B3=l3 etc..
+// in de formule waar B1 wordt gebruikt moet deze worden vertaald naar B1:B10
+// idem voor C1, D1 en E1
 	B1 = length (translates to B1:B10 where B1=length1, B2=length2 etc.)
 	S1 = spec:rol_l_min
 	S2 = spec:rol_l_max	
