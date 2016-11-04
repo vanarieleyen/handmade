@@ -15,6 +15,18 @@ A14 = AB4 = blendacc - 配方 精度%(Blend accuracy %)
 A15 = AC4 = pdacc - 吸阻合格率%(pd accuracy %)
 A16 = AP6 = batch score (see formula below)
 A17 = AA4 = tightness - 松紧度（支）tightness - nr out of spec
+	B1 = length (translates to B1:B10 where B1=length1, B2=length2 etc.)
+	S1 = spec:rol_l_min
+	S2 = spec:rol_l_max	
+	C1 = circ (translates to C1:C10 where C1=circ1, C2=circ2 etc.)
+	S3 = spec:rol_c_min
+	S4 = spec:rol_c_max	
+	D1 = weight (translates to D1:D10 where D1=weight1, D2=weight2 etc.)
+	S5 = spec:rol_w_min
+	S6 = spec:rol_w_max	
+	E1 = pd (translates to E1:E10 where E1=pd1, E2=pd2 etc.)
+	S7 = spec:rol_p_min
+	S8 = spec:rol_p_max	
 
 A18 = AW4 = color - 茄衣颜色（color of wrapper）
 A19 = AX4 = headend - 头尾（head and end）
@@ -55,6 +67,20 @@ A51 = X6 = 水分合格次数
 A52 = Y6 = 水标±0.5%次数
 ----------------------------------------------------------------------------------------------------------------------
 rolling process
+
+A1: =COUNTIF(B1,"<"S1)
+A2: =COUNTIF(B1,">"S2)
+A3: =COUNTIF(B1,">="S1) - COUNTIF(B1,">"S2)
+A4: =COUNTIF(C1,"<"S3)
+A5: =COUNTIF(C1,">"S4)
+A6: =COUNTIF(C1,">="S3) - COUNTIF(C1,">"S4)
+A7: =COUNTIF(D1,"<"S5)
+A8: =COUNTIF(D1,">"S6)
+A9: =COUNTIF(D1,">="S5) - COUNTIF(D1,">"S6)
+A10: =COUNTIF(E1,"<"S7)
+A11: =COUNTIF(E1,">"S8)
+A12: =COUNTIF(E1,">="S7) - COUNTIF(E1,">"S8)
+
 AP4 = 批次 得分(batch score): 
 =100-(A1+A2)*0.5-(A4+A5)*0.4-(A7+A8)*0.3-A13*0.4-AA6*0.5-(A10+A11)*1+
 		(IF(A14="","",IF(A14<80,-4,IF(A14>=85,IF(A14<90,-1,0),-2))))+(IF(A15="","",IF(A15<85,-5,IF(A15>=90,IF(A15<95,-2,0),-4))))
