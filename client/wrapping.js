@@ -15,7 +15,7 @@ var wrapping_content = {
 							m("table", {width: "100%"}, [
 								m("tr", [
 									m("td",	m("label.HANDMADE_DATE")),
-									m("td",	m("input.date", {type: "text", name: "date"}))
+									m("td",	m("input.datum", {type: "text", name: "date"}))
 								]),
 								m("tr", [
 									m("td",	m("label.PRODUCT")),
@@ -133,16 +133,7 @@ var wrapping_content = {
 	controller: function (element, isInitialized) {
 		if (isInitialized) 
 			return;
-			
-		var d_options = {
-			show_week_number: WEEK,
-			days: DAYS,
-			months: MONTHS,
-			offset: [10, 220],
-			lang_clear_date: ""
-		};	
-		$('#data_header .date').Zebra_DatePicker(d_options);
-		
+	
 		// save data
 		$("input:text").blur(function () {
 			var field = $(this).attr('name');

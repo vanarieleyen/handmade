@@ -38,12 +38,6 @@ function setButton(lbl, idx) {
 	$(lbl).attr('title', LABELS[idx][hint]);	// hint	
 }
 
-var l = $.jStorage.get('lang'); 	// labels for the calendar
-var WEEK = LABELS[415][l];
-var DAYS = Array(LABELS[416][l],LABELS[417][l],LABELS[418][l],LABELS[419][l],LABELS[420][l],LABELS[421][l],LABELS[422][l]);
-var MONTHS = Array(LABELS[423][l],LABELS[424][l],LABELS[425][l],LABELS[426][l],LABELS[427][l],LABELS[428][l],
-							LABELS[429][l],LABELS[430][l],LABELS[431][l],LABELS[432][l],LABELS[433][l],LABELS[434][l]);
-							
 // vul alle labels met text en hints
 function fill_labels() {
 	show('.HISTORY', 1);

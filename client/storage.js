@@ -15,7 +15,7 @@ var storage_content = {
 							m("table", {width: "100%"}, [
 								m("tr", [
 									m("td",	m("label.HANDMADE_DATE")),
-									m("td",	m("input.date", {type: "text", name: "date"}))
+									m("td",	m("input.datum", {type: "text", name: "date"}))
 								]),
 								m("tr", [
 									m("td",	m("label.PRODUCT")),
@@ -65,9 +65,9 @@ var storage_content = {
 				m("table", {width: "100%"}, [
 					m("tr", [
 						m("td",	m("label.START_DATE")),
-						m("td",	m("input.date", {name: "start"})),
+						m("td",	m("input.datum", {name: "start"})),
 						m("td",	m("label.END_DATE")),
-						m("td",	m("input.date", {name: "end"}))
+						m("td",	m("input.datum", {name: "end"}))
 					])
 				])
 			]),
@@ -149,15 +149,6 @@ var storage_content = {
 		if (isInitialized) 
 			return;
 			
-		var d_options = {
-			show_week_number: WEEK,
-			days: DAYS,
-			months: MONTHS,
-			offset: [10, 220],
-			lang_clear_date: ""
-		};	
-		$('.date').Zebra_DatePicker(d_options);
-		
 		// save data
 		$("input:text").blur(function () {
 			var field = $(this).attr('name');

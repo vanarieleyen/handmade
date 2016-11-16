@@ -6,7 +6,7 @@ require("ui-css");
 require("master-css");
 require("zebra-css");
 
-require('jquery-ui-bundle');
+require('jquery-ui');
 require("jstorage");
 require("zebra-js");
 
@@ -101,10 +101,10 @@ var uiTabs = [
 	])
 ]
 
-m.mount(document.body, handmade );
 
 $(document).ready(function() {
-
+	m.mount(document.body, handmade );
+		
 	if ($.jStorage.get("handmade_maintab") == null)
 		$.jStorage.set("handmade_maintab", 0);
 	if ($.jStorage.get("handmade_subtab") == null)
@@ -130,6 +130,8 @@ $(document).ready(function() {
 		}
 	});
 
+	$('.datum').Zebra_DatePicker();
+	
 	console.log('exit');
 });
 

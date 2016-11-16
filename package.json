@@ -22,8 +22,8 @@
     "webpack-dev-server": "^1.16.2"
   },
   "scripts": {
-    "start": "webpack-dev-server --inline",
-    "test": "webpack -p"
+    "test": "webpack-dev-server --inline",
+    "maak": "webpack -p"
   },
   "author": "",
   "license": "ISC"

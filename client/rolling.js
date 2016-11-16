@@ -15,7 +15,7 @@ var rolling_content = {
 							m("table", {width: "100%"}, [
 								m("tr", [
 									m("td",	m("label.HANDMADE_DATE")),
-									m("td",	m("input.date", {type: "text", name: "date"}))
+									m("td",	m("input.datum", {type: "text", name: "date"}))
 								]),
 								m("tr", [
 									m("td",	m("label.PRODUCT")),
@@ -193,14 +193,27 @@ var rolling_content = {
 		if (isInitialized) 
 			return;
 			
-		var d_options = {
-			show_week_number: WEEK,
-			days: DAYS,
-			months: MONTHS,
-			offset: [10, 220],
-			lang_clear_date: ""
-		};	
-		$('#data_header .date').Zebra_DatePicker(d_options);
+		// get the current location 
+		if ($.jStorage.get("handmade.current") == null) {	// for first-time start-ups 
+			$.getJSON('server/get_record.php', { 
+				query: 'SELECT max(id) AS id FROM gwc_handmade.rolling '
+			},	function(data) {
+				$.jStorage.set("handmade.current", data.id);	// NULL when none found
+			});
+		} else {
+			$.getJSON('server/get_record.php', { 
+				query: 'SELECT id FROM gwc_handmade.rolling WHERE id='+$.jStorage.get("handmade.current")
+			},	function(data) {
+				$.jStorage.set("handmade.current", data.id);	// NULL when none found
+			});
+		}
+		
+		// no records found - disable all input fields
+		if ($.jStorage.get("handmade.current") == null) {
+			$("input").not("[type=button]").attr("disabled", "disabled");
+			$("textarea").attr("disabled", "disabled");
+		}
+		
 		
 		// save data
 		$("input:text").blur(function () {
@@ -209,9 +222,13 @@ var rolling_content = {
 		
 		$(".new").click(function() {
 			$.getJSON('server/new.php', {	
-					nr: 10
+					table: "gwc_handmade.rolling"
 				},	function(data) {
-					alert(JSON.stringify(data));
+					if (data.id != null) {
+						$.jStorage.set("handmade.current", data.id);
+						$("input").not("[type=button]").removeAttr("disabled");
+						$("textarea").removeAttr("disabled");
+					}
 			});
 		})
 		

@@ -6,11 +6,11 @@ module.exports = {
 		path: './build',				// output directory 
 		filename: "app.js"
   },
-  devServer: {		// proxy calls to server folder to backend server (lighttpd port 81)
+  devServer: {		// proxy calls to server folder to backend server (lighttpd port 80)
     proxy: [
         {
             path: '/server/*',
-            target: "http://localhost:81/handmade/"
+            target: "http://localhost:80/handmade/"
         }
     ]
 	},
@@ -23,7 +23,7 @@ module.exports = {
   resolve: { 
 		alias: { 
 			"Mithril": path.join(__dirname, "node_modules/mithril/mithril.min.js"),
-			"jquery-ui": path.join(__dirname, "node_modules/jquery-ui-bundle/jquery-ui.min.js"),
+			"jquery-ui": path.join(__dirname, "node_modules/jquery-ui-bundle/jquery-ui.js"),
 			"ui-css": path.join(__dirname, "styles/ui.css"),		
 			"functions": path.join(__dirname, "client/js/functions.js"),
 			"master-css": path.join(__dirname, "styles/master.css"),	

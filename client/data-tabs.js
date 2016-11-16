@@ -64,6 +64,7 @@ var data_content = {
 				}
 			}
 		});
+		
 	},
 	view: function () {
 		return m("div", this.subTabs);
