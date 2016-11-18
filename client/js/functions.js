@@ -603,3 +603,322 @@ $(document).on("keyup", "input.number", function() {
 	$(this).val(val); 
 });
 
+// sets the current record pointer
+function get_current (table) {
+	var name = table.split('.')[1];
+	
+	if ($.jStorage.get("handmade.current."+name) == null) {	// for first-time start-ups 
+		$.getJSON('server/get_record.php', { 
+			query: 'SELECT max(id) AS id FROM '+table
+		}, function(data) {
+			$.jStorage.set("handmade.current."+name, data.id);	// NULL when none found
+		});
+	} else {
+		$.getJSON('server/get_record.php', { 
+			query: 'SELECT id FROM '+table+' WHERE id='+$.jStorage.get("handmade.current."+table)
+		},	function(data) {
+			if (data.id == null) {
+				$.getJSON('server/get_record.php', { 
+					query: 'SELECT max(id) AS id FROM '+table
+				}, function(data) {
+					$.jStorage.set("handmade.current."+name, data.id);	// NULL when none found
+				});
+			} else {
+				$.jStorage.set("handmade.current."+name, data.id);
+			}
+		});
+	}
+}
+
+// go to the next record
+function next_rec(table) {
+	var name = table.split('.')[1];
+	
+	this.current = $.jStorage.get("handmade.current."+name);
+	$.getJSON('server/get_record.php', { 
+		query: 'SELECT * FROM '+table+' WHERE id = ' + this.current + ' LIMIT 1'
+	}, function(data) {
+		if (data.rowcount != 0) {
+			$.getJSON('server/get_record.php', { 
+				query: 'SELECT * FROM '+table+' WHERE id > "' + data.id + '" ORDER BY id ASC LIMIT 1'
+			}, function(data) {
+				if (data.rowcount != 0) {	// als er nog records worden gevonden...
+					$.jStorage.set("handmade.current."+name, data.id);
+				}	
+			});
+		} else {
+			$.getJSON('server/get_record.php', { 
+				query: 'SELECT max(id) AS id FROM '+table
+			},	function(data) {
+				$.jStorage.set("handmade.current."+name, data.id);	// NULL when none found
+			});
+		}		
+	});
+}	
+
+// go to the previous record
+function prev_rec(table) {
+	var name = table.split('.')[1];
+	
+	this.current = $.jStorage.get("handmade.current."+name);
+	$.getJSON('server/get_record.php', { 
+		query: 'SELECT * FROM '+table+' WHERE id = ' + this.current + ' LIMIT 1'
+	}, function(data) {
+		if (data.rowcount != 0) {
+			$.getJSON('server/get_record.php', { 
+				query: 'SELECT * FROM '+table+' WHERE id < "' + data.id + '" ORDER BY id DESC LIMIT 1'
+			}, function(data) {
+				if (data.rowcount != 0) {	// als er nog records worden gevonden...
+					$.jStorage.set("handmade.current."+name, data.id);
+				}	
+			});		
+		} else {
+			$.getJSON('server/get_record.php', { 
+				query: 'SELECT min(id) AS id FROM '+table
+			},	function(data) {
+				$.jStorage.set("handmade.current."+name, data.id);	// NULL when none found
+			});
+		}		
+	});
+}
+
+// make a new record
+function new_rec(table, element) {
+	var name = table.split('.')[1];
+	
+	$.getJSON('server/new.php', {	
+			table: table
+	}, function(data) {
+		if (data.id != null) {
+			$.jStorage.set("handmade.current."+name, data.id);
+			$(element+" input").not("[type=button]").removeAttr("disabled");
+			$(element+" textarea").removeAttr("disabled");
+			$(element+" select").removeAttr("disabled");
+		}
+	});
+}
+
+// shows the data from a table
+function show_data(table) {
+	var id = $.jStorage.get("handmade.current."+table);
+
+	if (id != null)	{
+		switch (table) {
+			case "rolling":
+				$.getJSON('server/get_record.php', { 
+					query: 'SELECT * FROM gwc_handmade.rolling WHERE id='+id
+				}, function(data) {
+					$("#rolling [name=date]").val(data.date);
+					$("#rolling [name=product]").val(data.product);
+					$("#rolling [name=name]").val(data.name);
+					$("#rolling [name=inspector]").val(data.inspector);
+					$("#rolling [name=remarks]").val(data.remarks);
+					$("#rolling [name=score]").html(data.score);
+					$("#rolling [name=quality]").html(data.quality);
+					for (var i=1; i<=10; i++) {
+						$("#rolling [name=l"+i+"]").val(data["l"+i]);
+						$("#rolling [name=d"+i+"]").val(data["d"+i]);
+						$("#rolling [name=w"+i+"]").val(data["w"+i]);
+						$("#rolling [name=p"+i+"]").val(data["p"+i]);
+					}
+					$("#rolling [name=surfout]").val(data.surfout);
+					$("#rolling [name=tightout]").val(data.tightout);
+					$("#rolling [name=blendacc]").val(data.blendacc);
+					$("#rolling [name=pdacc]").val(data.pdacc);
+				});	
+				break;
+			case "wrapping":
+				$.getJSON('server/get_record.php', { 
+					query: 'SELECT * FROM gwc_handmade.wrapping WHERE id='+id
+				}, function(data) {
+					//alert(JSON.stringify(data));
+					$("#wrapping [name=date]").val(data.date);
+					$("#wrapping [name=product]").val(data.product);
+					$("#wrapping [name=name]").val(data.name);
+					$("#wrapping [name=inspector]").val(data.inspector);
+					$("#wrapping [name=remarks]").val(data.remarks);
+					$("#wrapping [name=score]").html(data.score);
+					$("#wrapping [name=quality]").html(data.quality);
+					
+					$("#wrapping [name=incision]").val(data.incision);
+					$("#wrapping [name=seam]").val(data.seam);
+					$("#wrapping [name=empty]").val(data.empty);
+					$("#wrapping [name=hole]").val(data.hole);
+					$("#wrapping [name=tightness]").val(data.tightness);
+					$("#wrapping [name=veins]").val(data.veins);
+					$("#wrapping [name=crack]").val(data.crack);
+					$("#wrapping [name=splice]").val(data.splice);
+					$("#wrapping [name=color]").val(data.color);
+					$("#wrapping [name=headend]").val(data.headend);
+					$("#wrapping [name=wrapok]").val(data.wrapok);
+					$("#wrapping [name=crease]").val(data.crease);
+					$("#wrapping [name=spot]").val(data.spot);
+					$("#wrapping [name=blot]").val(data.blot);
+				});
+				break;
+			case "cutting":
+				$.getJSON('server/get_record.php', { 
+					query: 'SELECT * FROM gwc_handmade.cutting WHERE id='+id
+				}, function(data) {
+					$("#cutting [name=date]").val(data.date);
+					$("#cutting [name=product]").val(data.product);
+					$("#cutting [name=name]").val(data.name);
+					$("#cutting [name=inspector]").val(data.inspector);
+					$("#cutting [name=remarks]").val(data.remarks);
+					$("#cutting [name=score]").html(data.score);
+					$("#cutting [name=quality]").html(data.quality);
+					
+					$("#cutting [name=incision]").val(data.incision);
+					$("#cutting [name=seam]").val(data.seam);
+					$("#cutting [name=empty]").val(data.empty);
+					$("#cutting [name=crack]").val(data.crack);
+					$("#cutting [name=headend]").val(data.headend);
+					$("#cutting [name=crease]").val(data.crease);
+					$("#cutting [name=spot]").val(data.spot);
+					$("#cutting [name=blot]").val(data.blot);
+				});	
+				break;
+			case "storage":
+				$.getJSON('server/get_record.php', { 
+					query: 'SELECT * FROM gwc_handmade.storage WHERE id='+id
+				}, function(data) {
+					$("#storage [name=date]").val(data.date);
+					$("#storage [name=product]").val(data.product);
+					$("#storage [name=incharge]").val(data.incharge);
+					$("#storage [name=inspector]").val(data.inspector);
+					$("#storage [name=remarks]").val(data.remarks);
+					$("#storage [name=score]").html(data.score);
+					$("#storage [name=batchok]").html(data.batchok);
+					for (var i=1; i<=8; i++) {
+						$("#storage [name=m"+i+"]").val(data["m"+i]);
+					}
+					$("#storage [name=start]").val(data.start);
+					$("#storage [name=end]").val(data.end);
+					$("#storage [name=moistmin]").val(data.moistmin);
+					$("#storage [name=moistmax]").val(data.moistmax);
+					$("#storage [name=deworm]").val(data.deworm);
+					$("#storage [name=headend]").val(data.headend);
+					$("#storage [name=empty]").val(data.empty);
+					$("#storage [name=seam]").val(data.seam);
+					$("#storage [name=hole]").val(data.hole);
+					$("#storage [name=dopant]").val(data.dopant);
+					$("#storage [name=break]").val(data.break);
+				});	
+				break;
+			case "defects":
+				$.getJSON('server/get_record.php', { 
+					query: 'SELECT * FROM gwc_handmade.defects WHERE id='+id
+				}, function(data) {
+					$("#defects [name=date]").val(data.date);
+					$("#defects [name=product]").val(data.product);
+					$("#defects [name=sample]").val(data.sample);
+					$("#defects [name=inspector]").val(data.inspector);
+					$("#defects [name=remarks]").val(data.remarks);
+					$("#defects [name=sscore]").html(data.sscore);
+					$("#defects [name=pscore]").html(data.pscore);
+					$("#defects [name=bscore]").html(data.bscore);
+					for (var i=1; i<=3; i++) {
+						$("#defects [name=srd"+i+"]").val(data["srd"+i]);
+						$("#defects [name=srd"+i+"_nr]").val(data["srd"+i+"_nr"]);
+						$("#defects [name=scd"+i+"]").val(data["scd"+i]);
+						$("#defects [name=scd"+i+"_nr]").val(data["scd"+i+"_nr"]);
+						$("#defects [name=ssd"+i+"]").val(data["ssd"+i]);
+						$("#defects [name=ssd"+i+"_nr]").val(data["ssd"+i+"_nr"]);
+						$("#defects [name=spd"+i+"]").val(data["spd"+i]);
+						$("#defects [name=spd"+i+"_nr]").val(data["spd"+i+"_nr"]);
+						$("#defects [name=ppd"+i+"]").val(data["ppd"+i]);
+						$("#defects [name=ppd"+i+"_nr]").val(data["ppd"+i+"_nr"]);
+						$("#defects [name=pm"+i+"]").val(data["pm"+i]);
+						$("#defects [name=pm"+i+"_nr]").val(data["pm"+i+"_nr"]);
+						$("#defects [name=bsd"+i+"]").val(data["bsd"+i]);
+						$("#defects [name=bsd"+i+"_nr]").val(data["bsd"+i+"_nr"]);
+						$("#defects [name=bb"+i+"]").val(data["bb"+i]);
+						$("#defects [name=bb"+i+"_nr]").val(data["bb"+i+"_nr"]);
+						$("#defects [name=bm"+i+"]").val(data["bm"+i]);
+						$("#defects [name=bm"+i+"_nr]").val(data["bm"+i+"_nr"]);
+					}
+					$("#defects [name=sjob]").val(data.sjob);
+					$("#defects [name=sjudge]").val(data.sjudge);
+					$("#defects [name=sremarks]").val(data.sremarks);
+					$("#defects [name=pjob]").val(data.pjob);
+					$("#defects [name=pjudge]").val(data.pjudge);
+					$("#defects [name=premarks]").val(data.premarks);
+					$("#defects [name=bjob]").val(data.bjob);
+					$("#defects [name=bjudge]").val(data.bjudge);
+					$("#defects [name=bremarks]").val(data.bremarks);
+				});
+				break;
+			case "specs":
+				// load all data with pid=id
+				// loop over each record
+				// fill the history list
+				// when end == 3000-01-01 display the data
+
+				$.getJSON('server/get_record.php', { 
+					query: "SELECT * FROM gwc_handmade.specs WHERE pid=(SELECT pid FROM gwc_handmade.specs WHERE id="+id+") AND DATE(end) = '3000-01-01' "
+				}, function(data) {
+					console.log(data);
+					$("#specs [name=name]").val(data.name);
+					$("#specs [name=nr]").val(data.nr);
+					$("#specs [name=rol_l_min]").val(data.rol_l_min);
+					$("#specs [name=rol_l_max]").val(data.rol_l_max);
+					$("#specs [name=rol_c_min]").val(data.rol_c_min);
+					$("#specs [name=rol_c_max]").val(data.rol_c_max);
+					$("#specs [name=rol_w_min]").val(data.rol_w_min);
+					$("#specs [name=rol_w_max]").val(data.rol_w_max);
+					$("#specs [name=rol_p_min]").val(data.rol_p_min);
+					$("#specs [name=rol_p_max]").val(data.rol_p_max);
+					$("#specs [name=rol_surfout]").val(data.rol_surfout);
+					$("#specs [name=rol_tightout]").val(data.rol_tightout);
+					$("#specs [name=rol_blendacc]").val(data.rol_blendacc);
+					$("#specs [name=rol_pdacc]").val(data.rol_pdacc);
+				});	
+				break;
+		}		
+	}
+}
+		
+function show_history() {
+	var source = "server/get_history.php?lang="+$.jStorage.get("lang")+"&tab="+$.jStorage.get("handmade_lasttab");
+	
+	$("#history #lijst thead").empty();
+	$("#history #lijst thead").append('<th style="display:none">ID</th>');
+	$("#history #lijst thead").append('<th><label class="DATE"></label></th>'); 
+	$("#history #lijst thead").append('<th><label class="PRODUCT"></label></th>');
+
+	switch ($.jStorage.get("handmade_lasttab")) {
+		case "rolling_sub_tab":
+		case "wrapping_sub_tab":
+		case "cutting_sub_tab":
+			$("#history #lijst thead").append('<th><label class="SAMPLINGPOINT"></label></th>');
+			$("#history #lijst thead").append('<th><label class="BATCH_SCORE"></label></th>');
+			$("#history #lijst thead").append('<th><label class="BATCH_QUALITY"></label></th>');
+			$("#history #lijst thead").append('<th><label class="INSPECTOR"></label></th>');
+			break;
+		case "storage_sub_tab":
+			$("#history #lijst thead").append('<th><label class="IN_CHARGE"></label></th>');
+			$("#history #lijst thead").append('<th><label class="BATCH_SCORE"></label></th>');
+			$("#history #lijst thead").append('<th><label class="BATCH_QUALITY_OK"></label></th>');
+			$("#history #lijst thead").append('<th><label class="INSPECTOR"></label></th>');
+			break;
+		case "defects_sub_tab":
+			$("#history #lijst thead").append('<th><label class="SAMPLING_FREQ"></label></th>');
+			$("#history #lijst thead").append('<th><label class="STICK_PACKING_SCORE"></label></th>');
+			$("#history #lijst thead").append('<th><label class="PACKING_SCORE"></label></th>');
+			$("#history #lijst thead").append('<th><label class="SLEEVEBOX_SCORE"></label></th>');
+			$("#history #lijst thead").append('<th><label class="INSPECTOR"></label></th>');
+			break;
+	}
+
+	fill_labels();
+	
+	$.getJSON(source,	function(data) {
+		console.log(data);
+		
+		$('#history #lijst tbody').empty();
+		$.each(data.records, function (key, regel) {
+			$('#history #lijst tbody').append(regel);
+		});		
+	})		
+	$("#history #lijst thead").addClass('header');	// color the header (first row))
+}

@@ -10,6 +10,7 @@ require('jquery-ui');
 require("jstorage");
 require("zebra-js");
 
+require("script!sprintf-js");
 require("script!language");
 require("script!functions");
 
@@ -118,14 +119,19 @@ $(document).ready(function() {
 			keus = ui.newPanel[0].id;
 			console.log(ui);
 			switch (keus) {
-				case "data_tab":			$.jStorage.set("handmade_maintab", 0);
-											break;
-				case "history_tab": 	$.jStorage.set("handmade_maintab", 1);
-											break;
-				case "export_tab": 		$.jStorage.set("handmade_maintab", 2);
-											break;
-				case "settings_tab": 	$.jStorage.set("handmade_maintab", 3);
-											break;
+				case "data_tab":			
+					$.jStorage.set("handmade_maintab", 0);
+					break;
+				case "history_tab": 	
+					show_history(); 												// update the history
+					$.jStorage.set("handmade_maintab", 1);
+					break;
+				case "export_tab": 		
+					$.jStorage.set("handmade_maintab", 2);
+					break;
+				case "settings_tab": 	
+					$.jStorage.set("handmade_maintab", 3);
+					break;
 			}
 		}
 	});

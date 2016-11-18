@@ -120,22 +120,10 @@ var storage_content = {
 					m("label.MOISTURE")
 				),
 				m("table", {width: "100%", border: "0"}, [
-					m("tr", [
-						m("td",	m("input.number", {name: "m1"})),
-						m("td",	m("input.number", {name: "m2"}))
-					]),
-					m("tr", [
-						m("td",	m("input.number", {name: "m3"})),
-						m("td",	m("input.number", {name: "m4"}))
-					]),
-					m("tr", [
-						m("td",	m("input.number", {name: "m5"})),
-						m("td",	m("input.number", {name: "m6"}))
-					]),
-					m("tr", [
-						m("td",	m("input.number", {name: "m7"})),
-						m("td",	m("input.number", {name: "m8"}))
-					])
+					m("tr", [1,2].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
+					m("tr", [3,4].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
+					m("tr", [5,6].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
+					m("tr", [7,8].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		}))
 				])
 			])
 		),
@@ -149,13 +137,69 @@ var storage_content = {
 		if (isInitialized) 
 			return;
 			
+		// set selectbox options
+		$.get('server/get_status.php?lang='+$.jStorage.get("lang"), function(data) {
+			$('#storage [name=deworm]').append(data);	
+		});		
+		
+		// get the current location 
+		get_current("gwc_handmade.storage");
+
+		// no records found - disable all input fields
+		if ($.jStorage.get("handmade.current.storage") == null) {
+			$("#storage input").not("[type=button]").attr("disabled", "disabled");
+			$("#storage textarea").attr("disabled", "disabled");
+		}
+		
+		// display the data
+		show_data("storage");
+		
 		// save data
-		$("input:text").blur(function () {
-			var field = $(this).attr('name');
+		$("#storage input:text").blur(function () {
+			this.current = $.jStorage.get("handmade.current.storage");	
+			this.field = $(this).attr('name');
+			this.value = $(this).val();
+			
+			sql = sprintf('UPDATE gwc_handmade.storage SET %s="%s" WHERE id=%s', this.field, this.value, this.current );
+			$.getJSON('server/send_query.php', {	query: sql	});			
 		})
+
+		$("#storage textarea").blur(function () {
+			this.current = $.jStorage.get("handmade.current.storage");	
+			this.remarks = $("#storage [name=remarks]").val();
+			
+			sql = sprintf('UPDATE gwc_handmade.storage SET remarks="%s" WHERE id=%s', this.remarks, this.current );
+			$.getJSON('server/send_query.php', {	query: sql	});			
+		})
+		
+		$("#storage select").on("blur", function () {
+			this.current = $.jStorage.get("handmade.current.storage");
+			this.field = $(this).attr('name');
+			this.value = $(this).val();
+
+			sql = sprintf('UPDATE gwc_handmade.storage SET %s="%s" WHERE id=%s', this.field, this.value, this.current );	
+			$.getJSON('server/send_query.php', {	query: sql	});	
+		});
+		
+		$("#storage .new").click(function() {
+			new_rec("gwc_handmade.storage", "#storage");
+			show_data("storage");
+		})
+
+	
+		$('#storage .next').click(function() {
+			next_rec("gwc_handmade.storage");
+			show_data("storage");
+		});
+	
+		$('#storage .prev').click(function() {
+			prev_rec("gwc_handmade.storage");
+			show_data("storage");
+		});
+
 	},
 	view: function () {
-		return m("div", [this.header, this.contents]);
+		return m("#storage", [this.header, this.contents]);
 	}
 }
 

@@ -63,20 +63,12 @@ var rolling_content = {
 					m("label.LENGTH")
 				),
 				m("table", {width: "100%", border: "0"}, [
-					m("tr", [
-						m("td",	m("input.number", {name: "l1"})),
-						m("td",	m("input.number", {name: "l2"})),
-						m("td",	m("input.number", {name: "l3"})),
-						m("td",	m("input.number", {name: "l4"})),
-						m("td",	m("input.number", {name: "l5"}))
-					]),
-					m("tr", [
-						m("td",	m("input.number", {name: "l6"})),
-						m("td",	m("input.number", {name: "l7"})),
-						m("td",	m("input.number", {name: "l8"})),
-						m("td",	m("input.number", {name: "l9"})),
-						m("td",	m("input.number", {name: "l10"}))
-					]),
+					m("tr", [1,2,3,4,5].map(function(n) {
+						return m("td",	m("input.number", {name: "l"+n}))
+					})), 
+					m("tr", [6,7,8,9,10].map(function(n) {
+						return m("td",	m("input.number", {name: "l"+n}))
+					})),
 					m("tr", [
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
@@ -90,20 +82,12 @@ var rolling_content = {
 					m("label.HANDMADE_CIRCUMFERENCE")
 				),
 				m("table", {width: "100%", border: "0"}, [
-					m("tr", [
-						m("td",	m("input.number", {name: "d1"})),
-						m("td",	m("input.number", {name: "d2"})),
-						m("td",	m("input.number", {name: "d3"})),
-						m("td",	m("input.number", {name: "d4"})),
-						m("td",	m("input.number", {name: "d5"}))
-					]),
-					m("tr", [
-						m("td",	m("input.number", {name: "d6"})),
-						m("td",	m("input.number", {name: "d7"})),
-						m("td",	m("input.number", {name: "d8"})),
-						m("td",	m("input.number", {name: "d9"})),
-						m("td",	m("input.number", {name: "d10"}))
-					]),
+					m("tr", [1,2,3,4,5].map(function(n) {
+						return m("td",	m("input.number", {name: "d"+n}))
+					})), 
+					m("tr", [6,7,8,9,10].map(function(n) {
+						return m("td",	m("input.number", {name: "d"+n}))
+					})),
 					m("tr", [
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
@@ -119,20 +103,12 @@ var rolling_content = {
 					m("label.WEIGHT")
 				),
 				m("table", {width: "100%", border: "0"}, [
-					m("tr", [
-						m("td",	m("input.number", {name: "w1"})),
-						m("td",	m("input.number", {name: "w2"})),
-						m("td",	m("input.number", {name: "w3"})),
-						m("td",	m("input.number", {name: "w4"})),
-						m("td",	m("input.number", {name: "w5"}))
-					]),
-					m("tr", [
-						m("td",	m("input.number", {name: "w6"})),
-						m("td",	m("input.number", {name: "w7"})),
-						m("td",	m("input.number", {name: "w8"})),
-						m("td",	m("input.number", {name: "w9"})),
-						m("td",	m("input.number", {name: "w10"}))
-					]),
+					m("tr", [1,2,3,4,5].map(function(n) {
+						return m("td",	m("input.number", {name: "w"+n}))
+					})), 
+					m("tr", [6,7,8,9,10].map(function(n) {
+						return m("td",	m("input.number", {name: "w"+n}))
+					})),
 					m("tr", [
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
@@ -146,20 +122,12 @@ var rolling_content = {
 					m("label.PRESSUREDROP")
 				),
 				m("table", {width: "100%", border: "0"}, [
-					m("tr", [
-						m("td",	m("input.number", {name: "p1"})),
-						m("td",	m("input.number", {name: "p2"})),
-						m("td",	m("input.number", {name: "p3"})),
-						m("td",	m("input.number", {name: "p4"})),
-						m("td",	m("input.number", {name: "p5"}))
-					]),
-					m("tr", [
-						m("td",	m("input.number", {name: "p6"})),
-						m("td",	m("input.number", {name: "p7"})),
-						m("td",	m("input.number", {name: "p8"})),
-						m("td",	m("input.number", {name: "p9"})),
-						m("td",	m("input.number", {name: "p10"}))
-					]),
+					m("tr", [1,2,3,4,5].map(function(n) {
+						return m("td",	m("input.number", {name: "p"+n}))
+					})), 
+					m("tr", [6,7,8,9,10].map(function(n) {
+						return m("td",	m("input.number", {name: "p"+n}))
+					})),
 					m("tr", [
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
@@ -175,7 +143,7 @@ var rolling_content = {
 					m("td",	m("label.SURFACE_OUT")),
 					m("td",	m("input.number", {name: "surfout"})),
 					m("td",	m("label.TIGHTNESS_OUT")),
-					m("td",	m("input.number", {name: "thightout"})),
+					m("td",	m("input.number", {name: "tightout"})),
 					m("td",	m("label.BLEND_ACC")),
 					m("td",	m("input.number", {name: "blendacc"})),
 					m("td",	m("label.PD_ACC")),
@@ -194,47 +162,58 @@ var rolling_content = {
 			return;
 			
 		// get the current location 
-		if ($.jStorage.get("handmade.current") == null) {	// for first-time start-ups 
-			$.getJSON('server/get_record.php', { 
-				query: 'SELECT max(id) AS id FROM gwc_handmade.rolling '
-			},	function(data) {
-				$.jStorage.set("handmade.current", data.id);	// NULL when none found
-			});
-		} else {
-			$.getJSON('server/get_record.php', { 
-				query: 'SELECT id FROM gwc_handmade.rolling WHERE id='+$.jStorage.get("handmade.current")
-			},	function(data) {
-				$.jStorage.set("handmade.current", data.id);	// NULL when none found
-			});
-		}
-		
+		get_current("gwc_handmade.rolling");
+
 		// no records found - disable all input fields
-		if ($.jStorage.get("handmade.current") == null) {
-			$("input").not("[type=button]").attr("disabled", "disabled");
-			$("textarea").attr("disabled", "disabled");
+		if ($.jStorage.get("handmade.current.rolling") == null) {
+			$("#rolling input").not("[type=button]").attr("disabled", "disabled");
+			$("#rolling textarea").attr("disabled", "disabled");
 		}
 		
+		// display the data
+		show_data("rolling");
 		
 		// save data
-		$("input:text").blur(function () {
-			var field = $(this).attr('name');
+		$("#rolling input:text").blur(function () {
+			this.current = $.jStorage.get("handmade.current.rolling");	
+			this.field = $(this).attr('name');
+			this.value = $(this).val();
+			
+			sql = sprintf('UPDATE gwc_handmade.rolling SET %s="%s" WHERE id=%s', this.field, this.value, this.current );
+			$.getJSON('server/send_query.php', {	query: sql	});			
+		})
+
+		$("#rolling textarea").blur(function () {
+			this.current = $.jStorage.get("handmade.current.rolling");	
+			this.remarks = $("#rolling [name=remarks]").val();
+			
+			sql = sprintf('UPDATE gwc_handmade.rolling SET remarks="%s" WHERE id=%s', this.remarks, this.current );
+			$.getJSON('server/send_query.php', {	query: sql	});			
 		})
 		
-		$(".new").click(function() {
-			$.getJSON('server/new.php', {	
-					table: "gwc_handmade.rolling"
-				},	function(data) {
-					if (data.id != null) {
-						$.jStorage.set("handmade.current", data.id);
-						$("input").not("[type=button]").removeAttr("disabled");
-						$("textarea").removeAttr("disabled");
-					}
-			});
+		$("#rolling .new").click(function() {
+			new_rec("gwc_handmade.rolling", "#rolling");
+			show_data("rolling");
 		})
-		
+
+		$('#rolling .next').click(function() {
+			next_rec("gwc_handmade.rolling");
+			show_data("rolling");
+		});
+	
+		$('#rolling .prev').click(function() {
+			prev_rec("gwc_handmade.rolling");
+			show_data("rolling");
+		});
+
 	},
 	view: function () {
-		return m("div", [this.header, this.contents]);
+		return m("#rolling", [this.header, this.contents]);
 	}
 }
+
+$(document).ready(function () {
+
+
+});
 

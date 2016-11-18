@@ -134,13 +134,55 @@ var wrapping_content = {
 		if (isInitialized) 
 			return;
 	
+		// get the current location 
+		get_current("gwc_handmade.wrapping");
+		
+		// no records found - disable all input fields
+		if ($.jStorage.get("handmade.current.wrapping") == null) {
+			$("#wrapping input").not("[type=button]").attr("disabled", "disabled");
+			$("#wrapping textarea").attr("disabled", "disabled");
+		}	
+		
+		// display the data
+		show_data("wrapping");
+		
 		// save data
-		$("input:text").blur(function () {
-			var field = $(this).attr('name');
+		$("#wrapping input:text").blur(function () {
+			this.current = $.jStorage.get("handmade.current.wrapping");	
+			this.field = $(this).attr('name');
+			this.value = $(this).val();
+			
+			sql = sprintf('UPDATE gwc_handmade.wrapping SET %s="%s" WHERE id=%s', this.field, this.value, this.current );
+			$.getJSON('server/send_query.php', {	query: sql	});			
 		})
+
+		$("#wrapping textarea").blur(function () {
+			this.current = $.jStorage.get("handmade.current.wrapping");	
+			this.remarks = $("#wrapping [name=remarks]").val();
+			
+			sql = sprintf('UPDATE gwc_handmade.wrapping SET remarks="%s" WHERE id=%s', this.remarks, this.current );
+			$.getJSON('server/send_query.php', {	query: sql	});			
+		})
+		
+		$("#wrapping .new").click(function() {
+			new_rec("gwc_handmade.wrapping", "#wrapping");
+			show_data("wrapping");
+		})
+		
+		$('#wrapping .next').click(function() {
+			next_rec("gwc_handmade.wrapping");
+			show_data("wrapping");
+		});
+	
+		$('#wrapping .prev').click(function() {
+			prev_rec("gwc_handmade.wrapping");
+			show_data("wrapping");
+		});
+
+
 	},
 	view: function () {
-		return m("div", [this.header, this.contents]);
+		return m("#wrapping", [this.header, this.contents]);
 	}
 }
 

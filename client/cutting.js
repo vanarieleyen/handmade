@@ -80,7 +80,7 @@ var cutting_content = {
 						m("td",	m("label.SEAMS")),
 						m("td",	m("input.number", {name: "seam"})),
 						m("td",	m("label.CRACKS")),
-						m("td",	m("input.number", {name: "break"}))
+						m("td",	m("input.number", {name: "crack"}))
 					])
 				])
 			])
@@ -112,13 +112,54 @@ var cutting_content = {
 		if (isInitialized) 
 			return;
 		
+		// get the current location 
+		get_current("gwc_handmade.cutting");
+		
+		// no records found - disable all input fields
+		if ($.jStorage.get("handmade.current.gwc_handmade.cutting") == null) {
+			$("#cutting input").not("[type=button]").attr("disabled", "disabled");
+			$("#cutting textarea").attr("disabled", "disabled");
+		}	
+		
+		// display the data
+		show_data("cutting");
+		
 		// save data
-		$("input:text").blur(function () {
-			var field = $(this).attr('name');
+		$("#cutting input:text").blur(function () {
+			this.current = $.jStorage.get("handmade.current.cutting");	
+			this.field = $(this).attr('name');
+			this.value = $(this).val();
+			
+			sql = sprintf('UPDATE gwc_handmade.cutting SET %s="%s" WHERE id=%s', this.field, this.value, this.current );
+			$.getJSON('server/send_query.php', {	query: sql	});			
 		})
+
+		$("#cutting textarea").blur(function () {
+			this.current = $.jStorage.get("handmade.current.cutting");	
+			this.remarks = $("#cutting [name=remarks]").val();
+			
+			sql = sprintf('UPDATE gwc_handmade.cutting SET remarks="%s" WHERE id=%s', this.remarks, this.current );
+			$.getJSON('server/send_query.php', {	query: sql	});			
+		})
+		
+		$("#cutting .new").click(function() {
+			new_rec("gwc_handmade.cutting", "#cutting");
+			show_data("cutting");
+		})
+		
+		$('#cutting .next').click(function() {
+			next_rec("gwc_handmade.cutting");
+			show_data("cutting");
+		});
+	
+		$('#cutting .prev').click(function() {
+			prev_rec("gwc_handmade.cutting");
+			show_data("cutting");
+		});
+
 	},
 	view: function () {
-		return m("div", [this.header, this.contents]);
+		return m("#cutting", [this.header, this.contents]);
 	}
 }
 

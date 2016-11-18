@@ -30,7 +30,8 @@ module.exports = {
 			"zebra-css": path.join(__dirname, "styles/zebra/default.css"),	
 			"language": path.join(__dirname, "client/js/language.js"),
 			"jstorage": path.join(__dirname, "client/js/jstorage.js"),
-			"zebra-js": path.join(__dirname, "client/js/zebra_datepicker.js")		
+			"zebra-js": path.join(__dirname, "client/js/zebra_datepicker.js"),
+			"sprintf-js": path.join(__dirname, "client/js/sprintf.js")	
 		} 
 	}
 }

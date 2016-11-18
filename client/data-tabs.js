@@ -49,7 +49,8 @@ var data_content = {
 			active: $.jStorage.get("handmade_subtab"),			// default tab when page is first loaded
 			activate: function( event, ui ) {
 				keus = ui.newPanel[0].id;
-				console.log(ui);
+				$.jStorage.set("handmade_lasttab", keus);
+
 				switch (keus) {
 					case "rolling_sub_tab":		$.jStorage.set("handmade_subtab", 0);
 												break;
@@ -57,9 +58,9 @@ var data_content = {
 												break;
 					case "cutting_sub_tab": 	$.jStorage.set("handmade_subtab", 2);
 												break;
-					case "storage_sub_tab": $.jStorage.set("handmade_subtab", 3);
+					case "storage_sub_tab": 	$.jStorage.set("handmade_subtab", 3);
 												break;
-					case "defects_sub_tab": $.jStorage.set("handmade_subtab", 4);
+					case "defects_sub_tab": 	$.jStorage.set("handmade_subtab", 4);
 												break;
 				}
 			}

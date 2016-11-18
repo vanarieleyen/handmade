@@ -83,80 +83,36 @@ var defects_content = {
 								m("legend", 
 									m("label.RING")
 								),
-								m("table", {width: "100%"}, [
-									m('tr', [
-										m("td",	m("select", {name: "srd1"})),
-										m("td",	m("input.number", {name: "srd1_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "srd2"})),
-										m("td",	m("input.number", {name: "srd2_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "srd3"})),
-										m("td",	m("input.number", {name: "srd3_nr"}))
-									])
-								])
+								m("table", {width: "100%"}, [1,2,3].map(function(n) {
+									return m('tr', m("td", [m("select", {name: "srd"+n}), m("span", " "), m("input.number", {name: "srd"+n+"_nr"}) ])	)
+								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
 								m("legend", 
 									m("label.CELLOPHANE")
 								),
-								m("table", {width: "100%"}, [
-									m('tr', [
-										m("td",	m("select", {name: "scd1"})),
-										m("td",	m("input.number", {name: "scd1_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "scd2"})),
-										m("td",	m("input.number", {name: "scd2_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "scd3"})),
-										m("td",	m("input.number", {name: "scd3_nr"}))
-									])
-								])
+								m("table", {width: "100%"}, [1,2,3].map(function(n) {
+									return m('tr', m("td", [m("select", {name: "scd"+n}), m("span", " "), m("input.number", {name: "scd"+n+"_nr"}) ])	)
+								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
 								m("legend", 
 									m("label.CIGAR_SET")
 								),
-								m("table", {width: "100%"}, [
-									m('tr', [
-										m("td",	m("select", {name: "ssd1"})),
-										m("td",	m("input.number", {name: "ssd1_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "ssd2"})),
-										m("td",	m("input.number", {name: "ssd2_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "ssd3"})),
-										m("td",	m("input.number", {name: "ssd3_nr"}))
-									])
-								])
+								m("table", {width: "100%"}, [1,2,3].map(function(n) {
+									return m('tr', m("td", [m("select", {name: "ssd"+n}), m("span", " "), m("input.number", {name: "ssd"+n+"_nr"}) ])	)
+								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
 								m("legend", 
 									m("label.PACKING_MARK")
 								),
-								m("table", {width: "100%"}, [
-									m('tr', [
-										m("td",	m("select", {name: "spd1"})),
-										m("td",	m("input.number", {name: "spd1_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "spd2"})),
-										m("td",	m("input.number", {name: "spd2_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "spd3"})),
-										m("td",	m("input.number", {name: "spd3_nr"}))
-									])
-								])
+								m("table", {width: "100%"}, [1,2,3].map(function(n) {
+									return m('tr', m("td", [m("select", {name: "spd"+n}), m("span", " "), m("input.number", {name: "spd"+n+"_nr"}) ])	)
+								}))
 							])
 						)
 					])
@@ -183,40 +139,18 @@ var defects_content = {
 								m("legend", 
 									m("label.PACK_QUALITY")
 								),
-								m("table", {width: "100%"}, [
-									m('tr', [
-										m("td",	m("select", {name: "ppd1"})),
-										m("td",	m("input.number", {name: "ppd1_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "ppd2"})),
-										m("td",	m("input.number", {name: "ppd2_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "ppd3"})),
-										m("td",	m("input.number", {name: "ppd3_nr"}))
-									])
-								])
+								m("table", {width: "100%"}, [1,2,3].map(function(n) {
+									return m('tr', m("td", [m("select", {name: "ppd"+n}), m("span", " "), m("input.number", {name: "ppd"+n+"_nr"}) ])	)
+								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
 								m("legend", 
 									m("label.PACKING_MARK")
 								),
-								m("table", {width: "100%"}, [
-									m('tr', [
-										m("td",	m("select", {name: "bmd1"})),
-										m("td",	m("input.number", {name: "bmd1_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "bmd2"})),
-										m("td",	m("input.number", {name: "bmd2_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "bmd3"})),
-										m("td",	m("input.number", {name: "bmd3_nr"}))
-									])
-								])
+								m("table", {width: "100%"}, [1,2,3].map(function(n) {
+									return m('tr', m("td", [m("select", {name: "pm"+n}), m("span", " "), m("input.number", {name: "pm"+n+"_nr"}) ])	)
+								}))
 							])
 						)
 					])
@@ -229,11 +163,11 @@ var defects_content = {
 				m("table", {width: "100%"}, [
 					m('tr', [
 						m("td", m("label.JOBNR")),
-						m("td",	m("input.number", {name: "pjob"})),
+						m("td",	m("input.number", {name: "bjob"})),
 						m("td", m("label.DETERMINATION")),
-						m("td",	m("input.number", {name: "pjudge"})),
+						m("td",	m("input.number", {name: "bjudge"})),
 						m("td",	m("label.REMARK")),
-						m("td",	m("textarea", {style: "height:1.5em; width:20em; resize:none", name: "premarks"})),
+						m("td",	m("textarea", {style: "height:1.5em; width:20em; resize:none", name: "bremarks"})),
 						m("td", {colspan: "2"})
 					])
 				]),
@@ -243,60 +177,27 @@ var defects_content = {
 								m("legend", 
 									m("label.SLEEVE_QUALITY")
 								),
-								m("table", {width: "100%"}, [
-									m('tr', [
-										m("td",	m("select", {name: "bsd1"})),
-										m("td",	m("input.number", {name: "bsd1_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "bsd2"})),
-										m("td",	m("input.number", {name: "bsd2_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "bsd3"})),
-										m("td",	m("input.number", {name: "bsd3_nr"}))
-									])
-								])
+								m("table", {width: "100%"}, [1,2,3].map(function(n) {
+									return m('tr', m("td", [m("select", {name: "bsd"+n}), m("span", " "), m("input.number", {name: "bsd"+n+"_nr"}) ])	)
+								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
 								m("legend", 
 									m("label.BOX_QUALITY")
 								),
-								m("table", {width: "100%"}, [
-									m('tr', [
-										m("td",	m("select", {name: "bbd1"})),
-										m("td",	m("input.number", {name: "bbd1_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "bbd2"})),
-										m("td",	m("input.number", {name: "bbd2_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "bbd3"})),
-										m("td",	m("input.number", {name: "bbd3_nr"}))
-									])
-								])
+								m("table", {width: "100%"}, [1,2,3].map(function(n) {
+									return m('tr', m("td", [m("select", {name: "bb"+n}), m("span", " "), m("input.number", {name: "b"+n+"_nr"}) ])	)
+								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
 								m("legend", 
 									m("label.PACKING_MARK")
 								),
-								m("table", {width: "100%"}, [
-									m('tr', [
-										m("td",	m("select", {name: "pmd1"})),
-										m("td",	m("input.number", {name: "pmd1_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "pmd2"})),
-										m("td",	m("input.number", {name: "pmd2_nr"}))
-									]),
-									m('tr', [
-										m("td",	m("select", {name: "pmd3"})),
-										m("td",	m("input.number", {name: "pmd3_nr"}))
-									])
-								])
+								m("table", {width: "100%"}, [1,2,3].map(function(n) {
+									return m('tr', m("td", [m("select", {name: "bm"+n}), m("span", " "), m("input.number", {name: "bm"+n+"_nr"}) ])	)
+								}))
 							])
 						)
 					])
@@ -313,14 +214,92 @@ var defects_content = {
 	controller: function (element, isInitialized) {
 		if (isInitialized) 
 			return;
+
+		// fill the selectbox options
+		$.get('server/get_defects.php?type=stick ring', function(data) {
+			for (var i=1; i<=3; i++)	$('#defects [name=srd'+i+']').append(data);	
+		});
+		$.get('server/get_defects.php?type=stick cel', function(data) {
+			for (var i=1; i<=3; i++)	$('#defects [name=scd'+i+']').append(data);	
+		});
+		$.get('server/get_defects.php?type=stick set', function(data) {
+			for (var i=1; i<=3; i++)	$('#defects [name=ssd'+i+']').append(data);	
+		});
+		$.get('server/get_defects.php?type=pack pack', function(data) {
+			for (var i=1; i<=3; i++)	$('#defects [name=ppd'+i+']').append(data);	
+		});
+		$.get('server/get_defects.php?type=sleeve', function(data) {
+			for (var i=1; i<=3; i++)	$('#defects [name=bsd'+i+']').append(data);	
+		});
+		$.get('server/get_defects.php?type=box box', function(data) {
+			for (var i=1; i<=3; i++)	$('#defects [name=bb'+i+']').append(data);	
+		});
+		$.get('server/get_defects.php?type=pack mark', function(data) {
+			for (var i=1; i<=3; i++) {
+				$('#defects [name=spd'+i+']').append(data);	
+				$('#defects [name=pm'+i+']').append(data);
+				$('#defects [name=bm'+i+']').append(data);
+			}
+		});
+
+		// get the current location 
+		get_current("gwc_handmade.defects");
+
+		// no records found - disable all input fields
+		if ($.jStorage.get("handmade.current.defects") == null) {
+			$("#defects input").not("[type=button]").attr("disabled", "disabled");
+			$("#defects textarea").attr("disabled", "disabled");
+			$("#defects select").attr("disabled", "disabled");
+		}
 		
+		// display the data
+		show_data("defects");
+
 		// save data
-		$("input:text").blur(function () {
-			var field = $(this).attr('name');
+		$("#defects input:text").blur(function () {
+			this.current = $.jStorage.get("handmade.current.defects");	
+			this.field = $(this).attr('name');
+			this.value = $(this).val();
+			
+			sql = sprintf('UPDATE gwc_handmade.defects SET %s="%s" WHERE id=%s', this.field, this.value, this.current );
+			$.getJSON('server/send_query.php', {	query: sql	});			
 		})
+
+		$("#defects textarea").blur(function () {
+			this.current = $.jStorage.get("handmade.current.defects");	
+			this.remarks = $("#defects [name=remarks]").val();
+			
+			sql = sprintf('UPDATE gwc_handmade.defects SET remarks="%s" WHERE id=%s', this.remarks, this.current );
+			$.getJSON('server/send_query.php', {	query: sql	});			
+		})
+		
+		$("#defects select").on("blur", function () {
+			this.current = $.jStorage.get("handmade.current.defects");
+			this.field = $(this).attr('name');
+			this.value = $(this).val();
+
+			sql = sprintf('UPDATE gwc_handmade.defects SET %s="%s" WHERE id=%s', this.field, this.value, this.current );	
+			$.getJSON('server/send_query.php', {	query: sql	});	
+		});
+		
+		$("#defects .new").click(function() {
+			new_rec("gwc_handmade.defects", "#defects");
+			show_data("defects");
+		})
+	
+		$('#defects .next').click(function() {
+			next_rec("gwc_handmade.defects");
+			show_data("defects");
+		});
+	
+		$('#defects .prev').click(function() {
+			prev_rec("gwc_handmade.defects");
+			show_data("defects");
+		});		
+
 	},
 	view: function () {
-		return m("div", [this.header, this.contents]);
+		return m("#defects", [this.header, this.contents]);
 	}
 }
 

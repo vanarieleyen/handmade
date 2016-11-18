@@ -11,11 +11,11 @@ var specs_content = {
 					m("table", {width: "100%"}, [
 						m("tr", {align: "center"}, [
 							m("td",	m("label.NAME")),
-							m("td",	m("input[type=text].number", {name: "name"}))
+							m("td",	m("input[type=text]", {name: "name"}))
 						]),
 						m("tr", {align: "center"}, [
 							m("td",	m("label.PRODNR")),
-							m("td",	m("input[type=text].number", {name: "nr"}))
+							m("td",	m("input[type=text]", {name: "nr"}))
 						])
 					])
 				]),
@@ -47,6 +47,14 @@ var specs_content = {
 							m("td",	m("input[type=text].number", {name: "rol_p_max"}))
 						]),
 						m("tr", {align: "center"}, [
+							m("td",	m("label.SURFACE_OUT")),
+							m("td",	{colspan: "3"}, m("input[type=text].number", {name: "rol_surfout"}))
+						]),
+						m("tr", {align: "center"}, [
+							m("td",	m("label.TIGHTNESS_OUT")),
+							m("td",	{colspan: "3"}, m("input[type=text].number", {name: "rol_tightout"}))
+						]),
+						m("tr", {align: "center"}, [
 							m("td",	m("label.BLEND_ACC")),
 							m("td",	{colspan: "3"}, m("input[type=text].number", {name: "rol_blendacc"}))
 						]),
@@ -73,23 +81,23 @@ var specs_content = {
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
 					m("legend", {class: "PRODUCT"}),
 					m("div", {style: "height:20em; overflow:auto"}, 
-						m("table#productlist", {width: "100%", border: "1"}, [
-							m("thead", {valign: "top"}, [
-								m("th", {"data-dynatable-column":"id"}),
-								m("th", {"data-dynatable-column":"name"}),
-								m("th", {"data-dynatable-column":"nr"})
+						m("table#product", {width: "100%", border: "1"}, [
+							m("thead.header", {valign: "top"}, [
+								m("th", "ID"),
+								m("th", m("label.PRODUCT")),
+								m("th", m("label.SPECSNR"))
 							]),
-							m("tbody", {style:"height:20em; overflow:auto"})					
+							m("tbody")					
 						])
 					),
 					m("div", {style: "height:10em; overflow:auto"}, 
-						m("table#productlist", {width: "100%", border: "1"}, [
-							m("thead", {valign: "top"}, [
-								m("th", {"data-dynatable-column":"id"}),
-								m("th", {"data-dynatable-column":"start"}),
-								m("th", {"data-dynatable-column":"end"})
+						m("table#history", {width: "100%", border: "1"}, [
+							m("thead.header", {valign: "top"}, [
+								m("th", "ID"),
+								m("th", m("label.START_DATE")),
+								m("th", m("label.END_DATE"))
 							]),
-							m("tbody", {style:"height:20em; overflow:auto"})					
+							m("tbody")					
 						])
 					)
 				])
@@ -108,10 +116,68 @@ var specs_content = {
 		if (isInitialized) 
 			return;
 			
-		// application code
+		// get the first spec
+		get_current("gwc_handmade.specs");
+
+		// no records found - disable all input fields
+		if ($.jStorage.get("handmade.current.specs") == null) {
+			$("#specs input").not("[type=button]").attr("disabled", "disabled");
+			$("#specs textarea").attr("disabled", "disabled");
+		}
+		
+		// display the data
+		show_data("specs");
+		
+		// new spec
+		$("#specs .new").click(function() {
+			new_rec("gwc_handmade.specs", "#specs");
+			show_data("specs");
+		})		
+		
+		// save the data
+		$("#specs .save").click(function() {
+			var id = $.jStorage.get("handmade.current.specs");
+			var name = $("#specs [name=name]").val();
+			var nr = $("#specs [name=nr]").val();
+			var rol_l_min = $("#specs [name=rol_l_min]").val();
+			var rol_l_max = $("#specs [name=rol_l_max]").val();
+			var rol_c_min = $("#specs [name=rol_c_min]").val();
+			var rol_c_max = $("#specs [name=rol_c_max]").val();
+			var rol_w_min = $("#specs [name=rol_w_min]").val();
+			var rol_w_max = $("#specs [name=rol_w_max]").val();
+			var rol_p_min = $("#specs [name=rol_p_min]").val();
+			var rol_p_max = $("#specs [name=rol_p_max]").val();
+			var rol_blendacc = $("#specs [name=rol_blendacc]").val();
+			var rol_pdacc = $("#specs [name=rol_pdacc]").val();
+			var rol_surfout = $("#specs [name=rol_surfout]").val();
+			var rol_tightout = $("#specs [name=rol_tightout]").val();
+		
+			$.getJSON('server/get_record.php', { 
+				query: 'SELECT * FROM gwc_handmade.specs WHERE id='+id
+			}, function(data) {
+				var pid = data.pid;
+				if (data.pid != -1) {		// de specs zijn al eens opgeslagen
+					$.getJSON('server/send_query.php', {
+						query: sprintf("UPDATE gwc_handmade.specs SET end=NOW() WHERE id=%s",	id)		// terminate the end-date	
+					}, function () {
+						new_rec("gwc_handmade.specs", "#specs");
+						id = $.jStorage.get("handmade.current.specs");
+					});						
+				} else {
+					pid = data.id;
+				}
+				
+				// opm: moet misschien vertraagd worden aangeroepen omdat id van new_rec nog niet binnen is.....
+				var sql = sprintf("UPDATE gwc_handmade.specs SET pid='%s', name='%s', nr='%s', rol_l_min='%s', rol_l_max='%s', rol_c_min='%s', rol_c_max='%s', \
+					rol_w_min='%s', rol_w_max='%s', rol_surfout='%s', rol_tightout='%s', rol_p_min='%s', rol_p_max='%s', rol_blendacc='%s', rol_pdacc='%s' \
+					WHERE id=%s",	pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, 
+												rol_surfout, rol_tightout, rol_p_min, rol_p_max, rol_blendacc, rol_pdacc, id);
+				$.getJSON('server/send_query.php', {	query: sql	});	
+			});
+		})	
 	},
 	view: function () {
-		return m("div", this.contents);
+		return m("#specs", this.contents);
 	}
 }
 
