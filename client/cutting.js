@@ -6,37 +6,31 @@ var cutting_content = {
 	header: [
 		m("span.flex-row#data_header", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:98%"}, [
-				m("legend", 
-					m("label.MEASUREMENTS")
-				),
+				m("legend.MEASUREMENTS"),
 				m("table", {width: "100%", border: "0"}, 
 					m("tr", [
 						m("td",
 							m("table", {width: "100%"}, [
-								m("tr", [
-									m("td",	m("label.HANDMADE_DATE")),
-									m("td",	m("input.datum", {type: "text", name: "date"}))
-								]),
-								m("tr", [
-									m("td",	m("label.PRODUCT")),
-									m("td",	m("input", {type: "text", name: "product"}))
-								]),
-								m("tr", [
-									m("td",	m("label.SAMPLINGPOINT")),
-									m("td",	m("input", {type: "text", name: "name"}))
-								])
+								[
+									{label:"label.HANDMADE_DATE", soort:"input.datum", field:"date"},
+									{label:"label.PRODUCT", soort:"input", field:"product"},
+									{label:"label.SAMPLINGPOINT", soort:"input", field:"name"}
+								].map(function (a) {							
+									return m("tr", [
+													m("td",	m(a.label)),
+													m("td",	m(a.soort, {type: "text", name: a.field}))
+												])
+								})
 							])
 						),
 						m("td",
 							m("table", {width: "100%"}, [
-								m("tr", [
-									m("td",	m("label.BATCH_SCORE")),
-									m("td",	m("div", {name: "score"}, "--"))
-								]),
-								m("tr", [
-									m("td",	m("label.BATCH_QUALITY")),
-									m("td",	m("div", {name: "quality"}, "--"))
-								]),
+								[	{label:"label.BATCH_SCORE", field:"score"},	{label:"label.BATCH_QUALITY", field:"quality"} ].map(function (a) {
+									return m("tr", [
+													m("td",	m(a.label)),
+													m("td",	m("div", {name: a.field}, "--"))
+												])
+								}),
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
 									m("td",	m("input", {type: "text", name: "inspector"}))
@@ -59,45 +53,38 @@ var cutting_content = {
 	contents: [
 		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.WRAPPING_FINISH")
-				),
+				m("legend.WRAPPING_FINISH"),
 				m("table", {width: "100%"}, [
 					m("tr", [
-						m("td",	m("label.CREASE")),
-						m("td",	m("input.number", {name: "crease"})),
-						m("td",	m("label.BLOTS")),
-						m("td",	m("input.number", {name: "blot"}))
+						[	{label:"label.CREASE", field:"crease"},	{label:"label.BLOTS", field:"blot"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					])
 				])
 			]),
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.WRAPPER_INTEGRITY")
-				),
+				m("legend.WRAPPER_INTEGRITY"),
 				m("table", {width: "100%"}, [
 					m("tr", [
-						m("td",	m("label.SEAMS")),
-						m("td",	m("input.number", {name: "seam"})),
-						m("td",	m("label.CRACKS")),
-						m("td",	m("input.number", {name: "crack"}))
+						[ {label:"label.SEAMS", field:"seam"}, {label:"label.CRACKS", field:"crack"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					])
 				])
 			])
 		),
 		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.CIGAR_APPEARANCE")
-				),
+				m("legend.CIGAR_APPEARANCE"),
 				m("table", {width: "100%"}, [
 					m("tr", [
-						m("td",	m("label.HEADEND")),
-						m("td",	m("input.number", {name: "headend"})),
-						m("td",	m("label.INCISSION")),
-						m("td",	m("input.number", {name: "incision"})),
-						m("td",	m("label.HEAD_EMPTY")),
-						m("td",	m("input.number", {name: "empty"}))
+						[
+							{label:"label.HEADEND", field:"headend"},
+							{label:"label.INCISSION", field:"incision"},
+							{label:"label.HEAD_EMPTY", field:"empty"}
+						].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					])
 				])
 			])
@@ -116,7 +103,7 @@ var cutting_content = {
 		get_current("gwc_handmade.cutting");
 		
 		// no records found - disable all input fields
-		if ($.jStorage.get("handmade.current.gwc_handmade.cutting") == null) {
+		if ($.jStorage.get("handmade.current.cutting") == null) {
 			$("#cutting input").not("[type=button]").attr("disabled", "disabled");
 			$("#cutting textarea").attr("disabled", "disabled");
 		}	

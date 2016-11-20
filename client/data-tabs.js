@@ -6,31 +6,19 @@ var data_content = {
 	subTabs: [
 		m("#tabs1.subtabs1", [
 			m("ul", [
-				m("li", 
-					m("a", {href: "#rolling_sub_tab", tabindex:"-1"}, [
-						m("label", {class:"ROLLING_PROCESS"})
-					])
-				),
-				m("li", 
-					m("a", {href: "#wrapping_sub_tab", tabindex:"-1"}, [
-						m("label", {class:"WRAPPING_PROCESS"})
-					])
-				),
-				m("li", 
-					m("a", {href: "#cutting_sub_tab", tabindex:"-1"}, [
-						m("label", {class:"MACHINE_CUTTING"})
-					])
-				),
-				m("li", 
-					m("a", {href: "#storage_sub_tab", tabindex:"-1"}, [
-						m("label", {class:"STORAGE_PROCESS"})
-					])
-				),
-				m("li", 
-					m("a", {href: "#defects_sub_tab", tabindex:"-1"}, [
-						m("label", {class:"DEFECTS"})
-					])
-				)
+				[
+					{label:"label.ROLLING_PROCESS", href:"#rolling_sub_tab"},
+					{label:"label.WRAPPING_PROCESS", href:"#wrapping_sub_tab"},
+					{label:"label.MACHINE_CUTTING", href:"#cutting_sub_tab"},
+					{label:"label.STORAGE_PROCESS", href:"#storage_sub_tab"},
+					{label:"label.DEFECTS", href:"#defects_sub_tab"}
+				].map(function (a) {
+					return m("li", 
+									m("a", {href: a.href, tabindex:"-1" }, [
+										m(a.label)
+									])
+								)
+				})
 			]),
 			[	// the tabs used by ui-tabs
 				m("#rolling_sub_tab", m.component(rolling_content)),

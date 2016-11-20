@@ -77,26 +77,18 @@ var tabContents = [
 var uiTabs = [
 	m("#tabs.pagecontainer", [
 		m("ul", [
-			m("li", 
-				m("a", {href: "#data_tab", tabindex:"-1" }, [
-					m("label", {class:"PACKING50"})
-				])
-			),
-			m("li",
-				m("a", {href: "#history_tab", tabindex:"-1"}, [
-					m("label", {class:"HISTORY"})
-				])
-			),
-			m("li",
-				m("a", {href: "#export_tab", tabindex:"-1"}, [
-					m("label", {class:"EXPORT"})
-				])
-			),
-			m("li",
-				m("a", {href: "#settings_tab", tabindex:"-1"}, [
-					m("label", {class:"SETTINGS"})
-				])
-			)
+			[
+				{label:"label.PACKING50", href:"#data_tab"},
+				{label:"label.HISTORY", href:"#history_tab"},
+				{label:"label.EXPORT", href:"#export_tab"},
+				{label:"label.SETTINGS", href:"#settings_tab"}
+			].map(function (a) {
+				return m("li", 
+								m("a", {href: a.href, tabindex:"-1" }, [
+									m(a.label)
+								])
+							)
+			})
 		]),
 		tabContents
 	])
@@ -106,6 +98,8 @@ var uiTabs = [
 $(document).ready(function() {
 	m.mount(document.body, handmade );
 		
+	if ($.jStorage.get("lang") == null)
+		$.jStorage.set("lang", 0);
 	if ($.jStorage.get("handmade_maintab") == null)
 		$.jStorage.set("handmade_maintab", 0);
 	if ($.jStorage.get("handmade_subtab") == null)
@@ -117,7 +111,6 @@ $(document).ready(function() {
 		active: $.jStorage.get("handmade_maintab"),			// default tab when page is first loaded
 		activate: function( event, ui ) {
 			keus = ui.newPanel[0].id;
-			console.log(ui);
 			switch (keus) {
 				case "data_tab":			
 					$.jStorage.set("handmade_maintab", 0);
@@ -138,7 +131,7 @@ $(document).ready(function() {
 	});
 
 	$('.datum').Zebra_DatePicker();
-	
-	console.log('exit');
+
+	console.log('ready');
 });
 

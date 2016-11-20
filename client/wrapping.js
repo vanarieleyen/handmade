@@ -6,37 +6,31 @@ var wrapping_content = {
 	header: [
 		m("span.flex-row#data_header", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:98%"}, [
-				m("legend", 
-					m("label.MEASUREMENTS")
-				),
+				m("legend.MEASUREMENTS"),
 				m("table", {width: "100%", border: "0"}, 
 					m("tr", [
 						m("td",
 							m("table", {width: "100%"}, [
-								m("tr", [
-									m("td",	m("label.HANDMADE_DATE")),
-									m("td",	m("input.datum", {type: "text", name: "date"}))
-								]),
-								m("tr", [
-									m("td",	m("label.PRODUCT")),
-									m("td",	m("input", {type: "text", name: "product"}))
-								]),
-								m("tr", [
-									m("td",	m("label.SAMPLINGPOINT")),
-									m("td",	m("input", {type: "text", name: "name"}))
-								])
+								[
+									{label:"label.HANDMADE_DATE", soort:"input.datum", field:"date"},
+									{label:"label.PRODUCT", soort:"input", field:"product"},
+									{label:"label.SAMPLINGPOINT", soort:"input", field:"name"}
+								].map(function (a) {							
+									return m("tr", [
+													m("td",	m(a.label)),
+													m("td",	m(a.soort, {type: "text", name: a.field}))
+												])
+								})
 							])
 						),
 						m("td",
 							m("table", {width: "100%"}, [
-								m("tr", [
-									m("td",	m("label.BATCH_SCORE")),
-									m("td",	m("div", {name: "score"}, "--"))
-								]),
-								m("tr", [
-									m("td",	m("label.BATCH_QUALITY")),
-									m("td",	m("div", {name: "quality"}, "--"))
-								]),
+								[	{label:"label.BATCH_SCORE", field:"score"},	{label:"label.BATCH_QUALITY", field:"quality"} ].map(function (a) {
+									return m("tr", [
+													m("td",	m(a.label)),
+													m("td",	m("div", {name: a.field}, "--"))
+												])
+								}),
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
 									m("td",	m("input", {type: "text", name: "inspector"}))
@@ -59,67 +53,54 @@ var wrapping_content = {
 	contents: [
 		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.WRAPPING_FINISH")
-				),
+				m("legend.WRAPPING_FINISH"),
 				m("table", {width: "100%"}, [
 					m("tr", [
-						m("td",	m("label.INCISSION")),
-						m("td",	m("input.number", {name: "incision"})),
-						m("td",	m("label.HEAD_EMPTY")),
-						m("td",	m("input.number", {name: "empty"}))
+						[	{label:"label.INCISSION", field:"incision"}, {label:"label.HEAD_EMPTY", field:"empty"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					]),
 					m("tr", [
-						m("td",	m("label.SEAMS")),
-						m("td",	m("input.number", {name: "seam"})),
-						m("td",	m("label.HOLES")),
-						m("td",	m("input.number", {name: "hole"}))
+						[	{label:"label.SEAMS", field:"seam"}, {label:"label.HOLES", field:"hole"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					])
 				])
 			]),
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.WRAPPER_INTEGRITY")
-				),
+				m("legend.WRAPPER_INTEGRITY"),
 				m("table", {width: "100%"}, [
 					m("tr", [
-						m("td",	m("label.TIGHTNESS")),
-						m("td",	m("input.number", {name: "tightness"})),
-						m("td",	m("label.VEIN_LINES")),
-						m("td",	m("input.number", {name: "veins"}))
+						[	{label:"label.TIGHTNESS", field:"tightness"},	{label:"label.VEIN_LINES", field:"veins"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					]),
 					m("tr", [
-						m("td",	m("label.CRACKS")),
-						m("td",	m("input.number", {name: "crack"})),
-						m("td",	m("label.SPLICES")),
-						m("td",	m("input.number", {name: "splice"}))
+						[	{label:"label.CRACKS", field:"crack"}, {label:"label.SPLICES", field:"splice"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					])
 				])
 			])
 		),
 		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.CIGAR_APPEARANCE")
-				),
+				m("legend.CIGAR_APPEARANCE"),
 				m("table", {width: "100%"}, [
 					m("tr", [
-						m("td",	m("label.WRAPPER_COLOR")),
-						m("td",	m("input.number", {name: "color"})),
-						m("td",	m("label.HEADEND")),
-						m("td",	m("input.number", {name: "headend"}))
+						[	{label:"label.WRAPPER_COLOR", field:"color"}, {label:"label.HEADEND", field:"headend"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					]),
 					m("tr", [
-						m("td",	m("label.WRAPPED_OK")),
-						m("td",	m("input.number", {name: "wrapok"})),
-						m("td",	m("label.CREASE")),
-						m("td",	m("input.number", {name: "crease"}))
+						[	{label:"label.WRAPPED_OK", field:"wrapok"},	{label:"label.CREASE", field:"crease"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					]),
 					m("tr", [
-						m("td",	m("label.SPOTS")),
-						m("td",	m("input.number", {name: "spot"})),
-						m("td",	m("label.BLOTS")),
-						m("td",	m("input.number", {name: "blot"}))
+						[ {label:"label.SPOTS", field:"spot"}, {label:"label.BLOTS", field:"blot"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					])
 				])
 			])

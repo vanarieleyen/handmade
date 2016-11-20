@@ -6,37 +6,31 @@ var storage_content = {
 	header: [
 		m("span.flex-row#data_header", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:98%"}, [
-				m("legend", 
-					m("label.MEASUREMENTS")
-				),
+				m("legend.MEASUREMENTS"),
 				m("table", {width: "100%", border: "0"}, 
 					m("tr", [
 						m("td",
 							m("table", {width: "100%"}, [
-								m("tr", [
-									m("td",	m("label.HANDMADE_DATE")),
-									m("td",	m("input.datum", {type: "text", name: "date"}))
-								]),
-								m("tr", [
-									m("td",	m("label.PRODUCT")),
-									m("td",	m("input", {type: "text", name: "product"}))
-								]),
-								m("tr", [
-									m("td",	m("label.IN_CHARGE")),
-									m("td",	m("input", {type: "text", name: "incharge"}))
-								])
+								[
+									{label:"label.HANDMADE_DATE", soort:"input.datum", field:"date"},
+									{label:"label.PRODUCT", soort:"input", field:"product"},
+									{label:"label.IN_CHARGE", soort:"input", field:"incharge"}
+								].map(function (a) {							
+									return m("tr", [
+													m("td",	m(a.label)),
+													m("td",	m(a.soort, {type: "text", name: a.field}))
+												])
+								})
 							])
 						),
 						m("td",
 							m("table", {width: "100%"}, [
-								m("tr", [
-									m("td",	m("label.BATCH_SCORE")),
-									m("td",	m("div", {name: "score"}, "--"))
-								]),
-								m("tr", [
-									m("td",	m("label.BATCH_QUALITY_OK")),
-									m("td",	m("div", {name: "batchok"}, "--"))
-								]),
+								[ {label:"label.BATCH_SCORE", field:"score"}, {label:"label.BATCH_QUALITY_OK", field:"batchok"} ].map(function (a) {
+									return m("tr", [
+													m("td",	m(a.label)),
+													m("td",	m("div", {name: a.field}, "--"))
+												])
+								}),
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
 									m("td",	m("input", {type: "text", name: "inspector"}))
@@ -59,66 +53,53 @@ var storage_content = {
 	contents: [
 		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.PROCESSING_DATE")
-				),
+				m("legend.PROCESSING_DATE"),
 				m("table", {width: "100%"}, [
 					m("tr", [
-						m("td",	m("label.START_DATE")),
-						m("td",	m("input.datum", {name: "start"})),
-						m("td",	m("label.END_DATE")),
-						m("td",	m("input.datum", {name: "end"}))
+						[	{label:"label.START_DATE", field:"start"}, {label:"label.END_DATE", field:"end"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.datum", {name: a.field}))]
+						})
 					])
 				])
 			]),
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.MOISTURE_LIMITS")
-				),
+				m("legend.MOISTURE_LIMITS"),
 				m("table", {width: "100%"}, [
 					m("tr", [
-						m("td",	m("label.LOWER_LIMIT")),
-						m("td",	m("input.number", {name: "moistmin"})),
-						m("td",	m("label.UPPER_LIMIT")),
-						m("td",	m("input.number", {name: "moistmax"}))
+						[	{label:"label.LOWER_LIMIT", field:"moistmin"}, {label:"label.UPPER_LIMIT", field:"moistmax"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					])
 				])
 			])
 		),
 		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.APPEARANCE_QUALITY")
-				),
+				m("legend.APPEARANCE_QUALITY"),
 				m("table", {width: "100%"}, [
 					m("tr", [
 						m("td", m("label.MILDEW_WORMS")),
 						m("td",	{colspan: 3}, m("select", {name: "deworm"}))
 					]),
 					m("tr", [
-						m("td",	m("label.HEADEND")),
-						m("td",	m("input.number", {name: "headend"})),
-						m("td",	m("label.HEAD_EMPTY")),
-						m("td",	m("input.number", {name: "empty"}))
+						[	{label:"label.HEADEND", field:"headend"},	{label:"label.HEAD_EMPTY", field:"empty"}	].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					]),
 					m("tr", [
-						m("td",	m("label.SEAMS")),
-						m("td",	m("input.number", {name: "seam"})),
-						m("td",	m("label.HOLES")),
-						m("td",	m("input.number", {name: "hole"}))
+						[	{label:"label.SEAMS", field:"seam"},	{label:"label.HOLES", field:"hole"}	].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					]),
 					m("tr", [
-						m("td",	m("label.DOPANT")),
-						m("td",	m("input.number", {name: "dopant"})),
-						m("td",	m("label.CRACKS")),
-						m("td",	m("input.number", {name: "break"}))
+						[	{label:"label.DOPANT", field:"dopant"},	{label:"label.CRACKS", field:"break"}	].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						})
 					])
 				])
 			]),
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.MOISTURE")
-				),
+				m("legend.MOISTURE"),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [1,2].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
 					m("tr", [3,4].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),

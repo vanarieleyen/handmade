@@ -7,20 +7,18 @@ var specs_content = {
 		m("span.flex-row#data_header", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("span.flex-col", [
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
-					m("legend", {class: "PRODUCT"}),
+					m("legend.PRODUCT"),
 					m("table", {width: "100%"}, [
-						m("tr", {align: "center"}, [
-							m("td",	m("label.NAME")),
-							m("td",	m("input[type=text]", {name: "name"}))
-						]),
-						m("tr", {align: "center"}, [
-							m("td",	m("label.PRODNR")),
-							m("td",	m("input[type=text]", {name: "nr"}))
-						])
+						[ {label:"label.NAME", field:"name"}, {label:"label.PRODNR", field:"nr"} ].map(function (a) {
+							return m("tr", [
+											m("td",	m(a.label)),
+											m("td",	m("input[type=text]", {name: a.field}))
+										])
+						})
 					])
 				]),
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
-					m("legend", {class: "ROLLING_PROCESS"}),						
+					m("legend.ROLLING_PROCESS"),						
 					m("table", {width: "100%"}, [
 						m("tr", {align: "center"}, [
 							m("td",	m("label.LENGTH")),
@@ -46,34 +44,29 @@ var specs_content = {
 							m("td",	 m("hr")),
 							m("td",	m("input[type=text].number", {name: "rol_p_max"}))
 						]),
-						m("tr", {align: "center"}, [
-							m("td",	m("label.SURFACE_OUT")),
-							m("td",	{colspan: "3"}, m("input[type=text].number", {name: "rol_surfout"}))
-						]),
-						m("tr", {align: "center"}, [
-							m("td",	m("label.TIGHTNESS_OUT")),
-							m("td",	{colspan: "3"}, m("input[type=text].number", {name: "rol_tightout"}))
-						]),
-						m("tr", {align: "center"}, [
-							m("td",	m("label.BLEND_ACC")),
-							m("td",	{colspan: "3"}, m("input[type=text].number", {name: "rol_blendacc"}))
-						]),
-						m("tr", {align: "center"}, [
-							m("td",	m("label.PD_ACC")),
-							m("td",	{colspan: "3"}, m("input[type=text].number", {name: "rol_pdacc"}))
-						])
+						[	
+							{label:"label.SURFACE_OUT", field:"rol_surfout"},	
+							{label:"label.TIGHTNESS_OUT", field:"rol_tightout"},	
+							{label:"label.BLEND_ACC", field:"rol_blendacc"},	
+							{label:"label.PD_ACC", field:"rol_pdacc"} 
+						].map(function (a) {
+							return m("tr",  {align: "center"}, [
+											m("td",	m(a.label)),
+											m("td",	{colspan: "3"}, m("input[type=text].number", {name: a.field}))
+										])
+						})
 					])
 				]),
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
-					m("legend", {class: "WRAPPING_PROCESS"}),
+					m("legend.WRAPPING_PROCESS"),
 					m("div", {style: "height: 4em"})
 				]),
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
-					m("legend", {class: "MACHINE_CUTTING"}),
+					m("legend.MACHINE_CUTTING"),
 					m("div", {style: "height: 4em"})
 				]),
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
-					m("legend", {class: "STORAGE_PROCESS"}),
+					m("legend.STORAGE_PROCESS"),
 					m("div"),
 					m("table", {width: "100%"}, [
 						m("tr", {align: "center"}, [
@@ -87,7 +80,7 @@ var specs_content = {
 			]),
 			m("span.flex-col#data_header",
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
-					m("legend", {class: "PRODUCT"}),
+					m("legend.PRODUCT"),
 					m("div", {style: "height:20em; overflow:auto"}, 
 						m("table#products", {width: "100%"}, [
 							m("thead.header", {valign: "top"}, [

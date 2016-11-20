@@ -8,57 +8,40 @@ var users_content = {
 			m("fieldset.fieldset_header", {style: "width:98%"}, [
 				m("legend", "Details"),
 				m("table", {width: "100%"}, [
-					m("tr", [
-						m("td",	"Name"),
-						m("td",	m("input[type=text]", {name: "name"}))
-					]),
-					m("tr", [
-						m("td",	"Password"),
-						m("td",	m("input[type=password]", {name: "login"}))
-					]),
-					m("tr", [
-						m("td",	"Specifications"),
-						m("td",	m("input[type=checkbox]", {name: "specs"}))
-					]),
-					m("tr", [
-						m("td",	"Formulas"),
-						m("td",	m("input[type=checkbox]", {name: "formulas"}))
-					]),
-					m("tr", [
-						m("td",	"Admistrator"),
-						m("td",	m("input[type=checkbox]", {name: "admin"}))
-					]),
-					m("tr", [
-						m("td",	"Readonly"),
-						m("td",	m("input[type=checkbox]", {name: "readonly"}))
-					]),
-					m("tr", [
-						m("td",	"Names"),
-						m("td",	m("input[type=checkbox]", {name: "names"}))
-					]),
-					m("tr", [
-						m("td",	"Last Login"),
-						m("td",	m("span", {id: "date"}, "--"))
-					]),
-					m("tr", [
-						m("td",	"Login IP"),
-						m("td",	m("span", {id: "identity"}, "--"))
-					]),
-					m("tr", [
-						m("td",	"Logins"),
-						m("td",	m("span", {id: "gebruik"}, "--"))
-					])
+					[
+						{label:"Name", field:"name", type:"text"}, 
+						{label:"Password", field:"login", type:"password"},
+						{label:"Specifications", field:"specs", type:"checkbox"},
+						{label:"Formulas", field:"formulas", type:"checkbox"},
+						{label:"Administrator", field:"admin", type:"checkbox"},
+						{label:"Readonly", field:"readonly", type:"checkbox"},
+						{label:"Names", field:"names", type:"checkbox"}
+					].map(function (a) {
+						return m("tr", [
+										m("td",	a.label),	
+										m("td",	m("input[type="+a.type+"]", {name: a.field}))	
+									])
+					}),
+					[
+						{label:"Last Login", field:"date"},
+						{label:"Login IP", field:"identity"}, 
+						{label:"Logins", field:"gebruik"} 
+					].map(function (a) {
+						return m("tr", [
+										m("td",	a.label),
+										m("td",	m("span", {id: a.field}, "--"))
+									])
+					})
 				])
 			]),
 			m("fieldset.fieldset_header", {style: "width:98%"}, [
 				m("legend", "Users"),
 				m("div", {style: "height:20em; overflow:auto"}, 
-					m("table#userlist", {width: "100%", border: "1"}, [
-						m("thead", {valign: "top"}, [
-							m("th", {"data-dynatable-column":"id"}),
-							m("th", {"data-dynatable-column":"date"}),
-							m("th", {"data-dynatable-column":"name"}),
-							m("th", {"data-dynatable-column":"gebruik"})
+					m("table#userlist", {width: "100%"}, [
+						m("thead.header", {valign: "top"}, [
+							["ID", "DATE", "NAME", "USAGE"].map(function (a) {
+								return m("th", a)
+							})
 						]),
 						m("tbody", {style:"height:20em; overflow:auto"})					
 					])
@@ -78,7 +61,12 @@ var users_content = {
 		if (isInitialized) 
 			return;
 			
-		$('[name=login').hover(function() {	// verberg of toon een login on hover
+		// display the data
+		$.jStorage.set("handmade.current.users", 1);		// only one fixed record with id=1
+		show_data("formulas");
+		
+		// show login on hover
+		$('[name=login').hover(function() {
 			var lbl = '[name='+ this.name + ']';
 			$(lbl).attr('type', '');
 			$(lbl).css('width', '148');
@@ -89,7 +77,7 @@ var users_content = {
 		});
 	},
 	view: function () {
-		return m("div", [this.header, this.contents]);
+		return m("#users", [this.header, this.contents]);
 	}
 }
 

@@ -6,37 +6,31 @@ var rolling_content = {
 	header: [
 		m("span.flex-row#data_header", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:98%"}, [
-				m("legend", 
-					m("label.MEASUREMENTS")
-				),
+				m("legend.MEASUREMENTS"),
 				m("table", {width: "100%", border: "0"}, 
 					m("tr", [
 						m("td",
 							m("table", {width: "100%"}, [
-								m("tr", [
-									m("td",	m("label.HANDMADE_DATE")),
-									m("td",	m("input.datum", {type: "text", name: "date"}))
-								]),
-								m("tr", [
-									m("td",	m("label.PRODUCT")),
-									m("td",	m("input", {type: "text", name: "product"}))
-								]),
-								m("tr", [
-									m("td",	m("label.SAMPLINGPOINT")),
-									m("td",	m("input", {type: "text", name: "name"}))
-								])
+								[
+									{label:"label.HANDMADE_DATE", soort:"input.datum", field:"date"},
+									{label:"label.PRODUCT", soort:"input", field:"product"},
+									{label:"label.SAMPLINGPOINT", soort:"input", field:"name"}
+								].map(function (a) {							
+									return m("tr", [
+													m("td",	m(a.label)),
+													m("td",	m(a.soort, {type: "text", name: a.field}))
+												])
+								})
 							])
 						),
 						m("td",
 							m("table", {width: "100%"}, [
-								m("tr", [
-									m("td",	m("label.BATCH_SCORE")),
-									m("td",	m("div", {name: "score"}, "--"))
-								]),
-								m("tr", [
-									m("td",	m("label.BATCH_QUALITY")),
-									m("td",	m("div", {name: "quality"}, "--"))
-								]),
+								[	{label:"label.BATCH_SCORE", field:"score"},	{label:"label.BATCH_QUALITY", field:"quality"} ].map(function (a) {
+									return m("tr", [
+													m("td",	m(a.label)),
+													m("td",	m("div", {name: a.field}, "--"))
+												])
+								}),
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
 									m("td",	m("input", {type: "text", name: "inspector"}))
@@ -59,9 +53,7 @@ var rolling_content = {
 	contents: [
 		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.LENGTH")
-				),
+				m("legend.LENGTH"),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [1,2,3,4,5].map(function(n) {
 						return m("td",	m("input.number", {name: "l"+n}))
@@ -78,9 +70,7 @@ var rolling_content = {
 				])
 			]),
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.HANDMADE_CIRCUMFERENCE")
-				),
+				m("legend.HANDMADE_CIRCUMFERENCE"),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [1,2,3,4,5].map(function(n) {
 						return m("td",	m("input.number", {name: "d"+n}))
@@ -99,9 +89,7 @@ var rolling_content = {
 		),
 		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.WEIGHT")
-				),
+				m("legend.label.WEIGHT"),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [1,2,3,4,5].map(function(n) {
 						return m("td",	m("input.number", {name: "w"+n}))
@@ -118,9 +106,7 @@ var rolling_content = {
 				])
 			]),
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend", 
-					m("label.PRESSUREDROP")
-				),
+				m("legend.PRESSUREDROP"),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [1,2,3,4,5].map(function(n) {
 						return m("td",	m("input.number", {name: "p"+n}))
@@ -140,14 +126,14 @@ var rolling_content = {
 		m("fieldset.fieldset_header", {style: "width:50%"}, [
 			m("table", {width: "100%", border: "0"}, [
 				m("tr", [
-					m("td",	m("label.SURFACE_OUT")),
-					m("td",	m("input.number", {name: "surfout"})),
-					m("td",	m("label.TIGHTNESS_OUT")),
-					m("td",	m("input.number", {name: "tightout"})),
-					m("td",	m("label.BLEND_ACC")),
-					m("td",	m("input.number", {name: "blendacc"})),
-					m("td",	m("label.PD_ACC")),
-					m("td",	m("input.number", {name: "pdacc"}))
+					[
+						{label:"label.SURFACE_OUT", field:"surfout"},
+						{label:"label.TIGHTNESS_OUT", field:"tightout"},
+						{label:"label.BLEND_ACC", field:"blendacc"},
+						{label:"label.PD_ACC", field:"pdacc"}
+					].map(function (a) {
+						return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+					})
 				])
 			])
 		]),
@@ -160,7 +146,7 @@ var rolling_content = {
 	controller: function (element, isInitialized) {
 		if (isInitialized) 
 			return;
-			
+		
 		// get the current location 
 		get_current("gwc_handmade.rolling");
 
@@ -212,8 +198,4 @@ var rolling_content = {
 	}
 }
 
-$(document).ready(function () {
-
-
-});
 

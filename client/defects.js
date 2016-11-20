@@ -6,25 +6,21 @@ var defects_content = {
 	header: [
 		m("span.flex-row#data_header", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:98%"}, [
-				m("legend", 
-					m("label.MEASUREMENTS")
-				),
+				m("legend.MEASUREMENTS"),
 				m("table", {width: "100%", border: "0"}, 
 					m("tr", [
 						m("td",
 							m("table", {width: "100%"}, [
-								m("tr", [
-									m("td",	m("label.HANDMADE_DATE")),
-									m("td",	m("input.datum", {type: "text", name: "date"}))
-								]),
-								m("tr", [
-									m("td",	m("label.PRODUCT")),
-									m("td",	m("input", {type: "text", name: "product"}))
-								]),
-								m("tr", [
-									m("td",	m("label.SAMPLING_FREQ")),
-									m("td",	m("input", {type: "text", name: "sample"}))
-								])
+								[
+									{label:"label.HANDMADE_DATE", soort:"input.datum", field:"date"},
+									{label:"label.PRODUCT", soort:"input", field:"product"},
+									{label:"label.SAMPLING_FREQ", soort:"input", field:"sample"}
+								].map(function (a) {							
+									return m("tr", [
+													m("td",	m(a.label)),
+													m("td",	m(a.soort, {type: "text", name: a.field}))
+												])
+								})
 							])
 						),
 						m("td",
@@ -41,18 +37,16 @@ var defects_content = {
 						),
 						m("td", {valign: "top"},
 							m("table", {width: "100%"}, [
-								m("tr", [
-									m("td",	m("label.STICK_PACKING_SCORE")),
-									m("td",	m("div", {name: "sscore"}, "--"))
-								]),
-								m("tr", [
-									m("td",	m("label.PACKING_SCORE")),
-									m("td",	m("div", {name: "pscore"}, "--"))
-								]),
-								m("tr", [
-									m("td",	m("label.SLEEVEBOX_SCORE")),
-									m("td",	m("div", {name: "bscore"}, "--"))
-								])
+								[	
+									{label:"label.STICK_PACKING_SCORE", field:"sscore"},	
+									{label:"label.PACKING_SCORE", field:"pscore"},
+									{label:"label.SLEEVEBOX_SCORE", field:"bscore"} 
+								].map(function (a) {
+									return m("tr", [
+													m("td",	m(a.label)),
+													m("td",	m("div", {name: a.field}, "--"))
+												])
+								})
 							])
 						)					
 					])
@@ -63,15 +57,12 @@ var defects_content = {
 	contents: [
 		m("span.flex-col#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:97%"}, [
-				m("legend", 
-					m("label.STICK_PACK_QUALITY")
-				),
+				m("legend.STICK_PACK_QUALITY"),
 				m("table", {width: "100%"}, [
 					m('tr', [
-						m("td", m("label.JOBNR")),
-						m("td",	m("input.number", {name: "sjob"})),
-						m("td", m("label.DETERMINATION")),
-						m("td",	m("input.number", {name: "sjudge"})),
+						[	{label:"label.JOBNR", field:"sjob"}, {label:"label.DETERMINATION", field:"sjudge"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						}),
 						m("td",	m("label.REMARK")),
 						m("td",	m("textarea", {style: "height:1.5em; width:20em; resize:none", name: "sremarks"})),
 						m("td", {colspan: "2"})
@@ -80,36 +71,28 @@ var defects_content = {
 				m("table", {width: "100%"}, [
 					m('tr', [
 						m("td",	m("fieldset.fieldset_header", [
-								m("legend", 
-									m("label.RING")
-								),
+								m("legend.RING"),
 								m("table", {width: "100%"}, [1,2,3].map(function(n) {
 									return m('tr', m("td", [m("select", {name: "srd"+n}), m("span", " "), m("input.number", {name: "srd"+n+"_nr"}) ])	)
 								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
-								m("legend", 
-									m("label.CELLOPHANE")
-								),
+								m("legend.CELLOPHANE"),
 								m("table", {width: "100%"}, [1,2,3].map(function(n) {
 									return m('tr', m("td", [m("select", {name: "scd"+n}), m("span", " "), m("input.number", {name: "scd"+n+"_nr"}) ])	)
 								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
-								m("legend", 
-									m("label.CIGAR_SET")
-								),
+								m("legend.CIGAR_SET"),
 								m("table", {width: "100%"}, [1,2,3].map(function(n) {
 									return m('tr', m("td", [m("select", {name: "ssd"+n}), m("span", " "), m("input.number", {name: "ssd"+n+"_nr"}) ])	)
 								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
-								m("legend", 
-									m("label.PACKING_MARK")
-								),
+								m("legend.PACKING_MARK"),
 								m("table", {width: "100%"}, [1,2,3].map(function(n) {
 									return m('tr', m("td", [m("select", {name: "spd"+n}), m("span", " "), m("input.number", {name: "spd"+n+"_nr"}) ])	)
 								}))
@@ -119,15 +102,12 @@ var defects_content = {
 				])
 			]),
 			m("fieldset.fieldset_header", {style: "width:97%"}, [
-				m("legend", 
-					m("label.PACKAPPEARANCE")
-				),
+				m("legend.PACKAPPEARANCE"),
 				m("table", {width: "100%"}, [
 					m('tr', [
-						m("td", m("label.JOBNR")),
-						m("td",	m("input.number", {name: "pjob"})),
-						m("td", m("label.DETERMINATION")),
-						m("td",	m("input.number", {name: "pjudge"})),
+						[	{label:"label.JOBNR", field:"pjob"}, {label:"label.DETERMINATION", field:"pjudge"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						}),
 						m("td",	m("label.REMARK")),
 						m("td",	m("textarea", {style: "height:1.5em; width:20em; resize:none", name: "premarks"})),
 						m("td", {colspan: "2"})
@@ -136,18 +116,14 @@ var defects_content = {
 				m("table", {width: "100%"}, [
 					m('tr', [
 						m("td",	m("fieldset.fieldset_header", [
-								m("legend", 
-									m("label.PACK_QUALITY")
-								),
+								m("legend", m("label.PACK_QUALITY")	),
 								m("table", {width: "100%"}, [1,2,3].map(function(n) {
 									return m('tr', m("td", [m("select", {name: "ppd"+n}), m("span", " "), m("input.number", {name: "ppd"+n+"_nr"}) ])	)
 								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
-								m("legend", 
-									m("label.PACKING_MARK")
-								),
+								m("legend", m("label.PACKING_MARK") ),
 								m("table", {width: "100%"}, [1,2,3].map(function(n) {
 									return m('tr', m("td", [m("select", {name: "pm"+n}), m("span", " "), m("input.number", {name: "pm"+n+"_nr"}) ])	)
 								}))
@@ -157,15 +133,12 @@ var defects_content = {
 				])
 			]),
 			m("fieldset.fieldset_header", {style: "width:97%"}, [
-				m("legend", 
-					m("label.SLEEVEBOX")
-				),
+				m("legend.SLEEVEBOX"),
 				m("table", {width: "100%"}, [
 					m('tr', [
-						m("td", m("label.JOBNR")),
-						m("td",	m("input.number", {name: "bjob"})),
-						m("td", m("label.DETERMINATION")),
-						m("td",	m("input.number", {name: "bjudge"})),
+						[	{label:"label.JOBNR", field:"bjob"}, {label:"label.DETERMINATION", field:"bjudge"} ].map(function (a) {
+							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+						}),
 						m("td",	m("label.REMARK")),
 						m("td",	m("textarea", {style: "height:1.5em; width:20em; resize:none", name: "bremarks"})),
 						m("td", {colspan: "2"})
@@ -174,27 +147,21 @@ var defects_content = {
 				m("table", {width: "100%"}, [
 					m('tr', [
 						m("td",	m("fieldset.fieldset_header", [
-								m("legend", 
-									m("label.SLEEVE_QUALITY")
-								),
+								m("legend.SLEEVE_QUALITY"),
 								m("table", {width: "100%"}, [1,2,3].map(function(n) {
 									return m('tr', m("td", [m("select", {name: "bsd"+n}), m("span", " "), m("input.number", {name: "bsd"+n+"_nr"}) ])	)
 								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
-								m("legend", 
-									m("label.BOX_QUALITY")
-								),
+								m("legend.BOX_QUALITY"),
 								m("table", {width: "100%"}, [1,2,3].map(function(n) {
 									return m('tr', m("td", [m("select", {name: "bb"+n}), m("span", " "), m("input.number", {name: "b"+n+"_nr"}) ])	)
 								}))
 							])
 						),
 						m("td",	m("fieldset.fieldset_header", [
-								m("legend", 
-									m("label.PACKING_MARK")
-								),
+								m("legend.PACKING_MARK"),
 								m("table", {width: "100%"}, [1,2,3].map(function(n) {
 									return m('tr', m("td", [m("select", {name: "bm"+n}), m("span", " "), m("input.number", {name: "bm"+n+"_nr"}) ])	)
 								}))

@@ -631,7 +631,7 @@ function get_current (table) {
 		});
 	} else {
 		$.getJSON('server/get_record.php', { 
-			query: 'SELECT id FROM '+table+' WHERE id='+$.jStorage.get("handmade.current."+table)
+			query: 'SELECT id FROM '+table+' WHERE id='+$.jStorage.get("handmade.current."+name)
 		},	function(data) {
 			if (data.id == null) {
 				$.getJSON('server/get_record.php', { 
@@ -873,6 +873,16 @@ function show_data(table) {
 					$("#formulas [name=s_batch_score]").val(data.s_batch_score);
 					$("#formulas [name=s_batch_quality]").val(data.s_batch_quality);
 					break;
+				case "users":
+					/*$("#users [name=name]").val(data.name);
+					$("#users [name=login]").val(data.login);
+					$('#users [name=specs]').prop('checked', (data.specs=='1'));
+					$('#users [name=formulas]').prop('checked', (data.formulas=='1'));
+					$('#users [name=admin]').prop("checked", (data.admin=='1'));
+					$('#users [name=names]').prop("checked", (data.names=='1'));
+					$('#users [name=readonly]').prop("checked", (data.readonly=='1'));*/
+					break;
+
 			}		
 		});
 	}
