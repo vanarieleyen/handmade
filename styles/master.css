@@ -19,6 +19,10 @@ html,body {
 	font-size: 120%;	
 }
 
+.formula {
+	width: 33em;
+}
+
 table {
 	border-collapse: collapse;	
 }

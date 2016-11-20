@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 03, 2016 at 04:13 PM
+-- Generation Time: Nov 19, 2016 at 02:58 PM
 -- Server version: 5.6.31-0ubuntu0.15.10.1
 -- PHP Version: 5.6.11-1ubuntu3.4
 
@@ -741,7 +741,23 @@ INSERT INTO `language` (`index`, `chinese`, `english`) VALUES
 (705, '烟支包装过程得分', 'Stick packing score'),
 (706, '盒装过程得分', 'Packing score'),
 (707, '箱条装过程得分', 'Sleeve+Box packing score'),
-(708, '箱条装过程', 'Sleeve+Box packing');
+(708, '箱条装过程', 'Sleeve+Box packing'),
+(709, '长度偏小次数', 'Amount length out of lower limit'),
+(710, '长度偏大次数', 'Amount length out of upper limit'),
+(711, '长度合格次数', 'Amount length within limit'),
+(712, '圆周偏小次数', 'Amount circumference out of lower limit'),
+(713, '圆周偏大次数', 'Amount circumference out of upper limit'),
+(714, '圆周合格次数', 'Amount circumference within specs'),
+(715, '质量偏小次数', 'Amount weight out of lower limit'),
+(716, '质量偏大次数', 'Amount weight out of upper limit'),
+(717, '质量合格次数', 'Amount weight within specs'),
+(718, '吸阻偏小次数', 'Amount PD out of lower limit'),
+(719, '吸阻偏大次数', 'Amount PD out of upper limit'),
+(720, '吸阻合格次数', 'Amount PD within specs'),
+(721, '水分偏小次数', 'Amount moisture out of lower limit'),
+(722, '水分偏大次数', 'Amount moisture out of upper limit'),
+(723, '水分合格次数', 'Amount moisture within limit'),
+(724, '水标±0.5%次数', 'Amount moisture ±0.5% specs');
 
 --
 -- Indexes for dumped tables

@@ -74,14 +74,22 @@ var specs_content = {
 				]),
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
 					m("legend", {class: "STORAGE_PROCESS"}),
-					m("div", {style: "height: 4em"})
+					m("div"),
+					m("table", {width: "100%"}, [
+						m("tr", {align: "center"}, [
+							m("td",	m("label.MOISTURE")),
+							m("td",	m("input[type=text].number", {name: "moist_s_min"})),
+							m("td",	 m("hr")),
+							m("td",	m("input[type=text].number", {name: "moist_s_max"}))
+						])
+					])
 				])
 			]),
 			m("span.flex-col#data_header",
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
 					m("legend", {class: "PRODUCT"}),
 					m("div", {style: "height:20em; overflow:auto"}, 
-						m("table#product", {width: "100%", border: "1"}, [
+						m("table#products", {width: "100%"}, [
 							m("thead.header", {valign: "top"}, [
 								m("th", "ID"),
 								m("th", m("label.PRODUCT")),
@@ -91,7 +99,7 @@ var specs_content = {
 						])
 					),
 					m("div", {style: "height:10em; overflow:auto"}, 
-						m("table#history", {width: "100%", border: "1"}, [
+						m("table#history", {width: "100%"}, [
 							m("thead.header", {valign: "top"}, [
 								m("th", "ID"),
 								m("th", m("label.START_DATE")),
@@ -108,7 +116,7 @@ var specs_content = {
 			m("input[type=button].new", {tabindex:"-1"}),
 			m("span", [
 				m("input[type=checkbox].toggle"),
-				m("input[type=button].delete", {tabindex:"-1"})
+				m("input[type=button].delete", {tabindex:"-1", disabled:"disabled"})
 			])
 		])
 	],
@@ -131,7 +139,7 @@ var specs_content = {
 		// new spec
 		$("#specs .new").click(function() {
 			new_rec("gwc_handmade.specs", "#specs");
-			show_data("specs");
+			show_specs();
 		})		
 		
 		// save the data
@@ -147,6 +155,8 @@ var specs_content = {
 			var rol_w_max = $("#specs [name=rol_w_max]").val();
 			var rol_p_min = $("#specs [name=rol_p_min]").val();
 			var rol_p_max = $("#specs [name=rol_p_max]").val();
+			var moist_s_min = $("#specs [name=moist_s_min]").val();
+			var moist_s_max = $("#specs [name=moist_s_max]").val();
 			var rol_blendacc = $("#specs [name=rol_blendacc]").val();
 			var rol_pdacc = $("#specs [name=rol_pdacc]").val();
 			var rol_surfout = $("#specs [name=rol_surfout]").val();
@@ -169,15 +179,61 @@ var specs_content = {
 				
 				// opm: moet misschien vertraagd worden aangeroepen omdat id van new_rec nog niet binnen is.....
 				var sql = sprintf("UPDATE gwc_handmade.specs SET pid='%s', name='%s', nr='%s', rol_l_min='%s', rol_l_max='%s', rol_c_min='%s', rol_c_max='%s', \
-					rol_w_min='%s', rol_w_max='%s', rol_surfout='%s', rol_tightout='%s', rol_p_min='%s', rol_p_max='%s', rol_blendacc='%s', rol_pdacc='%s' \
-					WHERE id=%s",	pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, 
+					rol_w_min='%s', rol_w_max='%s', moist_s_min='%s', moist_s_max='%s', rol_surfout='%s', rol_tightout='%s', rol_p_min='%s', rol_p_max='%s', rol_blendacc='%s', rol_pdacc='%s' \
+					WHERE id=%s",	pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, moist_s_min, moist_s_max, 
 												rol_surfout, rol_tightout, rol_p_min, rol_p_max, rol_blendacc, rol_pdacc, id);
 				$.getJSON('server/send_query.php', {	query: sql	});	
 			});
-		})	
+			
+			show_specs();
+		})
+		
+		// select a product from the specifications list
+		$('#specs #products tbody').on('click', 'td', function(e) {		
+			$("#specs #products tbody tr").removeClass('row_selected');
+			$(this).parent().addClass('row_selected');	// select the new row	
+			
+			// fill the spec history in the second list
+			show_spec_history($(this).parent().find("td:first").text());
+		});	
+		
+		// select a specification from the history
+		$('#specs #history tbody').on('click', 'td', function(e) {		
+			$("#specs #history tbody tr").removeClass('row_selected');
+			$(this).parent().addClass('row_selected');	// select the new row	
+			
+			// display all the details of the selected specification
+			show_spec_details($(this).parent().find("td:first").text());
+		});	
+		
+		// enable/disable the delete button
+		$('#specs .toggle').on('click', function(e) {		
+			var state = $(this).prop('checked');
+			if (state)
+				$('#specs .delete').removeAttr('disabled');	
+			else
+				$('#specs .delete').attr('disabled', 'disabled');
+		});	
+		
+		// delete a product (and its history)
+		$('#specs .delete').on('click', function(e) {		
+			var id = $("#specs #products .row_selected").parent().find("td:first").text();
+
+			$.getJSON('server/get_record.php', {
+				query: "SELECT pid FROM gwc_handmade.specs WHERE id="+id		
+			}, function (data) {
+				$.getJSON('server/send_query.php', {
+					query: "DELETE FROM gwc_handmade.specs WHERE pid="+data.pid	
+				}, function () {
+					$('#specs .delete').attr('disabled', 'disabled');
+					show_specs();
+				});
+			});	
+		});	
+		
 	},
 	view: function () {
-		return m("#specs", this.contents);
+		return m("#specs", {config: show_specs}, this.contents);
 	}
 }
 

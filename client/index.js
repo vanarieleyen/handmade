@@ -130,6 +130,7 @@ $(document).ready(function() {
 					$.jStorage.set("handmade_maintab", 2);
 					break;
 				case "settings_tab": 	
+					show_specs();
 					$.jStorage.set("handmade_maintab", 3);
 					break;
 			}

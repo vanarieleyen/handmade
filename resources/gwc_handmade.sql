@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 04, 2016 at 11:56 AM
+-- Generation Time: Nov 20, 2016 at 10:15 AM
 -- Server version: 5.6.31-0ubuntu0.15.10.1
 -- PHP Version: 5.6.11-1ubuntu3.4
 
@@ -23,22 +23,56 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `defects`
+-- Table structure for table `cutting`
 --
 
-DROP TABLE IF EXISTS `defects`;
-CREATE TABLE IF NOT EXISTS `defects` (
+DROP TABLE IF EXISTS `cutting`;
+CREATE TABLE IF NOT EXISTS `cutting` (
   `id` int(11) NOT NULL,
-  `code` varchar(5) NOT NULL,
+  `date` datetime NOT NULL,
+  `product` varchar(20) NOT NULL,
+  `name` varchar(10) NOT NULL,
+  `headend` varchar(4) NOT NULL,
+  `incision` varchar(4) NOT NULL,
+  `empty` varchar(4) NOT NULL,
+  `crease` varchar(4) NOT NULL,
+  `blot` varchar(4) NOT NULL,
+  `seam` varchar(4) NOT NULL,
+  `crack` varchar(4) NOT NULL,
+  `score` varchar(4) NOT NULL,
+  `quality` varchar(4) NOT NULL,
+  `inspector` varchar(4) NOT NULL,
+  `remarks` varchar(200) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=gbk;
+
+--
+-- Dumping data for table `cutting`
+--
+
+INSERT INTO `cutting` (`id`, `date`, `product`, `name`, `headend`, `incision`, `empty`, `crease`, `blot`, `seam`, `crack`, `score`, `quality`, `inspector`, `remarks`) VALUES
+(1, '2016-11-16 16:58:10', '1', '2', '9', '10', '11', '5', '6', '7', '8', '', '', '3', '4'),
+(2, '2016-11-16 16:58:53', 'test', '', '', '', '', '', '', '', '', '', '', '', ''),
+(3, '2016-11-17 09:23:16', '', 'sample', '', '', '0', '', '', '', '', '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `defectlabels`
+--
+
+DROP TABLE IF EXISTS `defectlabels`;
+CREATE TABLE IF NOT EXISTS `defectlabels` (
+  `id` int(11) NOT NULL,
+  `code` varchar(5) CHARACTER SET gbk NOT NULL,
   `text` varchar(200) CHARACTER SET gbk NOT NULL,
-  `type` varchar(20) NOT NULL
+  `type` varchar(20) CHARACTER SET gbk NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=280 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `defects`
+-- Dumping data for table `defectlabels`
 --
 
-INSERT INTO `defects` (`id`, `code`, `text`, `type`) VALUES
+INSERT INTO `defectlabels` (`id`, `code`, `text`, `type`) VALUES
 (1, 'A1', '包装体内烟支断残', 'stick cel a'),
 (2, 'A2', '包装明显异味', 'stick cel a'),
 (3, 'A3', '烟支明显异味', 'stick cel a'),
@@ -321,14 +355,133 @@ INSERT INTO `defects` (`id`, `code`, `text`, `type`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `defects`
+--
+
+DROP TABLE IF EXISTS `defects`;
+CREATE TABLE IF NOT EXISTS `defects` (
+  `id` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `product` varchar(20) NOT NULL,
+  `sample` varchar(5) NOT NULL,
+  `sscore` varchar(4) NOT NULL,
+  `pscore` varchar(4) NOT NULL,
+  `bscore` varchar(4) NOT NULL,
+  `inspector` varchar(4) NOT NULL,
+  `remarks` varchar(200) NOT NULL,
+  `sjob` varchar(4) NOT NULL,
+  `sjudge` varchar(4) NOT NULL,
+  `sremarks` varchar(200) NOT NULL,
+  `pjob` varchar(4) NOT NULL,
+  `pjudge` varchar(4) NOT NULL,
+  `premarks` varchar(200) NOT NULL,
+  `bjob` varchar(4) NOT NULL,
+  `bjudge` varchar(4) NOT NULL,
+  `bremarks` varchar(200) NOT NULL,
+  `srd1` varchar(4) NOT NULL,
+  `srd2` varchar(4) NOT NULL,
+  `srd3` varchar(4) NOT NULL,
+  `srd1_nr` varchar(4) NOT NULL,
+  `srd2_nr` varchar(4) NOT NULL,
+  `srd3_nr` varchar(4) NOT NULL,
+  `scd1` varchar(4) NOT NULL,
+  `scd2` varchar(4) NOT NULL,
+  `scd3` varchar(4) NOT NULL,
+  `scd1_nr` varchar(4) NOT NULL,
+  `scd2_nr` varchar(4) NOT NULL,
+  `scd3_nr` varchar(4) NOT NULL,
+  `ssd1` varchar(4) NOT NULL,
+  `ssd2` varchar(4) NOT NULL,
+  `ssd3` varchar(4) NOT NULL,
+  `ssd1_nr` varchar(4) NOT NULL,
+  `ssd2_nr` varchar(4) NOT NULL,
+  `ssd3_nr` varchar(4) NOT NULL,
+  `spd1` varchar(4) NOT NULL,
+  `spd2` varchar(4) NOT NULL,
+  `spd3` varchar(4) NOT NULL,
+  `spd1_nr` varchar(4) NOT NULL,
+  `spd2_nr` varchar(4) NOT NULL,
+  `spd3_nr` varchar(4) NOT NULL,
+  `ppd1` varchar(4) NOT NULL,
+  `ppd2` varchar(4) NOT NULL,
+  `ppd3` varchar(4) NOT NULL,
+  `ppd1_nr` varchar(4) NOT NULL,
+  `ppd2_nr` varchar(4) NOT NULL,
+  `ppd3_nr` varchar(4) NOT NULL,
+  `pm1` varchar(4) NOT NULL,
+  `pm2` varchar(4) NOT NULL,
+  `pm3` varchar(4) NOT NULL,
+  `pm1_nr` varchar(4) NOT NULL,
+  `pm2_nr` varchar(4) NOT NULL,
+  `pm3_nr` varchar(4) NOT NULL,
+  `bsd1` varchar(4) NOT NULL,
+  `bsd2` varchar(4) NOT NULL,
+  `bsd3` varchar(4) NOT NULL,
+  `bsd1_nr` varchar(4) NOT NULL,
+  `bsd2_nr` varchar(4) NOT NULL,
+  `bsd3_nr` varchar(4) NOT NULL,
+  `bb1` varchar(4) NOT NULL,
+  `bb2` varchar(4) NOT NULL,
+  `bb3` varchar(4) NOT NULL,
+  `bb1_nr` varchar(4) NOT NULL,
+  `bb2_nr` varchar(4) NOT NULL,
+  `bb3_nr` varchar(4) NOT NULL,
+  `bm1` varchar(4) NOT NULL,
+  `bm2` varchar(4) NOT NULL,
+  `bm3` varchar(4) NOT NULL,
+  `bm1_nr` varchar(4) NOT NULL,
+  `bm2_nr` varchar(4) NOT NULL,
+  `bm3_nr` varchar(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=gbk;
+
+--
+-- Dumping data for table `defects`
+--
+
+INSERT INTO `defects` (`id`, `date`, `product`, `sample`, `sscore`, `pscore`, `bscore`, `inspector`, `remarks`, `sjob`, `sjudge`, `sremarks`, `pjob`, `pjudge`, `premarks`, `bjob`, `bjudge`, `bremarks`, `srd1`, `srd2`, `srd3`, `srd1_nr`, `srd2_nr`, `srd3_nr`, `scd1`, `scd2`, `scd3`, `scd1_nr`, `scd2_nr`, `scd3_nr`, `ssd1`, `ssd2`, `ssd3`, `ssd1_nr`, `ssd2_nr`, `ssd3_nr`, `spd1`, `spd2`, `spd3`, `spd1_nr`, `spd2_nr`, `spd3_nr`, `ppd1`, `ppd2`, `ppd3`, `ppd1_nr`, `ppd2_nr`, `ppd3_nr`, `pm1`, `pm2`, `pm3`, `pm1_nr`, `pm2_nr`, `pm3_nr`, `bsd1`, `bsd2`, `bsd3`, `bsd1_nr`, `bsd2_nr`, `bsd3_nr`, `bb1`, `bb2`, `bb3`, `bb1_nr`, `bb2_nr`, `bb3_nr`, `bm1`, `bm2`, `bm3`, `bm1_nr`, `bm2_nr`, `bm3_nr`) VALUES
+(1, '2016-11-17 11:30:56', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'A5', '', '', '3', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'A8', '', '', '2', '', '', 'B12', 'B1', '0', '1', '2', '', '', '', '', '', '', '', '', '', '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `formulas`
 --
 
 DROP TABLE IF EXISTS `formulas`;
 CREATE TABLE IF NOT EXISTS `formulas` (
   `id` int(11) NOT NULL,
-  `formula` varchar(1000) CHARACTER SET gbk NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `l_outlow` varchar(500) CHARACTER SET gbk NOT NULL,
+  `l_outhigh` varchar(500) CHARACTER SET gbk NOT NULL,
+  `l_inspec` varchar(500) CHARACTER SET gbk NOT NULL,
+  `c_outlow` varchar(500) CHARACTER SET gbk NOT NULL,
+  `c_outhigh` varchar(500) CHARACTER SET gbk NOT NULL,
+  `c_inspec` varchar(500) CHARACTER SET gbk NOT NULL,
+  `w_outlow` varchar(500) CHARACTER SET gbk NOT NULL,
+  `w_outhigh` varchar(500) CHARACTER SET gbk NOT NULL,
+  `w_inspec` varchar(500) CHARACTER SET gbk NOT NULL,
+  `p_outlow` varchar(500) CHARACTER SET gbk NOT NULL,
+  `p_outhigh` varchar(500) CHARACTER SET gbk NOT NULL,
+  `p_inspec` varchar(500) CHARACTER SET gbk NOT NULL,
+  `m_outlow` varchar(500) CHARACTER SET gbk NOT NULL,
+  `m_outhigh` varchar(500) CHARACTER SET gbk NOT NULL,
+  `m_inspec` varchar(500) CHARACTER SET gbk NOT NULL,
+  `m_2inspec` varchar(500) CHARACTER SET gbk NOT NULL,
+  `r_batch_score` varchar(500) CHARACTER SET gbk NOT NULL,
+  `r_batch_quality` varchar(500) CHARACTER SET gbk NOT NULL,
+  `w_batch_score` varchar(500) CHARACTER SET gbk NOT NULL,
+  `w_batch_quality` varchar(500) CHARACTER SET gbk NOT NULL,
+  `c_batch_score` varchar(500) CHARACTER SET gbk NOT NULL,
+  `c_batch_quality` varchar(500) CHARACTER SET gbk NOT NULL,
+  `s_batch_score` varchar(500) CHARACTER SET gbk NOT NULL,
+  `s_batch_quality` varchar(500) CHARACTER SET gbk NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `formulas`
+--
+
+INSERT INTO `formulas` (`id`, `l_outlow`, `l_outhigh`, `l_inspec`, `c_outlow`, `c_outhigh`, `c_inspec`, `w_outlow`, `w_outhigh`, `w_inspec`, `p_outlow`, `p_outhigh`, `p_inspec`, `m_outlow`, `m_outhigh`, `m_inspec`, `m_2inspec`, `r_batch_score`, `r_batch_quality`, `w_batch_score`, `w_batch_quality`, `c_batch_score`, `c_batch_quality`, `s_batch_score`, `s_batch_quality`) VALUES
+(1, '=COUNTIF(B1,"<"S1)', '=COUNTIF(B1,">"S2)', '=COUNTIF(B1,">="S1) - COUNTIF(B1,">"S2)', '=COUNTIF(C1,"<"S3)', '=COUNTIF(C1,">"S4)', '=COUNTIF(C1,">="S3) - COUNTIF(C1,">"S4)', '=COUNTIF(D1,"<"S5)', '=COUNTIF(D1,">"S6)', '=COUNTIF(D1,">="S5) - COUNTIF(D1,">"S6)', '=COUNTIF(E1,"<"S7)', '=COUNTIF(E1,">"S8)', '=COUNTIF(E1,">="S7) - COUNTIF(E1,">"S8)', '=COUNTIF(F1,"<"S9)', '=COUNTIF(F1,">"S10)', '=COUNTIF(F1,">="S9) - COUNTIF(F1,">"S10)', '=COUNTIF(F1,">="&(S9-0.5))-COUNTIF(F1,">="S9)+COUNTIF(F1,">"S10)-COUNTIF(F1,">"&(S10+0.5))', '=100-(A1+A2)*0.5-(A4+A5)*0.4-(A7+A8)*0.3-A13*0.4-A17*0.5-(A10+A11)*1+(IF(A14="","",IF(A14<80,-4,IF(A14>=85,IF(A14<90,-1,0),-2))))+(IF(A15="","",IF(A15<85,-5,IF(A15>=90,IF(A15<95,-2,0),-4))))', '=IF(OR(A16<85,(A1+A2)>6,(A4+A5)>6,(A7+A8)>6,A13>6,(A1+A2+A4+A5+A7+A8+A13)>13,A17>6,A14<70,A15<75),"不合格","合格")', '=100-A18*0.2-A19*0.5-A20*0.2-A21*0.5-A22*1-A23*0.5-A24*0.2-A25*0.2-A26*0.2-A27*0.5-A28*0.5-A29*1-A30*1-A31*0.5', '=IF(OR(A32<96,(A18+A20+A24+A25+A26)>8,(A19+A21+A23+A27+A28+A31)>6,(A18+A19+A20+A21+A22+A23+A24+A25+A26+A27+A28+A29+A30+A31)>9),"不合格","合格")', '=100-A33*0.5-A34*0.5-A35*1-A36*0.2-A37*0.5-A38*0.5-A39*1', '=IF(OR(A40<90),"不合格","合格")', '=100-A41*0.2-A42*0.5-A43*1-A44*0.5-A45*1-A46*1-(A47+A48)*0.5+IF(OR(A49="生 霉",A49="虫 蛀"),-60,0)', '=IF(OR(A50<85,A51<4,AND(A51=4,A52<3)),"不合格","合格")');
 
 -- --------------------------------------------------------
 
@@ -422,6 +575,7 @@ DROP TABLE IF EXISTS `rolling`;
 CREATE TABLE IF NOT EXISTS `rolling` (
   `id` int(11) NOT NULL,
   `date` datetime NOT NULL,
+  `product` varchar(20) NOT NULL,
   `name` varchar(10) NOT NULL,
   `l1` varchar(4) NOT NULL,
   `l2` varchar(4) NOT NULL,
@@ -471,7 +625,15 @@ CREATE TABLE IF NOT EXISTS `rolling` (
   `quality` varchar(5) NOT NULL,
   `inspector` varchar(10) NOT NULL,
   `remarks` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=gbk;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=gbk;
+
+--
+-- Dumping data for table `rolling`
+--
+
+INSERT INTO `rolling` (`id`, `date`, `product`, `name`, `l1`, `l2`, `l3`, `l4`, `l5`, `l6`, `l7`, `l8`, `l9`, `l10`, `d1`, `d2`, `d3`, `d4`, `d5`, `d6`, `d7`, `d8`, `d9`, `d10`, `w1`, `w2`, `w3`, `w4`, `w5`, `w6`, `w7`, `w8`, `w9`, `w10`, `p1`, `p2`, `p3`, `p4`, `p5`, `p6`, `p7`, `p8`, `p9`, `p10`, `surfout`, `tightout`, `blendacc`, `pdacc`, `score`, `quality`, `inspector`, `remarks`) VALUES
+(4, '2016-11-16 00:00:00', 'sigaar', 'arie', '5', '6', '7', '8', '9', '1', '2', '3', '4', '5', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '50', '55', '88', '77', 'sc', 'qu', 'insp', '7'),
+(5, '2016-11-16 16:39:46', 'ander produkt', '', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -482,9 +644,10 @@ CREATE TABLE IF NOT EXISTS `rolling` (
 DROP TABLE IF EXISTS `specs`;
 CREATE TABLE IF NOT EXISTS `specs` (
   `id` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
-  `start` datetime NOT NULL,
-  `end` datetime NOT NULL,
+  `date` datetime NOT NULL,
+  `pid` varchar(4) NOT NULL DEFAULT '-1',
+  `start` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `end` datetime NOT NULL DEFAULT '3000-01-01 00:00:00',
   `name` varchar(20) NOT NULL,
   `nr` varchar(20) NOT NULL,
   `rol_l_min` varchar(4) NOT NULL,
@@ -498,8 +661,22 @@ CREATE TABLE IF NOT EXISTS `specs` (
   `rol_surfout` varchar(4) NOT NULL,
   `rol_tightout` varchar(4) NOT NULL,
   `rol_blendacc` varchar(4) NOT NULL,
-  `rol_pdacc` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=gbk;
+  `rol_pdacc` varchar(4) NOT NULL,
+  `moist_s_min` varchar(4) NOT NULL,
+  `moist_s_max` varchar(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=gbk;
+
+--
+-- Dumping data for table `specs`
+--
+
+INSERT INTO `specs` (`id`, `date`, `pid`, `start`, `end`, `name`, `nr`, `rol_l_min`, `rol_l_max`, `rol_c_min`, `rol_c_max`, `rol_w_min`, `rol_w_max`, `rol_p_min`, `rol_p_max`, `rol_surfout`, `rol_tightout`, `rol_blendacc`, `rol_pdacc`, `moist_s_min`, `moist_s_max`) VALUES
+(26, '2016-11-18 16:28:58', '26', '2016-11-18 16:28:58', '2016-11-18 16:29:10', 'test', '1', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(27, '2016-11-18 16:29:10', '26', '2016-11-18 16:29:10', '2016-11-18 16:29:14', 'test', '12', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(28, '2016-11-18 16:29:14', '26', '2016-11-18 16:29:14', '2016-11-18 16:29:40', 'test', '123', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(29, '2016-11-18 16:29:40', '26', '2016-11-18 16:29:40', '2016-11-19 10:36:06', 'laatste test', '123', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(30, '2016-11-19 10:36:06', '26', '2016-11-19 10:36:06', '2016-11-20 09:53:04', 'laatste test', '123', '1', '', '2', '', '3', '', '4', '', '', '', '', '', '', ''),
+(31, '2016-11-20 09:53:04', '26', '2016-11-20 09:53:04', '3000-01-01 00:00:00', 'laatste test', '123', '1', '', '2', '', '3', '', '4', '', '', '', '', '', '1', '2');
 
 -- --------------------------------------------------------
 
@@ -511,7 +688,7 @@ DROP TABLE IF EXISTS `storage`;
 CREATE TABLE IF NOT EXISTS `storage` (
   `id` int(11) NOT NULL,
   `date` datetime NOT NULL,
-  `product` varchar(4) NOT NULL,
+  `product` varchar(20) NOT NULL,
   `start` datetime NOT NULL,
   `end` datetime NOT NULL,
   `moistmin` varchar(4) NOT NULL,
@@ -536,7 +713,14 @@ CREATE TABLE IF NOT EXISTS `storage` (
   `inspector` varchar(10) NOT NULL,
   `incharge` varchar(10) NOT NULL,
   `remarks` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=gbk;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=gbk;
+
+--
+-- Dumping data for table `storage`
+--
+
+INSERT INTO `storage` (`id`, `date`, `product`, `start`, `end`, `moistmin`, `moistmax`, `deworm`, `dopant`, `headend`, `empty`, `seam`, `hole`, `break`, `m1`, `m2`, `m3`, `m4`, `m5`, `m6`, `m7`, `m8`, `score`, `batchok`, `inspector`, `incharge`, `remarks`) VALUES
+(1, '2016-11-17 09:46:48', '1', '2016-11-01 00:00:00', '2016-11-02 00:00:00', '5', '6', '1', '5', '1', '2', '3', '4', '6', '1', '2', '3', '4', '5', '6', '7', '8', '', '', '3', '2', '4');
 
 -- --------------------------------------------------------
 
@@ -548,6 +732,7 @@ DROP TABLE IF EXISTS `wrapping`;
 CREATE TABLE IF NOT EXISTS `wrapping` (
   `id` int(11) NOT NULL,
   `date` datetime NOT NULL,
+  `product` varchar(20) NOT NULL,
   `name` varchar(10) NOT NULL,
   `color` varchar(4) NOT NULL,
   `headend` varchar(4) NOT NULL,
@@ -567,18 +752,39 @@ CREATE TABLE IF NOT EXISTS `wrapping` (
   `quality` varchar(4) NOT NULL,
   `inspector` varchar(4) NOT NULL,
   `remarks` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=gbk;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=gbk;
+
+--
+-- Dumping data for table `wrapping`
+--
+
+INSERT INTO `wrapping` (`id`, `date`, `product`, `name`, `color`, `headend`, `wrapok`, `incision`, `empty`, `tightness`, `veins`, `crease`, `spot`, `blot`, `seam`, `hole`, `crack`, `splice`, `score`, `quality`, `inspector`, `remarks`) VALUES
+(1, '2016-11-16 16:26:55', 'p', 's', '9', '0', '1', '1', '2', '5', '6', '2', '3', '4', '3', '4', '7', '8', '', '', 'i', 'r'),
+(2, '2016-11-16 16:38:47', '2', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(3, '2016-11-16 16:39:40', '3', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indexes for table `cutting`
+--
+ALTER TABLE `cutting`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `defectlabels`
+--
+ALTER TABLE `defectlabels`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `type_idx` (`type`);
+
+--
 -- Indexes for table `defects`
 --
 ALTER TABLE `defects`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `type_idx` (`type`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `formulas`
@@ -621,15 +827,25 @@ ALTER TABLE `wrapping`
 --
 
 --
+-- AUTO_INCREMENT for table `cutting`
+--
+ALTER TABLE `cutting`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `defectlabels`
+--
+ALTER TABLE `defectlabels`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=280;
+--
 -- AUTO_INCREMENT for table `defects`
 --
 ALTER TABLE `defects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=280;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `formulas`
 --
 ALTER TABLE `formulas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `packing`
 --
@@ -639,22 +855,22 @@ ALTER TABLE `packing`
 -- AUTO_INCREMENT for table `rolling`
 --
 ALTER TABLE `rolling`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `specs`
 --
 ALTER TABLE `specs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
 --
 -- AUTO_INCREMENT for table `storage`
 --
 ALTER TABLE `storage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `wrapping`
 --
 ALTER TABLE `wrapping`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
