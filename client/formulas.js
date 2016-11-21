@@ -25,13 +25,13 @@ var formulas_content = {
 						m("tr", [	m("td", {width: "20%"}, m("", "A13")),	m("td", m("label.SURFACE_OUT" )) ]),
 						m("tr", [	m("td", {width: "20%"}, m("", "A14")),	m("td", m("label.BLEND_ACC" )) ]),
 						m("tr", [	m("td", {width: "20%"}, m("", "A15")),	m("td", m("label.PD_ACC" )) ]),
-						m("tr", [	m("td", {width: "20%"}, m("", "B1")),	m("td", m("label.LENGTH" )) ]),
-						m("tr", [	m("td", {width: "20%"}, m("", "C1")),	m("td", m("label.CIRCUMFERENCE" )) ]),
-						m("tr", [	m("td", {width: "20%"}, m("", "D1")),	m("td", m("label.WEIGHT" )) ]),
-						m("tr", [	m("td", {width: "20%"}, m("", "E1")),	m("td", m("label.PRESSUREDROP" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "A17")),	m("td", m("label.TIGHTNESS" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "B1:B10")),	m("td", m("label.LENGTH" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "C1:C10")),	m("td", m("label.CIRCUMFERENCE" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "D1:D10")),	m("td", m("label.WEIGHT" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "E1:E10")),	m("td", m("label.PRESSUREDROP" )) ]),
 						m("tr", [	m("td", {width: "20%"}, m("", "A16")),	m("td", m("label.BATCH_SCORE" )) ]),
 						m("tr", m("td[colspan=2]", {align:"center"}, m("label.WRAPPING_PROCESS")) ),
-						m("tr", [	m("td", {width: "20%"}, m("", "A17")),	m("td", m("label.TIGHTNESS" )) ]),
 						m("tr", [	m("td", {width: "20%"}, m("", "A18")),	m("td", m("label.WRAPPER_COLOR" )) ]),
 						m("tr", [	m("td", {width: "20%"}, m("", "A19")),	m("td", m("label.HEADEND" )) ]),
 						m("tr", [	m("td", {width: "20%"}, m("", "A20")),	m("td", m("label.WRAPPED_OK" )) ]),
@@ -69,7 +69,7 @@ var formulas_content = {
 						m("tr", [	m("td", {width: "20%"}, m("", "A50")),	m("td", m("label.BATCH_SCORE" )) ]),
 						m("tr", [ m("td", {width: "20%"}, m("", "A51")),	m("td", m("label.M_INSPEC" )) ]),
 						m("tr", [ m("td", {width: "20%"}, m("", "A52")),	m("td", m("label.M_2INSPEC" )) ]),
-						m("tr", [	m("td", {width: "20%"}, m("", "F1")),		m("td", m("label.MOISTURE" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "F1:F8")),		m("td", m("label.MOISTURE" )) ]),
 						m("tr", m("td[colspan=2]", {align:"center"}, m("label.SPECS")) ),
 						m("tr", [	m("td", {width: "20%"}, m("", "S1 (min)")),	m("td", m("label.LENGTH" )) ]),
 						m("tr", [	m("td", {width: "20%"}, m("", "S2 (max)")),	m("td", m("label.LENGTH" )) ]),
@@ -169,6 +169,7 @@ var formulas_content = {
 
 			$.getJSON('server/send_query.php', {	query: sql	});	
 		})
+		
 	},
 	view: function () {
 		return m("#formulas", [this.header, this.contents]);

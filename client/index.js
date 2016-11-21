@@ -51,19 +51,21 @@ var flagBox = [
 
 // read and evaluate the tab-scripts 
 // childs first, then the parents
-eval(require('script!./rolling.js'));				// children of data-tab
-eval(require('script!./wrapping.js'));
-eval(require('script!./cutting.js'));
-eval(require('script!./storage.js'));
-eval(require('script!./defects.js'));
-eval(require('script!./data-tabs.js'));			// parent
+// where initially evaluated: eval(require('script!./rolling.js'));	but doesn't seem to be necessary
 
-eval(require('script!./history.js'));
+require("script!./rolling.js");
+require('script!./wrapping.js');
+require('script!./cutting.js');
+require('script!./storage.js');
+require('script!./defects.js');
+require('script!./data-tabs.js');			// parent
 
-eval(require('script!./specs.js'));					// children of settings-tab
-eval(require('script!./formulas.js'));	
-eval(require('script!./users.js'));	
-eval(require('script!./settings-tabs.js'));	// parent
+require('script!./history.js');
+
+require('script!./specs.js');					// children of settings-tab
+require('script!./formulas.js');	
+require('script!./users.js');	
+require('script!./settings-tabs.js');	// parent
 
 
 // the tabs used by ui-tabs

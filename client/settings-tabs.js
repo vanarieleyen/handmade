@@ -2,26 +2,21 @@ console.log("data.js (create subtabs) processed");
 
 // creates the data-entry subtabs
 
-
 var settings_content = {
 	subTabs: [
 		m("#tabs2.subtabs1", [
 			m("ul", [
-				m("li", 
-					m("a", {href: "#specs_sub_tab", tabindex:"-1"}, [
-						m("label", {class:"SPECS"})
-					])
-				),
-				m("li", 
-					m("a", {href: "#formulas_sub_tab", tabindex:"-1"}, [
-						m("label", {class:"PENALTY"})
-					])
-				),
-				m("li", 
-					m("a", {href: "#users_sub_tab", tabindex:"-1"}, [
-						m("label", {class:"SETTINGS"})
-					])
-				)
+				[
+					{label:"label.SPECS", href:"#specs_sub_tab"},
+					{label:"label.PENALTY", href:"#formulas_sub_tab"},
+					{label:"label.SETTINGS", href:"#users_sub_tab"}
+				].map(function (a) {
+					return m("li", 
+									m("a", {href: a.href, tabindex:"-1" }, [
+										m(a.label)
+									])
+								)
+				})
 			]),
 			[			// the tabs used by ui-tabs
 				m("#formulas_sub_tab", m.component(formulas_content)),

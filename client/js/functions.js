@@ -710,6 +710,7 @@ function new_rec(table, element) {
 			$(element+" input").not("[type=button]").removeAttr("disabled");
 			$(element+" textarea").removeAttr("disabled");
 			$(element+" select").removeAttr("disabled");
+			$(element+" checkbox").attr("disabled", "disabled");
 		}
 	});
 }
@@ -873,16 +874,6 @@ function show_data(table) {
 					$("#formulas [name=s_batch_score]").val(data.s_batch_score);
 					$("#formulas [name=s_batch_quality]").val(data.s_batch_quality);
 					break;
-				case "users":
-					/*$("#users [name=name]").val(data.name);
-					$("#users [name=login]").val(data.login);
-					$('#users [name=specs]').prop('checked', (data.specs=='1'));
-					$('#users [name=formulas]').prop('checked', (data.formulas=='1'));
-					$('#users [name=admin]').prop("checked", (data.admin=='1'));
-					$('#users [name=names]').prop("checked", (data.names=='1'));
-					$('#users [name=readonly]').prop("checked", (data.readonly=='1'));*/
-					break;
-
 			}		
 		});
 	}
@@ -928,6 +919,44 @@ function show_history() {
 			$('#history #lijst tbody').append(regel);
 		});		
 	})		
+}
+
+// fill the users list
+function show_users() {
+	var element = $('#users #userlist tbody');
+	
+	$.getJSON("server/list_users.php",	function(data) {
+		element.empty();
+		$.each(data.records, function (key, regel) {
+			element.append(regel);
+		});		
+	})	
+
+	$("#users #userlist tr:eq(0)").addClass('row_selected');	// select the first row
+	show_user_details(element.find("td:first center").html());
+}
+
+// display all the details of the selected user
+function show_user_details(id) {
+	var sql = sprintf('SELECT * FROM gwc_handmade.users WHERE id=%s', id);
+
+	if (id != null)	{
+		$.getJSON('server/get_record.php', { 
+			query: sql
+		}, function(data) {
+			$("#users [name=name]").val(data.name);
+			$("#users [name=login]").val(data.login);
+			$('#users [name=specs]').prop('checked', (data.specs=='1'));
+			$('#users [name=formulas]').prop('checked', (data.formulas=='1'));
+			$('#users [name=admin]').prop("checked", (data.admin=='1'));
+			$('#users [name=names]').prop("checked", (data.names=='1'));
+			$('#users [name=readonly]').prop("checked", (data.readonly=='1'));
+			$("#users [name=date]").html(data.date);
+			$("#users [name=identity]").html(data.identity);
+			$("#users [name=gebruik]").html(data.gebruik);
+		});	
+	}
+	$.jStorage.set("handmade.current.users", id);
 }
 
 // fill the specs list

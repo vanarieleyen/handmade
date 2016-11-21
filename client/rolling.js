@@ -161,12 +161,14 @@ var rolling_content = {
 		
 		// save data
 		$("#rolling input:text").blur(function () {
-			this.current = $.jStorage.get("handmade.current.rolling");	
+			current = $.jStorage.get("handmade.current.rolling");	
 			this.field = $(this).attr('name');
 			this.value = $(this).val();
 			
-			sql = sprintf('UPDATE gwc_handmade.rolling SET %s="%s" WHERE id=%s', this.field, this.value, this.current );
-			$.getJSON('server/send_query.php', {	query: sql	});			
+			var sql = sprintf('UPDATE gwc_handmade.rolling SET %s="%s" WHERE id=%s', this.field, this.value, current );
+			$.getJSON('server/send_query.php', {query: sql}, function (data) {
+				$.getJSON('server/calc_scores.php', {id: current, table: "gwc_handmade.rolling"});
+			});	
 		})
 
 		$("#rolling textarea").blur(function () {

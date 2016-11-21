@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 20, 2016 at 10:15 AM
+-- Generation Time: Nov 21, 2016 at 04:22 PM
 -- Server version: 5.6.31-0ubuntu0.15.10.1
 -- PHP Version: 5.6.11-1ubuntu3.4
 
@@ -481,7 +481,7 @@ CREATE TABLE IF NOT EXISTS `formulas` (
 --
 
 INSERT INTO `formulas` (`id`, `l_outlow`, `l_outhigh`, `l_inspec`, `c_outlow`, `c_outhigh`, `c_inspec`, `w_outlow`, `w_outhigh`, `w_inspec`, `p_outlow`, `p_outhigh`, `p_inspec`, `m_outlow`, `m_outhigh`, `m_inspec`, `m_2inspec`, `r_batch_score`, `r_batch_quality`, `w_batch_score`, `w_batch_quality`, `c_batch_score`, `c_batch_quality`, `s_batch_score`, `s_batch_quality`) VALUES
-(1, '=COUNTIF(B1,"<"S1)', '=COUNTIF(B1,">"S2)', '=COUNTIF(B1,">="S1) - COUNTIF(B1,">"S2)', '=COUNTIF(C1,"<"S3)', '=COUNTIF(C1,">"S4)', '=COUNTIF(C1,">="S3) - COUNTIF(C1,">"S4)', '=COUNTIF(D1,"<"S5)', '=COUNTIF(D1,">"S6)', '=COUNTIF(D1,">="S5) - COUNTIF(D1,">"S6)', '=COUNTIF(E1,"<"S7)', '=COUNTIF(E1,">"S8)', '=COUNTIF(E1,">="S7) - COUNTIF(E1,">"S8)', '=COUNTIF(F1,"<"S9)', '=COUNTIF(F1,">"S10)', '=COUNTIF(F1,">="S9) - COUNTIF(F1,">"S10)', '=COUNTIF(F1,">="&(S9-0.5))-COUNTIF(F1,">="S9)+COUNTIF(F1,">"S10)-COUNTIF(F1,">"&(S10+0.5))', '=100-(A1+A2)*0.5-(A4+A5)*0.4-(A7+A8)*0.3-A13*0.4-A17*0.5-(A10+A11)*1+(IF(A14="","",IF(A14<80,-4,IF(A14>=85,IF(A14<90,-1,0),-2))))+(IF(A15="","",IF(A15<85,-5,IF(A15>=90,IF(A15<95,-2,0),-4))))', '=IF(OR(A16<85,(A1+A2)>6,(A4+A5)>6,(A7+A8)>6,A13>6,(A1+A2+A4+A5+A7+A8+A13)>13,A17>6,A14<70,A15<75),"不合格","合格")', '=100-A18*0.2-A19*0.5-A20*0.2-A21*0.5-A22*1-A23*0.5-A24*0.2-A25*0.2-A26*0.2-A27*0.5-A28*0.5-A29*1-A30*1-A31*0.5', '=IF(OR(A32<96,(A18+A20+A24+A25+A26)>8,(A19+A21+A23+A27+A28+A31)>6,(A18+A19+A20+A21+A22+A23+A24+A25+A26+A27+A28+A29+A30+A31)>9),"不合格","合格")', '=100-A33*0.5-A34*0.5-A35*1-A36*0.2-A37*0.5-A38*0.5-A39*1', '=IF(OR(A40<90),"不合格","合格")', '=100-A41*0.2-A42*0.5-A43*1-A44*0.5-A45*1-A46*1-(A47+A48)*0.5+IF(OR(A49="生 霉",A49="虫 蛀"),-60,0)', '=IF(OR(A50<85,A51<4,AND(A51=4,A52<3)),"不合格","合格")');
+(1, '=COUNTIF(B1:B10,"<"&S1)', '=COUNTIF(B1:B10,">"&S2)', '=COUNTIF(B1:B10,">="&S1) - COUNTIF(B1:B10,">"&S2)', '=COUNTIF(C1:C10,"<"&S3)', '=COUNTIF(C1:C10,">"&S4)', '=COUNTIF(C1:C10,">="&S3) - COUNTIF(C1:C10,">"&S4)', '=COUNTIF(D1:D10,"<"&S5)', '=COUNTIF(D1:D10,">"&S6)', '=COUNTIF(D1:D10,">="&S5) - COUNTIF(D1:D10,">"&S6)', '=COUNTIF(E1:E10,"<"&S7)', '=COUNTIF(E1:E10,">"&S8)', '=COUNTIF(E1:E10,">="&S7) - COUNTIF(E1:E10,">"&S8)', '=COUNTIF(F1:F8,"<"&S9)', '=COUNTIF(F1:F8,">"&S10)', '=COUNTIF(F1:F8,">="&S9) - COUNTIF(F1:F8,">"&S10)', '=COUNTIF(F1:F8,">="&(S9-0.5))-COUNTIF(F1:F8,">="&S9)+COUNTIF(F1:F8,">"&S10)-COUNTIF(F1:F8,">"&(S10+0.5))', '=100-(A1+A2)*0.5-(A4+A5)*0.4-(A7+A8)*0.3-A13*0.4-A17*0.5-(A10+A11)*1+(IF(A14="","",IF(A14<80,-4,IF(A14>=85,IF(A14<90,-1,0),-2))))+(IF(A15="","",IF(A15<85,-5,IF(A15>=90,IF(A15<95,-2,0),-4))))', '=IF(OR(A16<85,(A1+A2)>6,(A4+A5)>6,(A7+A8)>6,A13>6,(A1+A2+A4+A5+A7+A8+A13)>13,A17>6,A14<70,A15<75),"不合格","合格")', '=100-A18*0.2-A19*0.5-A20*0.2-A21*0.5-A22*1-A23*0.5-A24*0.2-A25*0.2-A26*0.2-A27*0.5-A28*0.5-A29*1-A30*1-A31*0.5', '=IF(OR(A32<96,(A18+A20+A24+A25+A26)>8,(A19+A21+A23+A27+A28+A31)>6,(A18+A19+A20+A21+A22+A23+A24+A25+A26+A27+A28+A29+A30+A31)>9),"不合格","合格")', '=100-A33*0.5-A34*0.5-A35*1-A36*0.2-A37*0.5-A38*0.5-A39*1', '=IF(OR(A40<90),"不合格","合格")', '=100-A41*0.2-A42*0.5-A43*1-A44*0.5-A45*1-A46*1-(A47+A48)*0.5+IF(OR(A49="生 霉",A49="虫 蛀"),-60,0)', '=IF(OR(A50<85,A51<4,AND(A51=4,A52<3)),"不合格","合格")');
 
 -- --------------------------------------------------------
 
@@ -633,7 +633,7 @@ CREATE TABLE IF NOT EXISTS `rolling` (
 
 INSERT INTO `rolling` (`id`, `date`, `product`, `name`, `l1`, `l2`, `l3`, `l4`, `l5`, `l6`, `l7`, `l8`, `l9`, `l10`, `d1`, `d2`, `d3`, `d4`, `d5`, `d6`, `d7`, `d8`, `d9`, `d10`, `w1`, `w2`, `w3`, `w4`, `w5`, `w6`, `w7`, `w8`, `w9`, `w10`, `p1`, `p2`, `p3`, `p4`, `p5`, `p6`, `p7`, `p8`, `p9`, `p10`, `surfout`, `tightout`, `blendacc`, `pdacc`, `score`, `quality`, `inspector`, `remarks`) VALUES
 (4, '2016-11-16 00:00:00', 'sigaar', 'arie', '5', '6', '7', '8', '9', '1', '2', '3', '4', '5', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '50', '55', '88', '77', 'sc', 'qu', 'insp', '7'),
-(5, '2016-11-16 16:39:46', 'ander produkt', '', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '', '', '', '', '', '', '', '');
+(5, '2016-11-21 00:00:00', 'test', '', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -664,7 +664,7 @@ CREATE TABLE IF NOT EXISTS `specs` (
   `rol_pdacc` varchar(4) NOT NULL,
   `moist_s_min` varchar(4) NOT NULL,
   `moist_s_max` varchar(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=gbk;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=gbk;
 
 --
 -- Dumping data for table `specs`
@@ -675,8 +675,7 @@ INSERT INTO `specs` (`id`, `date`, `pid`, `start`, `end`, `name`, `nr`, `rol_l_m
 (27, '2016-11-18 16:29:10', '26', '2016-11-18 16:29:10', '2016-11-18 16:29:14', 'test', '12', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
 (28, '2016-11-18 16:29:14', '26', '2016-11-18 16:29:14', '2016-11-18 16:29:40', 'test', '123', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
 (29, '2016-11-18 16:29:40', '26', '2016-11-18 16:29:40', '2016-11-19 10:36:06', 'laatste test', '123', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(30, '2016-11-19 10:36:06', '26', '2016-11-19 10:36:06', '2016-11-20 09:53:04', 'laatste test', '123', '1', '', '2', '', '3', '', '4', '', '', '', '', '', '', ''),
-(31, '2016-11-20 09:53:04', '26', '2016-11-20 09:53:04', '3000-01-01 00:00:00', 'laatste test', '123', '1', '', '2', '', '3', '', '4', '', '', '', '', '', '1', '2');
+(32, '2016-11-21 14:26:09', '26', '2016-11-21 14:26:09', '3000-01-01 00:00:00', 'laatste test', '123', '5', '6', '2', '', '3', '', '4', '', '', '', '', '', '1', '2');
 
 -- --------------------------------------------------------
 
@@ -720,7 +719,37 @@ CREATE TABLE IF NOT EXISTS `storage` (
 --
 
 INSERT INTO `storage` (`id`, `date`, `product`, `start`, `end`, `moistmin`, `moistmax`, `deworm`, `dopant`, `headend`, `empty`, `seam`, `hole`, `break`, `m1`, `m2`, `m3`, `m4`, `m5`, `m6`, `m7`, `m8`, `score`, `batchok`, `inspector`, `incharge`, `remarks`) VALUES
-(1, '2016-11-17 09:46:48', '1', '2016-11-01 00:00:00', '2016-11-02 00:00:00', '5', '6', '1', '5', '1', '2', '3', '4', '6', '1', '2', '3', '4', '5', '6', '7', '8', '', '', '3', '2', '4');
+(1, '2016-11-17 09:46:48', '1', '2016-11-01 00:00:00', '2016-11-20 00:00:00', '5', '6', '1', '5', '1', '2', '3', '4', '6', '1', '2', '3', '4', '5', '6', '7', '8', '', '', '3', '2', '4');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `identity` varchar(18) NOT NULL,
+  `gebruik` int(11) NOT NULL DEFAULT '0',
+  `login` varchar(10) CHARACTER SET gb2312 NOT NULL,
+  `name` varchar(40) CHARACTER SET gb2312 NOT NULL,
+  `specs` tinyint(1) NOT NULL DEFAULT '0',
+  `formulas` tinyint(1) NOT NULL DEFAULT '0',
+  `admin` tinyint(1) NOT NULL DEFAULT '0',
+  `readonly` tinyint(1) NOT NULL DEFAULT '0',
+  `names` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `date`, `identity`, `gebruik`, `login`, `name`, `specs`, `formulas`, `admin`, `readonly`, `names`) VALUES
+(2, '2016-11-19 14:29:01', '127.0.0.1', 15, 'leyen', 'Arie', 0, 0, 1, 0, 0),
+(3, '2016-10-21 11:54:15', '', 0, '963852', 'alex', 1, 1, 0, 0, 1),
+(6, '2016-11-21 11:27:33', '', 0, '132132', 'Gao San', 1, 1, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -817,6 +846,12 @@ ALTER TABLE `storage`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `wrapping`
 --
 ALTER TABLE `wrapping`
@@ -860,12 +895,17 @@ ALTER TABLE `rolling`
 -- AUTO_INCREMENT for table `specs`
 --
 ALTER TABLE `specs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `storage`
 --
 ALTER TABLE `storage`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `wrapping`
 --
