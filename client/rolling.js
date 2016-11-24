@@ -89,7 +89,7 @@ var rolling_content = {
 		),
 		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend.label.WEIGHT"),
+				m("legend.WEIGHT"),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [1,2,3,4,5].map(function(n) {
 						return m("td",	m("input.number", {name: "w"+n}))
@@ -167,7 +167,13 @@ var rolling_content = {
 			
 			var sql = sprintf('UPDATE gwc_handmade.rolling SET %s="%s" WHERE id=%s', this.field, this.value, current );
 			$.getJSON('server/send_query.php', {query: sql}, function (data) {
-				$.getJSON('server/calc_scores.php', {id: current, table: "gwc_handmade.rolling"});
+				$.getJSON('server/calc_scores.php', {
+					id: current, 
+					table: "rolling"
+				}, function (data) {
+					$("#rolling [name=score]").html(data.score);
+					$("#rolling [name=quality]").html(data.quality);
+				});
 			});	
 		})
 

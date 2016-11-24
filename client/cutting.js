@@ -113,12 +113,20 @@ var cutting_content = {
 		
 		// save data
 		$("#cutting input:text").blur(function () {
-			this.current = $.jStorage.get("handmade.current.cutting");	
+			current = $.jStorage.get("handmade.current.cutting");	
 			this.field = $(this).attr('name');
 			this.value = $(this).val();
 			
-			sql = sprintf('UPDATE gwc_handmade.cutting SET %s="%s" WHERE id=%s', this.field, this.value, this.current );
-			$.getJSON('server/send_query.php', {	query: sql	});			
+			var sql = sprintf('UPDATE gwc_handmade.cutting SET %s="%s" WHERE id=%s', this.field, this.value, current );
+			$.getJSON('server/send_query.php', {query: sql}, function (data) {
+				$.getJSON('server/calc_scores.php', {
+					id: current, 
+					table: "cutting"
+				}, function (data) {
+					$("#cutting [name=score]").html(data.score);
+					$("#cutting [name=quality]").html(data.quality);
+				});
+			});			
 		})
 
 		$("#cutting textarea").blur(function () {

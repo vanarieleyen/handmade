@@ -25,7 +25,7 @@ var storage_content = {
 						),
 						m("td",
 							m("table", {width: "100%"}, [
-								[ {label:"label.BATCH_SCORE", field:"score"}, {label:"label.BATCH_QUALITY_OK", field:"batchok"} ].map(function (a) {
+								[ {label:"label.BATCH_SCORE", field:"score"}, {label:"label.BATCH_QUALITY_OK", field:"quality"} ].map(function (a) {
 									return m("tr", [
 													m("td",	m(a.label)),
 													m("td",	m("div", {name: a.field}, "--"))
@@ -137,12 +137,21 @@ var storage_content = {
 		
 		// save data
 		$("#storage input:text").blur(function () {
-			this.current = $.jStorage.get("handmade.current.storage");	
+			current = $.jStorage.get("handmade.current.storage");	
 			this.field = $(this).attr('name');
 			this.value = $(this).val();
 			
-			sql = sprintf('UPDATE gwc_handmade.storage SET %s="%s" WHERE id=%s', this.field, this.value, this.current );
-			$.getJSON('server/send_query.php', {	query: sql	});			
+			var sql = sprintf('UPDATE gwc_handmade.storage SET %s="%s" WHERE id=%s', this.field, this.value, current );
+			$.getJSON('server/send_query.php', {query: sql}, function (data) {
+				$.getJSON('server/calc_scores.php', {
+					id: current, 
+					table: "storage"
+				}, function (data) {
+					$("#storage [name=score]").html(data.score);
+					$("#storage [name=quality]").html(data.quality);
+				});
+			});			
+		
 		})
 
 		$("#storage textarea").blur(function () {

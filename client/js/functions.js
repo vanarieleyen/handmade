@@ -726,153 +726,89 @@ function show_data(table) {
 		}, function(data) {
 			switch (table) {
 				case "rolling":
-					$("#rolling [name=date]").val(data.date);
-					$("#rolling [name=product]").val(data.product);
-					$("#rolling [name=name]").val(data.name);
-					$("#rolling [name=inspector]").val(data.inspector);
-					$("#rolling [name=remarks]").val(data.remarks);
-					$("#rolling [name=score]").html(data.score);
-					$("#rolling [name=quality]").html(data.quality);
+					Array("date","product","name","inspector","remarks","surfout","tightout","blendacc","pdacc").map(function (label) {
+						$("#rolling [name="+label+"]").val(data[label]);
+					});
+					Array("score","quality").map(function (label) {	$("#rolling [name="+label+"]").html(data[label]);	});
 					for (var i=1; i<=10; i++) {
 						$("#rolling [name=l"+i+"]").val(data["l"+i]);
 						$("#rolling [name=d"+i+"]").val(data["d"+i]);
 						$("#rolling [name=w"+i+"]").val(data["w"+i]);
 						$("#rolling [name=p"+i+"]").val(data["p"+i]);
 					}
-					$("#rolling [name=surfout]").val(data.surfout);
-					$("#rolling [name=tightout]").val(data.tightout);
-					$("#rolling [name=blendacc]").val(data.blendacc);
-					$("#rolling [name=pdacc]").val(data.pdacc);
 					break;
 				case "wrapping":
-					$("#wrapping [name=date]").val(data.date);
-					$("#wrapping [name=product]").val(data.product);
-					$("#wrapping [name=name]").val(data.name);
-					$("#wrapping [name=inspector]").val(data.inspector);
-					$("#wrapping [name=remarks]").val(data.remarks);
-					$("#wrapping [name=score]").html(data.score);
-					$("#wrapping [name=quality]").html(data.quality);
-					
-					$("#wrapping [name=incision]").val(data.incision);
-					$("#wrapping [name=seam]").val(data.seam);
-					$("#wrapping [name=empty]").val(data.empty);
-					$("#wrapping [name=hole]").val(data.hole);
-					$("#wrapping [name=tightness]").val(data.tightness);
-					$("#wrapping [name=veins]").val(data.veins);
-					$("#wrapping [name=crack]").val(data.crack);
-					$("#wrapping [name=splice]").val(data.splice);
-					$("#wrapping [name=color]").val(data.color);
-					$("#wrapping [name=headend]").val(data.headend);
-					$("#wrapping [name=wrapok]").val(data.wrapok);
-					$("#wrapping [name=crease]").val(data.crease);
-					$("#wrapping [name=spot]").val(data.spot);
-					$("#wrapping [name=blot]").val(data.blot);
+					Array("date","product","name","inspector","remarks","incision","seam","empty","hole","tightness","veins",
+								"crack","splice","color","headend","wrapok","crease","spot","blot").map(function (label) {
+						$("#wrapping [name="+label+"]").val(data[label]);
+					});
+					Array("score","quality").map(function (label) {	$("#wrapping [name="+label+"]").html(data[label]);	});		
 					break;
 				case "cutting":
-					$("#cutting [name=date]").val(data.date);
-					$("#cutting [name=product]").val(data.product);
-					$("#cutting [name=name]").val(data.name);
-					$("#cutting [name=inspector]").val(data.inspector);
-					$("#cutting [name=remarks]").val(data.remarks);
-					$("#cutting [name=score]").html(data.score);
-					$("#cutting [name=quality]").html(data.quality);
-
-					$("#cutting [name=incision]").val(data.incision);
-					$("#cutting [name=seam]").val(data.seam);
-					$("#cutting [name=empty]").val(data.empty);
-					$("#cutting [name=crack]").val(data.crack);
-					$("#cutting [name=headend]").val(data.headend);
-					$("#cutting [name=crease]").val(data.crease);
-					$("#cutting [name=spot]").val(data.spot);
-					$("#cutting [name=blot]").val(data.blot);
+					Array("date","product","name","inspector","remarks","incision","seam","empty",
+								"crack","headend","crease","spot","blot").map(function (label) {
+						$("#cutting [name="+label+"]").val(data[label]);
+					});
+					Array("score","quality").map(function (label) {	$("#cutting [name="+label+"]").html(data[label]);	});
 					break;
 				case "storage":
-					$("#storage [name=date]").val(data.date);
-					$("#storage [name=product]").val(data.product);
-					$("#storage [name=incharge]").val(data.incharge);
-					$("#storage [name=inspector]").val(data.inspector);
-					$("#storage [name=remarks]").val(data.remarks);
-					$("#storage [name=score]").html(data.score);
-					$("#storage [name=batchok]").html(data.batchok);
+					Array("date","product","incharge","inspector","remarks","start","end","moistmin","moistmax",
+								"deworm","headend","empty","seam","hole","dopant","break").map(function (label) {
+						$("#storage [name="+label+"]").val(data[label]);
+					});
+					Array("score","quality").map(function (label) {	$("#storage [name="+label+"]").html(data[label]);	});
 					for (var i=1; i<=8; i++) {
 						$("#storage [name=m"+i+"]").val(data["m"+i]);
 					}
-					$("#storage [name=start]").val(data.start);
-					$("#storage [name=end]").val(data.end);
-					$("#storage [name=moistmin]").val(data.moistmin);
-					$("#storage [name=moistmax]").val(data.moistmax);
-					$("#storage [name=deworm]").val(data.deworm);
-					$("#storage [name=headend]").val(data.headend);
-					$("#storage [name=empty]").val(data.empty);
-					$("#storage [name=seam]").val(data.seam);
-					$("#storage [name=hole]").val(data.hole);
-					$("#storage [name=dopant]").val(data.dopant);
-					$("#storage [name=break]").val(data.break);
 					break;
-				case "defects":
-					$("#defects [name=date]").val(data.date);
-					$("#defects [name=product]").val(data.product);
-					$("#defects [name=sample]").val(data.sample);
-					$("#defects [name=inspector]").val(data.inspector);
-					$("#defects [name=remarks]").val(data.remarks);
-					$("#defects [name=sscore]").html(data.sscore);
-					$("#defects [name=pscore]").html(data.pscore);
-					$("#defects [name=bscore]").html(data.bscore);
+				case "stickDefects":
+					Array("date","product","sample","inspector","remarks","sjob","sjudge","sremarks").map(function (label) {
+						$("#stickDefects [name="+label+"]").val(data[label]);
+					});
+					$("#stickDefects [name=sscore]").html(data.sscore);
 					for (var i=1; i<=3; i++) {
-						$("#defects [name=srd"+i+"]").val(data["srd"+i]);
-						$("#defects [name=srd"+i+"_nr]").val(data["srd"+i+"_nr"]);
-						$("#defects [name=scd"+i+"]").val(data["scd"+i]);
-						$("#defects [name=scd"+i+"_nr]").val(data["scd"+i+"_nr"]);
-						$("#defects [name=ssd"+i+"]").val(data["ssd"+i]);
-						$("#defects [name=ssd"+i+"_nr]").val(data["ssd"+i+"_nr"]);
-						$("#defects [name=spd"+i+"]").val(data["spd"+i]);
-						$("#defects [name=spd"+i+"_nr]").val(data["spd"+i+"_nr"]);
-						$("#defects [name=ppd"+i+"]").val(data["ppd"+i]);
-						$("#defects [name=ppd"+i+"_nr]").val(data["ppd"+i+"_nr"]);
-						$("#defects [name=pm"+i+"]").val(data["pm"+i]);
-						$("#defects [name=pm"+i+"_nr]").val(data["pm"+i+"_nr"]);
-						$("#defects [name=bsd"+i+"]").val(data["bsd"+i]);
-						$("#defects [name=bsd"+i+"_nr]").val(data["bsd"+i+"_nr"]);
-						$("#defects [name=bb"+i+"]").val(data["bb"+i]);
-						$("#defects [name=bb"+i+"_nr]").val(data["bb"+i+"_nr"]);
-						$("#defects [name=bm"+i+"]").val(data["bm"+i]);
-						$("#defects [name=bm"+i+"_nr]").val(data["bm"+i+"_nr"]);
+						$("#stickDefects [name=srd"+i+"]").val(data["srd"+i]);
+						$("#stickDefects [name=srd"+i+"_nr]").val(data["srd"+i+"_nr"]);
+						$("#stickDefects [name=scd"+i+"]").val(data["scd"+i]);
+						$("#stickDefects [name=scd"+i+"_nr]").val(data["scd"+i+"_nr"]);
+						$("#stickDefects [name=ssd"+i+"]").val(data["ssd"+i]);
+						$("#stickDefects [name=ssd"+i+"_nr]").val(data["ssd"+i+"_nr"]);
+						$("#stickDefects [name=spd"+i+"]").val(data["spd"+i]);
+						$("#stickDefects [name=spd"+i+"_nr]").val(data["spd"+i+"_nr"]);
 					}
-					$("#defects [name=sjob]").val(data.sjob);
-					$("#defects [name=sjudge]").val(data.sjudge);
-					$("#defects [name=sremarks]").val(data.sremarks);
-					$("#defects [name=pjob]").val(data.pjob);
-					$("#defects [name=pjudge]").val(data.pjudge);
-					$("#defects [name=premarks]").val(data.premarks);
-					$("#defects [name=bjob]").val(data.bjob);
-					$("#defects [name=bjudge]").val(data.bjudge);
-					$("#defects [name=bremarks]").val(data.bremarks);
+					break;
+				case "packDefects":
+					Array("date","product","sample","inspector","remarks","pjob","pjudge","premarks").map(function (label) {
+						$("#packDefects [name="+label+"]").val(data[label]);
+					});
+					$("#packDefects [name=pscore]").html(data.pscore);
+					for (var i=1; i<=3; i++) {
+						$("#packDefects [name=ppd"+i+"]").val(data["ppd"+i]);
+						$("#packDefects [name=ppd"+i+"_nr]").val(data["ppd"+i+"_nr"]);
+						$("#packDefects [name=pm"+i+"]").val(data["pm"+i]);
+						$("#packDefects [name=pm"+i+"_nr]").val(data["pm"+i+"_nr"]);
+					}
+					break;
+				case "boxDefects":
+					Array("date","product","sample","inspector","remarks","bjob","bjudge","bremarks").map(function (label) {
+						$("#boxDefects [name="+label+"]").val(data[label]);
+					});
+					$("#boxDefects [name=bscore]").html(data.bscore);
+					for (var i=1; i<=3; i++) {
+						$("#boxDefects [name=bsd"+i+"]").val(data["bsd"+i]);
+						$("#boxDefects [name=bsd"+i+"_nr]").val(data["bsd"+i+"_nr"]);
+						$("#boxDefects [name=bb"+i+"]").val(data["bb"+i]);
+						$("#boxDefects [name=bb"+i+"_nr]").val(data["bb"+i+"_nr"]);
+						$("#boxDefects [name=bm"+i+"]").val(data["bm"+i]);
+						$("#boxDefects [name=bm"+i+"_nr]").val(data["bm"+i+"_nr"]);
+					}
 					break;
 				case "formulas":
-					$("#formulas [name=l_outlow]").val(data.l_outlow);
-					$("#formulas [name=l_outhigh]").val(data.l_outhigh);
-					$("#formulas [name=l_inspec]").val(data.l_inspec);
-					$("#formulas [name=c_outlow]").val(data.c_outlow);
-					$("#formulas [name=c_outhigh]").val(data.c_outhigh);
-					$("#formulas [name=c_inspec]").val(data.c_inspec);
-					$("#formulas [name=w_outlow]").val(data.w_outlow);
-					$("#formulas [name=w_outhigh]").val(data.w_outhigh);
-					$("#formulas [name=w_inspec]").val(data.w_inspec);
-					$("#formulas [name=p_outlow]").val(data.p_outlow);
-					$("#formulas [name=p_outhigh]").val(data.p_outhigh);
-					$("#formulas [name=p_inspec]").val(data.p_inspec);
-					$("#formulas [name=m_outlow]").val(data.m_outlow);
-					$("#formulas [name=m_outhigh]").val(data.m_outhigh);
-					$("#formulas [name=m_inspec]").val(data.m_inspec);
-					$("#formulas [name=m_2inspec]").val(data.m_2inspec);
-					$("#formulas [name=r_batch_score]").val(data.r_batch_score);
-					$("#formulas [name=r_batch_quality]").val(data.r_batch_quality);
-					$("#formulas [name=w_batch_score]").val(data.w_batch_score);
-					$("#formulas [name=w_batch_quality]").val(data.w_batch_quality);
-					$("#formulas [name=c_batch_score]").val(data.c_batch_score);
-					$("#formulas [name=c_batch_quality]").val(data.c_batch_quality);
-					$("#formulas [name=s_batch_score]").val(data.s_batch_score);
-					$("#formulas [name=s_batch_quality]").val(data.s_batch_quality);
+					Array("l_outlow","l_outhigh","l_inspec","c_outlow","c_outhigh","c_inspec","w_outlow","w_outhigh","w_inspec",
+								"p_outlow","p_outhigh","p_inspec","m_outlow","m_outhigh","m_inspec","m_2inspec","r_batch_score","r_batch_quality",
+								"w_batch_score","w_batch_quality","c_batch_score","c_batch_quality","s_batch_score","s_batch_quality").map(function (label) {
+						$("#formulas [name="+label+"]").val(data[label]);
+					});
 					break;
 			}		
 		});
@@ -880,7 +816,8 @@ function show_data(table) {
 }
 		
 function show_history() {
-	var source = sprintf("server/list_history.php?lang=%s&tab=%s", $.jStorage.get("lang"), $.jStorage.get("handmade_lasttab"));
+	var source = sprintf("server/list_history.php?lang=%s&tab=%s&defects=%s", $.jStorage.get("lang"), 
+										$.jStorage.get("handmade_lasttab"), $.jStorage.get("handmade_defectstab"));
 	
 	$("#history #lijst thead").empty();
 	$("#history #lijst thead").append('<th style="display:none">ID</th>');

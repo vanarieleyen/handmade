@@ -11,7 +11,7 @@ var data_content = {
 					{label:"label.WRAPPING_PROCESS", href:"#wrapping_sub_tab"},
 					{label:"label.MACHINE_CUTTING", href:"#cutting_sub_tab"},
 					{label:"label.STORAGE_PROCESS", href:"#storage_sub_tab"},
-					{label:"label.DEFECTS", href:"#defects_sub_tab"}
+					{label:"label.APPEARANCE", href:"#defects_sub_tab"}
 				].map(function (a) {
 					return m("li", 
 									m("a", {href: a.href, tabindex:"-1" }, [

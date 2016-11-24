@@ -18,6 +18,9 @@ var history_content = {
 		$('#history #lijst tbody').on('click', 'td', function(e) {		// open the selected row
 			var id = parseInt($(this).parent().find("td:first").text());
 			var table = $.jStorage.get("handmade_lasttab").split('_')[0];
+			
+			if (table=="defects") // defects are split into different tables
+				table = Array("stickDefects", "packDefects", "boxDefects")[$.jStorage.get("handmade_defectstab")];
 
 			$.jStorage.set("handmade.current."+table, id);
 			show_data(table);		// update the data in the tab before it is selected

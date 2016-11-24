@@ -53,11 +53,15 @@ var flagBox = [
 // childs first, then the parents
 // where initially evaluated: eval(require('script!./rolling.js'));	but doesn't seem to be necessary
 
+require('script!./stick-defects.js');
+require('script!./pack-defects.js');
+require('script!./sleeve-defects.js');
+
 require("script!./rolling.js");
 require('script!./wrapping.js');
 require('script!./cutting.js');
 require('script!./storage.js');
-require('script!./defects.js');
+require('script!./defects-tabs.js');
 require('script!./data-tabs.js');			// parent
 
 require('script!./history.js');

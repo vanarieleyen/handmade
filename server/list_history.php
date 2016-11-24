@@ -33,6 +33,11 @@ switch ($tab) {
 $column = split(", ", $fields);															// extract the column names from the $fields
 $table = sprintf("gwc_handmade.%s", split("_", $tab)[0]);		// get the tablename from the $tab-name
 
+if ($table == "gwc_handmade.defects") {		// er zijn 3 defects tables..
+	$type = ["stickDefects", "packDefects", "boxDefects"];
+	$table = sprintf("gwc_handmade.%s", $type[$defects]);	
+}
+
 $query = sprintf("SELECT %s	FROM %s ORDER BY id DESC", $fields, $table);
 $database->query($query);
 $rows = $database->resultset();
