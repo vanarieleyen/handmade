@@ -66,9 +66,12 @@ require('script!./data-tabs.js');			// parent
 
 require('script!./history.js');
 
+require('script!./evaluate.js');
+
 require('script!./specs.js');					// children of settings-tab
 require('script!./formulas.js');	
 require('script!./users.js');	
+require('script!./names.js');	
 require('script!./settings-tabs.js');	// parent
 
 
@@ -76,7 +79,7 @@ require('script!./settings-tabs.js');	// parent
 var tabContents = [
 	m("#data_tab", {config: handmade.setStyle}, m.component(data_content)),
 	m("#history_tab", m.component(history_content)),
-	m("#export_tab", "export"),
+	m("#evaluate_tab", m.component(evaluate_content)),
 	m("#settings_tab", {config: handmade.setStyle}, m.component(settings_content))
 ]
 
@@ -86,7 +89,7 @@ var uiTabs = [
 			[
 				{label:"label.PACKING50", href:"#data_tab"},
 				{label:"label.HISTORY", href:"#history_tab"},
-				{label:"label.EXPORT", href:"#export_tab"},
+				{label:"label.EVALUATE", href:"#evaluate_tab"},
 				{label:"label.SETTINGS", href:"#settings_tab"}
 			].map(function (a) {
 				return m("li", 
@@ -125,7 +128,7 @@ $(document).ready(function() {
 					show_history(); 												// update the history
 					$.jStorage.set("handmade_maintab", 1);
 					break;
-				case "export_tab": 		
+				case "evaluate_tab": 		
 					$.jStorage.set("handmade_maintab", 2);
 					break;
 				case "settings_tab": 	

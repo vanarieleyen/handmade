@@ -23,10 +23,10 @@ switch ($tab) {
 		$fields = "id, date, product, name, score, quality, inspector";
 		break;
 	case "storage_sub_tab":
-		$fields = "id, date, product, incharge, score, batchok, inspector";
+		$fields = "id, date, product, incharge, score, quality, inspector";
 		break;
 	case "defects_sub_tab":
-		$fields = "id, date, product, sample, sscore, pscore, bscore, inspector";
+		$fields = "id, date, product, sample, judge, score, inspector";
 		break;
 }
 
@@ -38,8 +38,10 @@ if ($table == "gwc_handmade.defects") {		// er zijn 3 defects tables..
 	$table = sprintf("gwc_handmade.%s", $type[$defects]);	
 }
 
+
 $query = sprintf("SELECT %s	FROM %s ORDER BY id DESC", $fields, $table);
 $database->query($query);
+// echo $database->getQuery($query); return;
 $rows = $database->resultset();
 
 foreach ($rows as $aRow) {
@@ -62,6 +64,5 @@ foreach ($rows as $aRow) {
 $database->endTransaction();
 
 echo json_encode( $output );
-	
 
 ?>

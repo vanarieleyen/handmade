@@ -1,6 +1,6 @@
-console.log("rolling.js processed");
+console.log("storage.js processed");
 
-// the rolling process input page
+// the storage process input page
 
 var storage_content = {
 	header: [

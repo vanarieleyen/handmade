@@ -14,7 +14,12 @@ $database->execute();
 $database->query("SET lc_time_names = 'zh_CN'");
 $database->execute();
 
-$database->query(sprintf("INSERT INTO %s (date) VALUES(NOW())", $table));		
+if ($table == "specs")
+	$query = sprintf("INSERT INTO %s (date, start) VALUES(NOW(), NOW())", $table);
+else	
+	$query = sprintf("INSERT INTO %s (date) VALUES(NOW())", $table);
+		
+$database->query($query);	
 $database->execute();
 $id = $database->lastInsertId();
 

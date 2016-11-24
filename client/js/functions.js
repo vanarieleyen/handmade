@@ -762,10 +762,10 @@ function show_data(table) {
 					}
 					break;
 				case "stickDefects":
-					Array("date","product","sample","inspector","remarks","sjob","sjudge","sremarks").map(function (label) {
+					Array("date","product","sample","inspector","remarks","sjob","judge","sremarks").map(function (label) {
 						$("#stickDefects [name="+label+"]").val(data[label]);
 					});
-					$("#stickDefects [name=sscore]").html(data.sscore);
+					$("#stickDefects [name=score]").html(data.score);
 					for (var i=1; i<=3; i++) {
 						$("#stickDefects [name=srd"+i+"]").val(data["srd"+i]);
 						$("#stickDefects [name=srd"+i+"_nr]").val(data["srd"+i+"_nr"]);
@@ -778,10 +778,10 @@ function show_data(table) {
 					}
 					break;
 				case "packDefects":
-					Array("date","product","sample","inspector","remarks","pjob","pjudge","premarks").map(function (label) {
+					Array("date","product","sample","inspector","remarks","pjob","judge","premarks").map(function (label) {
 						$("#packDefects [name="+label+"]").val(data[label]);
 					});
-					$("#packDefects [name=pscore]").html(data.pscore);
+					$("#packDefects [name=score]").html(data.score);
 					for (var i=1; i<=3; i++) {
 						$("#packDefects [name=ppd"+i+"]").val(data["ppd"+i]);
 						$("#packDefects [name=ppd"+i+"_nr]").val(data["ppd"+i+"_nr"]);
@@ -790,10 +790,10 @@ function show_data(table) {
 					}
 					break;
 				case "boxDefects":
-					Array("date","product","sample","inspector","remarks","bjob","bjudge","bremarks").map(function (label) {
+					Array("date","product","sample","inspector","remarks","bjob","judge","bremarks").map(function (label) {
 						$("#boxDefects [name="+label+"]").val(data[label]);
 					});
-					$("#boxDefects [name=bscore]").html(data.bscore);
+					$("#boxDefects [name=score]").html(data.score);
 					for (var i=1; i<=3; i++) {
 						$("#boxDefects [name=bsd"+i+"]").val(data["bsd"+i]);
 						$("#boxDefects [name=bsd"+i+"_nr]").val(data["bsd"+i+"_nr"]);
@@ -841,9 +841,8 @@ function show_history() {
 			break;
 		case "defects_sub_tab":
 			$("#history #lijst thead").append('<th><label class="SAMPLING_FREQ"></label></th>');
-			$("#history #lijst thead").append('<th><label class="STICK_PACKING_SCORE"></label></th>');
-			$("#history #lijst thead").append('<th><label class="PACKING_SCORE"></label></th>');
-			$("#history #lijst thead").append('<th><label class="SLEEVEBOX_SCORE"></label></th>');
+			$("#history #lijst thead").append('<th><label class="DETERMINATION"></label></th>');
+			$("#history #lijst thead").append('<th><label class="SCORE"></label></th>');
 			$("#history #lijst thead").append('<th><label class="INSPECTOR"></label></th>');
 			break;
 	}

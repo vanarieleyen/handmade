@@ -166,5 +166,5 @@ select {
 } 
 .subtabs1 .ui-tabs-nav .ui-state-active a { 
     text-decoration: underline;
-    background: lightyellow;
+    background: white;
 }

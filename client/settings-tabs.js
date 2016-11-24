@@ -9,7 +9,8 @@ var settings_content = {
 				[
 					{label:"label.SPECS", href:"#specs_sub_tab"},
 					{label:"label.PENALTY", href:"#formulas_sub_tab"},
-					{label:"label.SETTINGS", href:"#users_sub_tab"}
+					{label:"label.SETTINGS", href:"#users_sub_tab"},
+					{label:"label.NAAM", href:"#names_sub_tab"}
 				].map(function (a) {
 					return m("li", 
 									m("a", {href: a.href, tabindex:"-1" }, [
@@ -21,7 +22,8 @@ var settings_content = {
 			[			// the tabs used by ui-tabs
 				m("#formulas_sub_tab", m.component(formulas_content)),
 				m("#specs_sub_tab", m.component(specs_content)),
-				m("#users_sub_tab", m.component(users_content))
+				m("#users_sub_tab", m.component(users_content)),
+				m("#names_sub_tab", m.component(names_content))
 			]
 		])
 	],
@@ -40,6 +42,8 @@ var settings_content = {
 					case "formulas_sub_tab": 	$.jStorage.set("handmade_subtab", 1);
 												break;
 					case "users_sub_tab": 	$.jStorage.set("handmade_subtab", 2);
+												break;
+					case "names_sub_tab": 	$.jStorage.set("handmade_subtab", 3);
 												break;
 				}
 			}

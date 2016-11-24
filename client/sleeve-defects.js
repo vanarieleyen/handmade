@@ -39,7 +39,7 @@ var sleevedefects_content = {
 							m("table", {width: "100%"}, 
 								m("tr", [	
 									m("td",	m("label.SCORE")),	
-									m("td",	m("div[name=bscore]", "--"))	
+									m("td",	m("div[name=score]", "--"))	
 								])
 							)
 						)					
@@ -54,7 +54,7 @@ var sleevedefects_content = {
 				m("legend.DEFECTS"),
 				m("table", {width: "100%"}, [
 					m('tr', [
-						[	{label:"label.JOBNR", field:"bjob"}, {label:"label.DETERMINATION", field:"bjudge"} ].map(function (a) {
+						[	{label:"label.JOBNR", field:"bjob"}, {label:"label.DETERMINATION", field:"judge"} ].map(function (a) {
 							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
 						}),
 						m("td",	m("label.REMARK")),

@@ -32,7 +32,7 @@ var defects_content = {
 			active: $.jStorage.get("handmade_defectstab"),			// default tab when page is first loaded
 			activate: function( event, ui ) {
 				keus = ui.newPanel[0].id;
-				console.log(ui);
+				//console.log(ui);
 				switch (keus) {
 					case "stick_sub_tab":		$.jStorage.set("handmade_defectstab", 0);
 												break;

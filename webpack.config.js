@@ -1,7 +1,10 @@
 var path = require("path");
 
 module.exports = {
-  entry: ["./client/index.js"],
+  entry: [
+  	//'webpack-dev-server/client?http://' + require("ip").address() + ':8080/',
+  	"./client/index.js"
+  ],
   output: {
 		path: './build',				// output directory 
 		filename: "app.js"
