@@ -1,6 +1,3 @@
-console.log("rolling.js processed");
-
-// the rolling process input page
 
 var wrapping_content = {
 	header: [

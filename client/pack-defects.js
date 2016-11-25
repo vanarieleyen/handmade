@@ -1,6 +1,3 @@
-console.log("rolling.js processed");
-
-// the rolling process input page
 
 var packdefects_content = {
 	header: [

@@ -1,4 +1,3 @@
-console.log("evaluate.js processed");
 
 var evaluate_content = {
 	contents: [

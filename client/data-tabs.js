@@ -1,6 +1,3 @@
-console.log("data.js (create subtabs) processed");
-
-// creates the data-entry subtabs
 
 var data_content = {
 	subTabs: [

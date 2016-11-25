@@ -1,6 +1,3 @@
-console.log("rolling.js processed");
-
-// the rolling process input page
 
 var rolling_content = {
 	header: [
@@ -33,7 +30,8 @@ var rolling_content = {
 								}),
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
-									m("td",	m("input", {type: "text", name: "inspector"}))
+									m("td",	m("select[name=inspector]"))
+//									m("td",	m("input", {type: "text", name: "inspector"}))
 								])
 							])						
 						),

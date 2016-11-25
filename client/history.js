@@ -1,5 +1,4 @@
 
-
 var history_content = {
 	contents: [
 		m("div", {style: "height:41em; overflow:auto"},

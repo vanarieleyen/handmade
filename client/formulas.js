@@ -1,6 +1,3 @@
-console.log("formulas.js processed");
-
-// the formulas page
 
 var formulas_content = {
 	header: [

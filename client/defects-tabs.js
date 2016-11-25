@@ -1,6 +1,4 @@
 
-// creates the defects subtabs
-
 var defects_content = {
 	subTabs: [
 		m("#tabs3.subtabs1", [

@@ -14,6 +14,14 @@ require("script!sprintf-js");
 require("script!language");
 require("script!functions");
 
+var debug=false;
+
+// wrapper for require script (shows which file is processed)
+function include(filename) {
+	if (debug)
+		console.log("processing: "+filename);	
+	require('script!./'+filename);
+}
 
 // the complete handmade component
 var handmade = {
@@ -53,26 +61,26 @@ var flagBox = [
 // childs first, then the parents
 // where initially evaluated: eval(require('script!./rolling.js'));	but doesn't seem to be necessary
 
-require('script!./stick-defects.js');
-require('script!./pack-defects.js');
-require('script!./sleeve-defects.js');
+include('stick-defects.js');
+include('pack-defects.js');
+include('sleeve-defects.js');
 
-require("script!./rolling.js");
-require('script!./wrapping.js');
-require('script!./cutting.js');
-require('script!./storage.js');
-require('script!./defects-tabs.js');
-require('script!./data-tabs.js');			// parent
+include("rolling.js");
+include('wrapping.js');
+include('cutting.js');
+include('storage.js');
+include('defects-tabs.js');
+include('data-tabs.js');			// parent
 
-require('script!./history.js');
+include('history.js');
 
-require('script!./evaluate.js');
+include('evaluate.js');
 
-require('script!./specs.js');					// children of settings-tab
-require('script!./formulas.js');	
-require('script!./users.js');	
-require('script!./names.js');	
-require('script!./settings-tabs.js');	// parent
+include('specs.js');					// children of settings-tab
+include('formulas.js');	
+include('users.js');	
+include('names.js');	
+include('settings-tabs.js');	// parent
 
 
 // the tabs used by ui-tabs

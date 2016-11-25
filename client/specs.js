@@ -1,6 +1,3 @@
-console.log("specs.js processed");
-
-// the specs page
 
 var specs_content = {
 	contents: [

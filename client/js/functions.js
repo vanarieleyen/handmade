@@ -958,5 +958,12 @@ function show_spec_details(id) {
 	}
 }
 
+function show_names() {
+	$.getJSON('server/get_record.php', { 
+		query: "SELECT * FROM gwc_handmade.names WHERE id=1"
+	}, function(data) {
+		$("#names [name=inspector]").val(data.inspector);
+	});	
+}
 
 

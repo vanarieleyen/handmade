@@ -1,6 +1,3 @@
-console.log("storage.js processed");
-
-// the storage process input page
 
 var storage_content = {
 	header: [

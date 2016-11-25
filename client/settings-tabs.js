@@ -1,6 +1,3 @@
-console.log("data.js (create subtabs) processed");
-
-// creates the data-entry subtabs
 
 var settings_content = {
 	subTabs: [
@@ -35,7 +32,7 @@ var settings_content = {
 			active: $.jStorage.get("handmade_subtab"),			// default tab when page is first loaded
 			activate: function( event, ui ) {
 				keus = ui.newPanel[0].id;
-				console.log(ui);
+				//console.log(ui);
 				switch (keus) {
 					case "specs_sub_tab":		$.jStorage.set("handmade_subtab", 0);
 												break;
