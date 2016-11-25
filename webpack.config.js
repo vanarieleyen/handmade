@@ -2,7 +2,7 @@ var path = require("path");
 
 module.exports = {
   entry: [
-  	//'webpack-dev-server/client?http://' + require("ip").address() + ':8080/',
+  	"webpack-dev-server/client?http://0.0.0.0:8080/",		// enable requests from any client
   	"./client/index.js"
   ],
   output: {
@@ -13,7 +13,7 @@ module.exports = {
     proxy: [
         {
             path: '/server/*',
-            target: "http://localhost:80/handmade/"
+            target: "http://localhost:80/handmade/"			// the url of the server that handles the php requests
         }
     ]
 	},
