@@ -30,7 +30,7 @@ var cutting_content = {
 								}),
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
-									m("td",	m("input", {type: "text", name: "inspector"}))
+									m("td",	m("select[name=inspector]"))
 								])
 							])						
 						),
@@ -105,6 +105,11 @@ var cutting_content = {
 			$("#cutting textarea").attr("disabled", "disabled");
 		}	
 		
+		// fill the selectbox options
+		$.get('server/get_names.php', function(data) {
+			$('#cutting [name=inspector]').append(data);	
+		});
+		
 		// display the data
 		show_data("cutting");
 		
@@ -132,6 +137,15 @@ var cutting_content = {
 			
 			sql = sprintf('UPDATE gwc_handmade.cutting SET remarks="%s" WHERE id=%s', this.remarks, this.current );
 			$.getJSON('server/send_query.php', {	query: sql	});			
+		})
+		
+		$("#cutting select").on("blur", function () {
+			this.current = $.jStorage.get("handmade.current.cutting");
+			this.field = $(this).attr('name');
+			this.value = $(this).val();
+
+			sql = sprintf('UPDATE gwc_handmade.cutting SET %s="%s" WHERE id=%s', this.field, this.value, this.current );	
+			$.getJSON('server/send_query.php', {	query: sql	});	
 		})
 		
 		$("#cutting .new").click(function() {

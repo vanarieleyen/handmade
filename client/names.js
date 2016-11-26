@@ -25,7 +25,16 @@ var names_content = {
 		$("#names .save").click(function() {
 			var value = $("#names [name=inspector]").val();
 			var sql = sprintf('UPDATE gwc_handmade.names SET inspector="%s" WHERE id=1', value );
-			$.getJSON('server/send_query.php', {query: sql});	
+			$.getJSON('server/send_query.php', {
+				query: sql
+			}, function () {
+				// reload all inspector select-boxes with the new data
+				$.get('server/get_names.php', function(data) {
+					Array("#stickDefects","packDefects","#boxDefects","#rolling","#wrapping","#cutting","#storage").map(function(element){
+						$(element+' [name=inspector]').empty().append(data);
+					});
+				});
+			});	
 		});
 		
 	},

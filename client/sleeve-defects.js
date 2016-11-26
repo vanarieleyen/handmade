@@ -24,7 +24,7 @@ var sleevedefects_content = {
 							m("table", {width: "100%"}, [
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
-									m("td",	m("input", {type: "text", name: "inspector"}))
+									m("td",	m("select[name=inspector]"))
 								]),
 								m("tr", [
 									m("td",	m("label.REMARK")),
@@ -117,6 +117,11 @@ var sleevedefects_content = {
 			$("#boxDefects textarea").attr("disabled", "disabled");
 			$("#boxDefects select").attr("disabled", "disabled");
 		}
+		
+		// fill the selectbox options
+		$.get('server/get_names.php', function(data) {
+			$('#boxDefects [name=inspector]').append(data);	
+		});
 		
 		// display the data
 		show_data("boxDefects");

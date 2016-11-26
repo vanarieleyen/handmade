@@ -726,7 +726,11 @@ function show_data(table) {
 		}, function(data) {
 			switch (table) {
 				case "rolling":
-					Array("date","product","name","inspector","remarks","surfout","tightout","blendacc","pdacc").map(function (label) {
+					// add inspector when it is not in the list
+					if(!$('#rolling [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
+						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#rolling [name=inspector]'));
+					}
+					Array("date","product","name","remarks","inspector","surfout","tightout","blendacc","pdacc").map(function (label) {
 						$("#rolling [name="+label+"]").val(data[label]);
 					});
 					Array("score","quality").map(function (label) {	$("#rolling [name="+label+"]").html(data[label]);	});
@@ -738,6 +742,10 @@ function show_data(table) {
 					}
 					break;
 				case "wrapping":
+					// add inspector when it is not in the list
+					if(!$('#wrapping [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
+						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#wrapping [name=inspector]'));
+					}
 					Array("date","product","name","inspector","remarks","incision","seam","empty","hole","tightness","veins",
 								"crack","splice","color","headend","wrapok","crease","spot","blot").map(function (label) {
 						$("#wrapping [name="+label+"]").val(data[label]);
@@ -745,6 +753,10 @@ function show_data(table) {
 					Array("score","quality").map(function (label) {	$("#wrapping [name="+label+"]").html(data[label]);	});		
 					break;
 				case "cutting":
+					// add inspector when it is not in the list
+					if(!$('#cutting [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
+						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#cutting [name=inspector]'));
+					}
 					Array("date","product","name","inspector","remarks","incision","seam","empty",
 								"crack","headend","crease","spot","blot").map(function (label) {
 						$("#cutting [name="+label+"]").val(data[label]);
@@ -752,6 +764,10 @@ function show_data(table) {
 					Array("score","quality").map(function (label) {	$("#cutting [name="+label+"]").html(data[label]);	});
 					break;
 				case "storage":
+					// add inspector when it is not in the list
+					if(!$('#storage [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
+						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#storage [name=inspector]'));
+					}
 					Array("date","product","incharge","inspector","remarks","start","end","moistmin","moistmax",
 								"deworm","headend","empty","seam","hole","dopant","break").map(function (label) {
 						$("#storage [name="+label+"]").val(data[label]);
@@ -762,6 +778,10 @@ function show_data(table) {
 					}
 					break;
 				case "stickDefects":
+					// add inspector when it is not in the list
+					if(!$('#stickDefects [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
+						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#stickDefects [name=inspector]'));
+					}
 					Array("date","product","sample","inspector","remarks","sjob","judge","sremarks").map(function (label) {
 						$("#stickDefects [name="+label+"]").val(data[label]);
 					});
@@ -778,6 +798,10 @@ function show_data(table) {
 					}
 					break;
 				case "packDefects":
+					// add inspector when it is not in the list
+					if(!$('#packDefects [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
+						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#packDefects [name=inspector]'));
+					}
 					Array("date","product","sample","inspector","remarks","pjob","judge","premarks").map(function (label) {
 						$("#packDefects [name="+label+"]").val(data[label]);
 					});
@@ -790,6 +814,10 @@ function show_data(table) {
 					}
 					break;
 				case "boxDefects":
+					// add inspector when it is not in the list
+					if(!$('#boxDefects [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
+						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#boxDefects [name=inspector]'));
+					}
 					Array("date","product","sample","inspector","remarks","bjob","judge","bremarks").map(function (label) {
 						$("#boxDefects [name="+label+"]").val(data[label]);
 					});

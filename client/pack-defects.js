@@ -24,7 +24,7 @@ var packdefects_content = {
 							m("table", {width: "100%"}, [
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
-									m("td",	m("input", {type: "text", name: "inspector"}))
+									m("td",	m("select[name=inspector]"))
 								]),
 								m("tr", [
 									m("td",	m("label.REMARK")),
@@ -107,6 +107,11 @@ var packdefects_content = {
 			$("#packDefects textarea").attr("disabled", "disabled");
 			$("#packDefects select").attr("disabled", "disabled");
 		}
+		
+		// fill the selectbox options
+		$.get('server/get_names.php', function(data) {
+			$('#packDefects [name=inspector]').append(data);	
+		});
 		
 		// display the data
 		show_data("packDefects");

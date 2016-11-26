@@ -30,7 +30,7 @@ var wrapping_content = {
 								}),
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
-									m("td",	m("input", {type: "text", name: "inspector"}))
+									m("td",	m("select[name=inspector]"))
 								])
 							])						
 						),
@@ -121,6 +121,11 @@ var wrapping_content = {
 			$("#wrapping textarea").attr("disabled", "disabled");
 		}	
 		
+		// fill the selectbox options
+		$.get('server/get_names.php', function(data) {
+			$('#wrapping [name=inspector]').append(data);	
+		});
+		
 		// display the data
 		show_data("wrapping");
 		
@@ -140,6 +145,15 @@ var wrapping_content = {
 					$("#wrapping [name=quality]").html(data.quality);
 				});
 			});	
+		})
+		
+		$("#wrapping select").on("blur", function () {
+			this.current = $.jStorage.get("handmade.current.wrapping");
+			this.field = $(this).attr('name');
+			this.value = $(this).val();
+
+			sql = sprintf('UPDATE gwc_handmade.wrapping SET %s="%s" WHERE id=%s', this.field, this.value, this.current );	
+			$.getJSON('server/send_query.php', {	query: sql	});	
 		})
 
 		$("#wrapping textarea").blur(function () {

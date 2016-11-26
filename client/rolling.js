@@ -31,7 +31,6 @@ var rolling_content = {
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
 									m("td",	m("select[name=inspector]"))
-//									m("td",	m("input", {type: "text", name: "inspector"}))
 								])
 							])						
 						),

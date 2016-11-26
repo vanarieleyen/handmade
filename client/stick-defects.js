@@ -24,7 +24,7 @@ var stickdefects_content = {
 							m("table", {width: "100%"}, [
 								m("tr", [
 									m("td",	m("label.INSPECTOR")),
-									m("td",	m("input", {type: "text", name: "inspector"}))
+									m("td",	m("select[name=inspector]"))
 								]),
 								m("tr", [
 									m("td",	m("label.REMARK")),
@@ -128,6 +128,11 @@ var stickdefects_content = {
 			$("#stickDefects select").attr("disabled", "disabled");
 		}
 		
+		// fill the selectbox options
+		$.get('server/get_names.php', function(data) {
+			$('#stickDefects [name=inspector]').append(data);	
+		});
+
 		// display the data
 		show_data("stickDefects");
 
@@ -145,7 +150,7 @@ var stickdefects_content = {
 			this.current = $.jStorage.get("handmade.current.stickDefects");	
 			this.remarks = $("#stickDefects [name=remarks]").val();
 			
-			sql = sprintf('UPDATE gwc_handmade.stickDefects SET type=0, remarks="%s" WHERE id=%s', this.remarks, this.current );
+			sql = sprintf('UPDATE gwc_handmade.stickDefects SET remarks="%s" WHERE id=%s', this.remarks, this.current );
 			$.getJSON('server/send_query.php', {	query: sql	});			
 		})
 		
@@ -154,7 +159,7 @@ var stickdefects_content = {
 			this.field = $(this).attr('name');
 			this.value = $(this).val();
 
-			sql = sprintf('UPDATE gwc_handmade.stickDefects SET type=0, %s="%s" WHERE id=%s', this.field, this.value, this.current );	
+			sql = sprintf('UPDATE gwc_handmade.stickDefects SET %s="%s" WHERE id=%s', this.field, this.value, this.current );	
 			$.getJSON('server/send_query.php', {	query: sql	});	
 		});
 		
