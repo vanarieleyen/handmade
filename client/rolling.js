@@ -154,6 +154,11 @@ var rolling_content = {
 			$("#rolling textarea").attr("disabled", "disabled");
 		}
 		
+		// fill the selectbox options
+		$.get('server/get_names.php', function(data) {
+			$('#rolling [name=inspector]').append(data);	
+		});
+		
 		// display the data
 		show_data("rolling");
 		
@@ -181,6 +186,15 @@ var rolling_content = {
 			
 			sql = sprintf('UPDATE gwc_handmade.rolling SET remarks="%s" WHERE id=%s', this.remarks, this.current );
 			$.getJSON('server/send_query.php', {	query: sql	});			
+		})
+		
+		$("#rolling select").on("blur", function () {
+			this.current = $.jStorage.get("handmade.current.rolling");
+			this.field = $(this).attr('name');
+			this.value = $(this).val();
+
+			sql = sprintf('UPDATE gwc_handmade.rolling SET %s="%s" WHERE id=%s', this.field, this.value, this.current );	
+			$.getJSON('server/send_query.php', {	query: sql	});	
 		})
 		
 		$("#rolling .new").click(function() {
