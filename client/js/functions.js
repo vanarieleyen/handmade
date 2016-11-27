@@ -6,6 +6,27 @@ functies om de inputvelden van data uit de database te voorzien
 $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "Content-Type: text/html; charset=utf-8"});
 $.ajaxSetup({async:false});
 
+// format a Date to string: format("yyyy-MM-dd h:mm:ss")
+Date.prototype.format = function(format) {
+	var o = {
+			"M+" : this.getMonth()+1, //month
+			"d+" : this.getDate(),    //day
+			"h+" : this.getHours(),   //hour
+			"m+" : this.getMinutes(), //minute
+			"s+" : this.getSeconds(), //second
+			"q+" : Math.floor((this.getMonth()+3)/3),  //quarter
+			"S" : this.getMilliseconds() //millisecond
+		}
+	if (/(y+)/.test(format)) format=format.replace(RegExp.$1,
+   		(this.getFullYear()+"").substr(4 - RegExp.$1.length));
+	for (var k in o) 
+		if (new RegExp("("+ k +")").test(format))
+			format = format.replace(RegExp.$1,
+				RegExp.$1.length==1 ? o[k] : 
+				("00"+ o[k]).substr((""+ o[k]).length));
+	return format;
+}
+
 // stel de text en hint van een label in
 // een: de class van het element op de pagina
 // twee/drie: index of extra toevoeging aan label
@@ -134,7 +155,6 @@ function fill_labels() {
 	show('.RANGE', 37);
 	show('.PRODNR', 344);
 	show('.YOURNAME', 110);
-	show('.REASON', 111);
 	show('.SHIFT', 164);
 	show('.DAYSHIFT', 165);
 	show('.NIGHTSHIFT', 166);
@@ -670,6 +690,7 @@ function next_rec(table) {
 			});
 		}		
 	});
+	show_data(name);
 }	
 
 // go to the previous record
@@ -696,6 +717,7 @@ function prev_rec(table) {
 			});
 		}		
 	});
+	show_data(name);
 }
 
 // make a new record
@@ -712,6 +734,7 @@ function new_rec(table, element) {
 			$(element+" select").removeAttr("disabled");
 			$(element+" checkbox").attr("disabled", "disabled");
 		}
+		show_data(name);
 	});
 }
 
@@ -726,10 +749,13 @@ function show_data(table) {
 		}, function(data) {
 			switch (table) {
 				case "rolling":
-					// add inspector when it is not in the list
-					if(!$('#rolling [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
-						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#rolling [name=inspector]'));
-					}
+					// add option when it is not in the select
+					Array("inspector", "product").map(function (label) {
+						if (!$('#rolling [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
+							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#rolling [name='+label+']'));
+						}
+					});
+
 					Array("date","product","name","remarks","inspector","surfout","tightout","blendacc","pdacc").map(function (label) {
 						$("#rolling [name="+label+"]").val(data[label]);
 					});
@@ -742,10 +768,13 @@ function show_data(table) {
 					}
 					break;
 				case "wrapping":
-					// add inspector when it is not in the list
-					if(!$('#wrapping [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
-						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#wrapping [name=inspector]'));
-					}
+					// add option when it is not in the select
+					Array("inspector", "product").map(function (label) {
+						if (!$('#wrapping [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
+							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#wrapping [name='+label+']'));
+						}
+					});
+
 					Array("date","product","name","inspector","remarks","incision","seam","empty","hole","tightness","veins",
 								"crack","splice","color","headend","wrapok","crease","spot","blot").map(function (label) {
 						$("#wrapping [name="+label+"]").val(data[label]);
@@ -753,10 +782,13 @@ function show_data(table) {
 					Array("score","quality").map(function (label) {	$("#wrapping [name="+label+"]").html(data[label]);	});		
 					break;
 				case "cutting":
-					// add inspector when it is not in the list
-					if(!$('#cutting [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
-						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#cutting [name=inspector]'));
-					}
+					// add option when it is not in the select
+					Array("inspector", "product").map(function (label) {
+						if (!$('#cutting [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
+							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#cutting [name='+label+']'));
+						}
+					});
+
 					Array("date","product","name","inspector","remarks","incision","seam","empty",
 								"crack","headend","crease","spot","blot").map(function (label) {
 						$("#cutting [name="+label+"]").val(data[label]);
@@ -764,10 +796,13 @@ function show_data(table) {
 					Array("score","quality").map(function (label) {	$("#cutting [name="+label+"]").html(data[label]);	});
 					break;
 				case "storage":
-					// add inspector when it is not in the list
-					if(!$('#storage [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
-						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#storage [name=inspector]'));
-					}
+					// add option when it is not in the select
+					Array("inspector", "product").map(function (label) {
+						if (!$('#storage [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
+							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#storage [name='+label+']'));
+						}
+					});
+
 					Array("date","product","incharge","inspector","remarks","start","end","moistmin","moistmax",
 								"deworm","headend","empty","seam","hole","dopant","break").map(function (label) {
 						$("#storage [name="+label+"]").val(data[label]);
@@ -778,10 +813,13 @@ function show_data(table) {
 					}
 					break;
 				case "stickDefects":
-					// add inspector when it is not in the list
-					if(!$('#stickDefects [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
-						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#stickDefects [name=inspector]'));
-					}
+					// add option when it is not in the select
+					Array("inspector", "product").map(function (label) {
+						if (!$('#stickDefects [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
+							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#stickDefects [name='+label+']'));
+						}
+					});
+
 					Array("date","product","sample","inspector","remarks","sjob","judge","sremarks").map(function (label) {
 						$("#stickDefects [name="+label+"]").val(data[label]);
 					});
@@ -798,10 +836,13 @@ function show_data(table) {
 					}
 					break;
 				case "packDefects":
-					// add inspector when it is not in the list
-					if(!$('#packDefects [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
-						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#packDefects [name=inspector]'));
-					}
+					// add option when it is not in the select
+					Array("inspector", "product").map(function (label) {
+						if (!$('#packDefects [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
+							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#packDefects [name='+label+']'));
+						}
+					});
+
 					Array("date","product","sample","inspector","remarks","pjob","judge","premarks").map(function (label) {
 						$("#packDefects [name="+label+"]").val(data[label]);
 					});
@@ -814,10 +855,13 @@ function show_data(table) {
 					}
 					break;
 				case "boxDefects":
-					// add inspector when it is not in the list
-					if(!$('#boxDefects [name=inspector]').find("option:contains('" + data.inspector  + "')").length) {
-						$("<option/>", {value: data.inspector, text:data.inspector}).appendTo($('#boxDefects [name=inspector]'));
-					}
+					// add option when it is not in the select
+					Array("inspector", "product").map(function (label) {
+						if (!$('#boxDefects [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
+							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#boxDefects [name='+label+']'));
+						}
+					});
+
 					Array("date","product","sample","inspector","remarks","bjob","judge","bremarks").map(function (label) {
 						$("#boxDefects [name="+label+"]").val(data[label]);
 					});
@@ -935,7 +979,7 @@ function show_specs() {
 	})	
 
 	$("#specs #products tr:eq(0)").addClass('row_selected');	// select the first row
-	
+
 	// fill the spec history in the second list
 	show_spec_history(element.find("td:first center").html());
 }
@@ -991,6 +1035,8 @@ function show_names() {
 		query: "SELECT * FROM gwc_handmade.names WHERE id=1"
 	}, function(data) {
 		$("#names [name=inspector]").val(data.inspector);
+		$("#names [name=sampling]").val(data.name);
+		$("#names [name=incharge]").val(data.incharge);
 	});	
 }
 

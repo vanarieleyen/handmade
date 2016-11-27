@@ -10,7 +10,7 @@ var packdefects_content = {
 							m("table", {width: "100%"}, [
 								[
 									{label:"label.HANDMADE_DATE", soort:"input.datum", field:"date"},
-									{label:"label.PRODUCT", soort:"input", field:"product"},
+									{label:"label.PRODUCT", soort:"select", field:"product"},
 									{label:"label.SAMPLING_FREQ", soort:"input", field:"sample"}
 								].map(function (a) {							
 									return m("tr", [
@@ -109,8 +109,11 @@ var packdefects_content = {
 		}
 		
 		// fill the selectbox options
-		$.get('server/get_names.php', function(data) {
-			$('#packDefects [name=inspector]').append(data);	
+		$.getJSON('server/get_names.php', function(data) {
+			$('#packDefects [name=inspector]').append(data.inspectors);	
+		});
+		$.get('server/get_products.php', function(data) {
+			$('#packDefects [name=product]').append(data);	
 		});
 		
 		// display the data
@@ -145,17 +148,14 @@ var packdefects_content = {
 		
 		$("#packDefects .new").click(function() {
 			new_rec("gwc_handmade.packDefects", "#packDefects");
-			show_data("packDefects");
 		})
 	
 		$('#packDefects .next').click(function() {
 			next_rec("gwc_handmade.packDefects");
-			show_data("packDefects");
 		});
 	
 		$('#packDefects .prev').click(function() {
 			prev_rec("gwc_handmade.packDefects");
-			show_data("packDefects");
 		});		
 
 	},

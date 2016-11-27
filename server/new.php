@@ -14,7 +14,7 @@ $database->execute();
 $database->query("SET lc_time_names = 'zh_CN'");
 $database->execute();
 
-if ($table == "specs")
+if ($table == "gwc_handmade.specs")
 	$query = sprintf("INSERT INTO %s (date, start) VALUES(NOW(), NOW())", $table);
 else	
 	$query = sprintf("INSERT INTO %s (date) VALUES(NOW())", $table);

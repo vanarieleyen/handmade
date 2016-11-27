@@ -10,8 +10,8 @@ var storage_content = {
 							m("table", {width: "100%"}, [
 								[
 									{label:"label.HANDMADE_DATE", soort:"input.datum", field:"date"},
-									{label:"label.PRODUCT", soort:"input", field:"product"},
-									{label:"label.IN_CHARGE", soort:"input", field:"incharge"}
+									{label:"label.PRODUCT", soort:"select", field:"product"},
+									{label:"label.IN_CHARGE", soort:"select", field:"incharge"}
 								].map(function (a) {							
 									return m("tr", [
 													m("td",	m(a.label)),
@@ -130,8 +130,12 @@ var storage_content = {
 		}
 		
 		// fill the selectbox options
-		$.get('server/get_names.php', function(data) {
-			$('#storage [name=inspector]').append(data);	
+		$.getJSON('server/get_names.php', function(data) {
+			$('#storage [name=inspector]').append(data.inspectors);	
+			$('#storage [name=incharge]').append(data.incharge);	
+		});
+		$.get('server/get_products.php', function(data) {
+			$('#storage [name=product]').append(data);	
 		});
 		
 		// display the data
@@ -184,18 +188,15 @@ var storage_content = {
 		
 		$("#storage .new").click(function() {
 			new_rec("gwc_handmade.storage", "#storage");
-			show_data("storage");
 		})
 
 	
 		$('#storage .next').click(function() {
 			next_rec("gwc_handmade.storage");
-			show_data("storage");
 		});
 	
 		$('#storage .prev').click(function() {
 			prev_rec("gwc_handmade.storage");
-			show_data("storage");
 		});
 
 	},

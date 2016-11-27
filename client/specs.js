@@ -88,6 +88,7 @@ var specs_content = {
 							m("tbody")					
 						])
 					),
+					m("hr"),
 					m("div", {style: "height:10em; overflow:auto"}, 
 						m("table#history", {width: "100%"}, [
 							m("thead.header", {valign: "top"}, [
@@ -172,7 +173,14 @@ var specs_content = {
 					rol_w_min='%s', rol_w_max='%s', moist_s_min='%s', moist_s_max='%s', rol_surfout='%s', rol_tightout='%s', rol_p_min='%s', rol_p_max='%s', rol_blendacc='%s', rol_pdacc='%s' \
 					WHERE id=%s",	pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, moist_s_min, moist_s_max, 
 												rol_surfout, rol_tightout, rol_p_min, rol_p_max, rol_blendacc, rol_pdacc, id);
-				$.getJSON('server/send_query.php', {	query: sql	});	
+				$.getJSON('server/send_query.php', {	query: sql	});
+				
+				// reload all product select-boxes with the new data
+				$.get('server/get_products.php', function(data) {
+					Array("#stickDefects","packDefects","#boxDefects","#rolling","#wrapping","#cutting","#storage").map(function(element){
+						$(element+' [name=product]').empty().append(data);
+					});
+				});
 			});
 			
 			show_specs();
@@ -212,8 +220,13 @@ var specs_content = {
 			$.getJSON('server/get_record.php', {
 				query: "SELECT pid FROM gwc_handmade.specs WHERE id="+id		
 			}, function (data) {
+				if (data.pid == -1) {
+					var sql = "DELETE FROM gwc_handmade.specs WHERE id="+id
+				} else {
+					var sql = "DELETE FROM gwc_handmade.specs WHERE pid="+data.pid;
+				}
 				$.getJSON('server/send_query.php', {
-					query: "DELETE FROM gwc_handmade.specs WHERE pid="+data.pid	
+					query: sql
 				}, function () {
 					$('#specs .delete').attr('disabled', 'disabled');
 					show_specs();

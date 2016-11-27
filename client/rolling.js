@@ -10,8 +10,8 @@ var rolling_content = {
 							m("table", {width: "100%"}, [
 								[
 									{label:"label.HANDMADE_DATE", soort:"input.datum", field:"date"},
-									{label:"label.PRODUCT", soort:"input", field:"product"},
-									{label:"label.SAMPLINGPOINT", soort:"input", field:"name"}
+									{label:"label.PRODUCT", soort:"select", field:"product"},
+									{label:"label.SAMPLINGPOINT", soort:"select", field:"name"}
 								].map(function (a) {							
 									return m("tr", [
 													m("td",	m(a.label)),
@@ -154,8 +154,12 @@ var rolling_content = {
 		}
 		
 		// fill the selectbox options
-		$.get('server/get_names.php', function(data) {
-			$('#rolling [name=inspector]').append(data);	
+		$.getJSON('server/get_names.php', function(data) {
+			$('#rolling [name=inspector]').append(data.inspectors);	
+			$('#rolling [name=name]').append(data.sampling);	
+		});
+		$.get('server/get_products.php', function(data) {
+			$('#rolling [name=product]').append(data);	
 		});
 		
 		// display the data
@@ -198,17 +202,14 @@ var rolling_content = {
 		
 		$("#rolling .new").click(function() {
 			new_rec("gwc_handmade.rolling", "#rolling");
-			show_data("rolling");
 		})
 
 		$('#rolling .next').click(function() {
 			next_rec("gwc_handmade.rolling");
-			show_data("rolling");
 		});
 	
 		$('#rolling .prev').click(function() {
 			prev_rec("gwc_handmade.rolling");
-			show_data("rolling");
 		});
 
 	},

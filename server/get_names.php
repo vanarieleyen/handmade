@@ -19,13 +19,34 @@ $query = "SELECT * FROM gwc_handmade.names";
 $database->query($query);
 $row = $database->single();
 
-$names = explode(PHP_EOL, $row['inspector']);
+$inspectors = explode(PHP_EOL, $row['inspector']);
+$sampling = explode(PHP_EOL, $row['name']);
+$incharge = explode(PHP_EOL, $row['incharge']);
+
+$result = array();
 
 // generate the option list
-echo sprintf("<option value='---'>%s</option selected>", "---");
-foreach ($names AS $val) {
+$temp = sprintf("<option value='---'>%s</option selected>", "---");
+foreach ($inspectors AS $val) {
 	if (trim($val) != "") 
-		echo sprintf("<option value='%s'>%s</option>", $val, $val);
+		$temp = sprintf("%s<option value='%s'>%s</option>", $temp, $val, $val);
 }
+$result['inspectors'] = $temp;
+
+$temp = sprintf("<option value='---'>%s</option selected>", "---");
+foreach ($sampling AS $val) {
+	if (trim($val) != "") 
+		$temp = sprintf("%s<option value='%s'>%s</option>", $temp, $val, $val);
+}
+$result['sampling'] = $temp;
+
+$temp = sprintf("<option value='---'>%s</option selected>", "---");
+foreach ($incharge AS $val) {
+	if (trim($val) != "") 
+		$temp = sprintf("%s<option value='%s'>%s</option>", $temp, $val, $val);
+}
+$result['incharge'] = $temp;
+
+echo json_encode($result);
 
 ?>

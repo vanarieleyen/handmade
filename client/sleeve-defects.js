@@ -10,7 +10,7 @@ var sleevedefects_content = {
 							m("table", {width: "100%"}, [
 								[
 									{label:"label.HANDMADE_DATE", soort:"input.datum", field:"date"},
-									{label:"label.PRODUCT", soort:"input", field:"product"},
+									{label:"label.PRODUCT", soort:"select", field:"product"},
 									{label:"label.SAMPLING_FREQ", soort:"input", field:"sample"}
 								].map(function (a) {							
 									return m("tr", [
@@ -119,8 +119,11 @@ var sleevedefects_content = {
 		}
 		
 		// fill the selectbox options
-		$.get('server/get_names.php', function(data) {
-			$('#boxDefects [name=inspector]').append(data);	
+		$.getJSON('server/get_names.php', function(data) {
+			$('#boxDefects [name=inspector]').append(data.inspectors);	
+		});
+		$.get('server/get_products.php', function(data) {
+			$('#boxDefects [name=product]').append(data);	
 		});
 		
 		// display the data
@@ -155,17 +158,14 @@ var sleevedefects_content = {
 		
 		$("#boxDefects .new").click(function() {
 			new_rec("gwc_handmade.boxDefects", "#defects");
-			show_data("boxDefects");
 		})
 	
 		$('#boxDefects .next').click(function() {
 			next_rec("gwc_handmade.boxDefects");
-			show_data("boxDefects");
 		});
 	
 		$('#boxDefects .prev').click(function() {
 			prev_rec("gwc_handmade.boxDefects");
-			show_data("boxDefects");
 		});		
 
 	},
