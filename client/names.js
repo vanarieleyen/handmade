@@ -37,7 +37,7 @@ var names_content = {
 			m("input[type=button].save", {tabindex:"-1"})
 		])
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
 		
@@ -63,6 +63,6 @@ var names_content = {
 		
 	},
 	view: function () {
-		return m("#names", {config: show_names()}, this.contents);
+		return m("#names", this.contents);
 	}
 }

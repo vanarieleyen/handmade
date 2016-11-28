@@ -93,41 +93,9 @@ var sleevedefects_content = {
 			m("input[type=button].new", {tabindex:"-1"}),
 		])
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
-
-		// fill the selectbox options
-		$.get('server/get_defects.php?type=sleeve', function(data) {
-			for (var i=1; i<=3; i++)	$('#boxDefects [name=bsd'+i+']').append(data);	
-		});
-		$.get('server/get_defects.php?type=box box', function(data) {
-			for (var i=1; i<=3; i++)	$('#boxDefects [name=bb'+i+']').append(data);	
-		});
-		$.get('server/get_defects.php?type=pack mark', function(data) {
-			for (var i=1; i<=3; i++) 	$('#boxDefects [name=bm'+i+']').append(data);
-		});
-
-		// get the current location 
-		get_current("gwc_handmade.boxDefects");
-
-		// no records found - disable all input fields
-		if ($.jStorage.get("handmade.current.boxDefects") == null) {
-			$("#boxDefects input").not("[type=button]").attr("disabled", "disabled");
-			$("#boxDefects textarea").attr("disabled", "disabled");
-			$("#boxDefects select").attr("disabled", "disabled");
-		}
-		
-		// fill the selectbox options
-		$.getJSON('server/get_names.php', function(data) {
-			$('#boxDefects [name=inspector]').append(data.inspectors);	
-		});
-		$.get('server/get_products.php', function(data) {
-			$('#boxDefects [name=product]').append(data);	
-		});
-		
-		// display the data
-		show_data("boxDefects");
 
 		// save data
 		$("#boxDefects input:text").blur(function () {

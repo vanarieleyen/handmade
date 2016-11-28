@@ -6,6 +6,13 @@ functies om de inputvelden van data uit de database te voorzien
 $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "Content-Type: text/html; charset=utf-8"});
 $.ajaxSetup({async:false});
 
+// change the :contains-selector to match on whole words
+jQuery.expr[":"].contains = $.expr.createPseudo(function(arg) {
+  return function( elem ) {
+  	return ($(elem).text()==arg);
+  };
+});
+
 // format a Date to string: format("yyyy-MM-dd h:mm:ss")
 Date.prototype.format = function(format) {
 	var o = {
@@ -738,8 +745,18 @@ function new_rec(table, element) {
 	});
 }
 
+// load the data for the page
+function load_data(table) {
+	$.jStorage.set("handmade_table", table);
+	show_data(table); 
+}
+
 // shows the data from a table
 function show_data(table) {
+	
+	// get the current location 
+	get_current("gwc_handmade."+table);
+	
 	var id = $.jStorage.get("handmade.current."+table);
 	var sql = sprintf('SELECT * FROM gwc_handmade.%s WHERE id=%s', table, id);
 
@@ -749,6 +766,21 @@ function show_data(table) {
 		}, function(data) {
 			switch (table) {
 				case "rolling":
+					// no records found - disable all input fields
+					if ($.jStorage.get("handmade.current.rolling") == null) {
+						$("#rolling input").not("[type=button]").attr("disabled", "disabled");
+						$("#rolling textarea").attr("disabled", "disabled");
+					}
+					
+					// fill the selectbox options
+					$.getJSON('server/get_names.php', function(data) {
+						$('#rolling [name=inspector]').empty().append(data.inspectors);	
+						$('#rolling [name=name]').empty().append(data.sampling);	
+					});
+					$.get('server/get_products.php',  function(data) {
+						$('#rolling [name=product]').empty().append(data);	
+					});				
+				
 					// add option when it is not in the select
 					Array("inspector", "product").map(function (label) {
 						if (!$('#rolling [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
@@ -766,8 +798,25 @@ function show_data(table) {
 						$("#rolling [name=w"+i+"]").val(data["w"+i]);
 						$("#rolling [name=p"+i+"]").val(data["p"+i]);
 					}
+					
+					mini_chart("#rolling #chart-l", "length");
 					break;
 				case "wrapping":
+					// no records found - disable all input fields
+					if ($.jStorage.get("handmade.current.wrapping") == null) {
+						$("#wrapping input").not("[type=button]").attr("disabled", "disabled");
+						$("#wrapping textarea").attr("disabled", "disabled");
+					}	
+					
+					// fill the selectbox options
+					$.getJSON('server/get_names.php', function(data) {
+						$('#wrapping [name=inspector]').empty().append(data.inspectors);	
+						$('#wrapping [name=name]').empty().append(data.sampling);	
+					});
+					$.get('server/get_products.php', function(data) {
+						$('#wrapping [name=product]').empty().append(data);	
+					});
+
 					// add option when it is not in the select
 					Array("inspector", "product").map(function (label) {
 						if (!$('#wrapping [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
@@ -782,6 +831,21 @@ function show_data(table) {
 					Array("score","quality").map(function (label) {	$("#wrapping [name="+label+"]").html(data[label]);	});		
 					break;
 				case "cutting":
+					// no records found - disable all input fields
+					if ($.jStorage.get("handmade.current.cutting") == null) {
+						$("#cutting input").not("[type=button]").attr("disabled", "disabled");
+						$("#cutting textarea").attr("disabled", "disabled");
+					}	
+					
+					// fill the selectbox options
+					$.getJSON('server/get_names.php', function(data) {
+						$('#cutting [name=inspector]').empty().append(data.inspectors);	
+						$('#cutting [name=name]').empty().append(data.sampling);	
+					});
+					$.get('server/get_products.php', function(data) {
+						$('#cutting [name=product]').empty().append(data);	
+					});
+
 					// add option when it is not in the select
 					Array("inspector", "product").map(function (label) {
 						if (!$('#cutting [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
@@ -796,6 +860,21 @@ function show_data(table) {
 					Array("score","quality").map(function (label) {	$("#cutting [name="+label+"]").html(data[label]);	});
 					break;
 				case "storage":
+					// no records found - disable all input fields
+					if ($.jStorage.get("handmade.current.storage") == null) {
+						$("#storage input").not("[type=button]").attr("disabled", "disabled");
+						$("#storage textarea").attr("disabled", "disabled");
+					}
+					
+					// fill the selectbox options
+					$.getJSON('server/get_names.php', function(data) {
+						$('#storage [name=inspector]').empty().append(data.inspectors);	
+						$('#storage [name=incharge]').empty().append(data.incharge);	
+					});
+					$.get('server/get_products.php', function(data) {
+						$('#storage [name=product]').empty().append(data);	
+					});
+
 					// add option when it is not in the select
 					Array("inspector", "product").map(function (label) {
 						if (!$('#storage [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
@@ -813,6 +892,33 @@ function show_data(table) {
 					}
 					break;
 				case "stickDefects":
+					// no records found - disable all input fields
+					if ($.jStorage.get("handmade.current.stickDefects") == null) {
+						$("#stickDefects input").not("[type=button]").attr("disabled", "disabled");
+						$("#stickDefects textarea").attr("disabled", "disabled");
+						$("#stickDefects select").attr("disabled", "disabled");
+					}
+					
+					// fill the selectbox options
+					$.get('server/get_defects.php?type=stick ring', function(data) {
+						for (var i=1; i<=3; i++)	$('#stickDefects [name=srd'+i+']').append(data);	
+					});
+					$.get('server/get_defects.php?type=stick cel', function(data) {
+						for (var i=1; i<=3; i++)	$('#stickDefects [name=scd'+i+']').append(data);	
+					});
+					$.get('server/get_defects.php?type=stick set', function(data) {
+						for (var i=1; i<=3; i++)	$('#stickDefects [name=ssd'+i+']').append(data);	
+					});
+					$.get('server/get_defects.php?type=pack mark', function(data) {
+						for (var i=1; i<=3; i++) $('#stickDefects [name=spd'+i+']').append(data);	
+					});
+					$.getJSON('server/get_names.php', function(data) {
+						$('#stickDefects [name=inspector]').empty().append(data.inspectors);	
+					});
+					$.get('server/get_products.php', function(data) {
+						$('#stickDefects [name=product]').empty().append(data);	
+					});
+					
 					// add option when it is not in the select
 					Array("inspector", "product").map(function (label) {
 						if (!$('#stickDefects [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
@@ -836,6 +942,27 @@ function show_data(table) {
 					}
 					break;
 				case "packDefects":
+					// no records found - disable all input fields
+					if ($.jStorage.get("handmade.current.packDefects") == null) {
+						$("#packDefects input").not("[type=button]").attr("disabled", "disabled");
+						$("#packDefects textarea").attr("disabled", "disabled");
+						$("#packDefects select").attr("disabled", "disabled");
+					}
+					
+					// fill the selectbox options
+					$.get('server/get_defects.php?type=pack pack', function(data) {
+						for (var i=1; i<=3; i++)	$('#packDefects [name=ppd'+i+']').append(data);	
+					});
+					$.get('server/get_defects.php?type=pack mark', function(data) {
+						for (var i=1; i<=3; i++)	$('#packDefects [name=pm'+i+']').append(data);
+					});
+					$.getJSON('server/get_names.php', function(data) {
+						$('#packDefects [name=inspector]').empty().append(data.inspectors);	
+					});
+					$.get('server/get_products.php', function(data) {
+						$('#packDefects [name=product]').empty().append(data);	
+					});				
+				
 					// add option when it is not in the select
 					Array("inspector", "product").map(function (label) {
 						if (!$('#packDefects [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
@@ -855,6 +982,30 @@ function show_data(table) {
 					}
 					break;
 				case "boxDefects":
+					// no records found - disable all input fields
+					if ($.jStorage.get("handmade.current.boxDefects") == null) {
+						$("#boxDefects input").not("[type=button]").attr("disabled", "disabled");
+						$("#boxDefects textarea").attr("disabled", "disabled");
+						$("#boxDefects select").attr("disabled", "disabled");
+					}
+					
+					// fill the selectbox options
+					$.get('server/get_defects.php?type=sleeve', function(data) {
+						for (var i=1; i<=3; i++)	$('#boxDefects [name=bsd'+i+']').append(data);	
+					});
+					$.get('server/get_defects.php?type=box box', function(data) {
+						for (var i=1; i<=3; i++)	$('#boxDefects [name=bb'+i+']').append(data);	
+					});
+					$.get('server/get_defects.php?type=pack mark', function(data) {
+						for (var i=1; i<=3; i++) 	$('#boxDefects [name=bm'+i+']').append(data);
+					});
+					$.getJSON('server/get_names.php', function(data) {
+						$('#boxDefects [name=inspector]').empty().append(data.inspectors);	
+					});
+					$.get('server/get_products.php', function(data) {
+						$('#boxDefects [name=product]').empty().append(data);	
+					});
+
 					// add option when it is not in the select
 					Array("inspector", "product").map(function (label) {
 						if (!$('#boxDefects [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
@@ -875,12 +1026,32 @@ function show_data(table) {
 						$("#boxDefects [name=bm"+i+"_nr]").val(data["bm"+i+"_nr"]);
 					}
 					break;
+				case "specs":
+					// no records found - disable all input fields
+					if ($.jStorage.get("handmade.current.specs") == null) {
+						$("#specs input").not("[type=button]").attr("disabled", "disabled");
+						$("#specs textarea").attr("disabled", "disabled");
+					}
+					show_specs();
+					break;
 				case "formulas":
 					Array("l_outlow","l_outhigh","l_inspec","c_outlow","c_outhigh","c_inspec","w_outlow","w_outhigh","w_inspec",
 								"p_outlow","p_outhigh","p_inspec","m_outlow","m_outhigh","m_inspec","m_2inspec","r_batch_score","r_batch_quality",
 								"w_batch_score","w_batch_quality","c_batch_score","c_batch_quality","s_batch_score","s_batch_quality").map(function (label) {
 						$("#formulas [name="+label+"]").val(data[label]);
 					});
+					break;
+				case "users":
+					// no records found - disable all input fields
+					if ($.jStorage.get("handmade.current.users") == null) {
+						$("#users input").not("[type=button]").attr("disabled", "disabled");
+						$("#users checkbox").attr("disabled", "disabled");
+						$("#users .save").attr("disabled", "disabled");
+					}
+					show_users();
+					break;
+				case "names":
+					show_names();
 					break;
 			}		
 		});
@@ -1040,4 +1211,18 @@ function show_names() {
 	});	
 }
 
+function show_evaluation() {
+	// fill the selectbox options
+	$.getJSON('server/get_names.php', function(data) {
+		$('#evaluate [name=sampling]').append(data.sampling);	
+	});
+	$.get('server/get_products.php', function(data) {
+		$('#evaluate [name=product]').append(data);	
+	});
+	$.getJSON('server/get_stage.php', {
+		lang: $.jStorage.get("lang")
+	}, function(data) {
+		$('#evaluate [name=stage]').append(data);	
+	});
+}
 

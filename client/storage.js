@@ -111,7 +111,7 @@ var storage_content = {
 			m("input[type=button].new", {tabindex:"-1"}),
 		])
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
 			
@@ -119,28 +119,7 @@ var storage_content = {
 		$.get('server/get_status.php?lang='+$.jStorage.get("lang"), function(data) {
 			$('#storage [name=deworm]').append(data);	
 		});		
-		
-		// get the current location 
-		get_current("gwc_handmade.storage");
 
-		// no records found - disable all input fields
-		if ($.jStorage.get("handmade.current.storage") == null) {
-			$("#storage input").not("[type=button]").attr("disabled", "disabled");
-			$("#storage textarea").attr("disabled", "disabled");
-		}
-		
-		// fill the selectbox options
-		$.getJSON('server/get_names.php', function(data) {
-			$('#storage [name=inspector]').append(data.inspectors);	
-			$('#storage [name=incharge]').append(data.incharge);	
-		});
-		$.get('server/get_products.php', function(data) {
-			$('#storage [name=product]').append(data);	
-		});
-		
-		// display the data
-		show_data("storage");
-		
 		// save data
 		$("#storage input:text").blur(function () {
 			current = $.jStorage.get("handmade.current.storage");	
@@ -156,8 +135,7 @@ var storage_content = {
 					$("#storage [name=score]").html(data.score);
 					$("#storage [name=quality]").html(data.quality);
 				});
-			});			
-		
+			});
 		})
 
 		$("#storage textarea").blur(function () {

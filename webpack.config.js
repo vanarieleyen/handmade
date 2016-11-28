@@ -20,21 +20,16 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.css$/, loader: "style-loader!css-loader" },
-      { test: /\.(jpg|gif|png)$/i, loader: "base64-image-loader" }
+      { test: /\.script.js$/, loader: "script-loader" },						// use the script loader for *.script.js files
+      { test: /\.(jpg|gif|png)$/i, loader: "base64-image-loader" },
     ]
   },
   resolve: { 
 		alias: { 
 			"Mithril": path.join(__dirname, "node_modules/mithril/mithril.min.js"),
 			"jquery-ui": path.join(__dirname, "node_modules/jquery-ui-bundle/jquery-ui.js"),
-			"ui-css": path.join(__dirname, "styles/ui.css"),		
-			"functions": path.join(__dirname, "client/js/functions.js"),
-			"master-css": path.join(__dirname, "styles/master.css"),	
-			"zebra-css": path.join(__dirname, "styles/zebra/default.css"),	
-			"language": path.join(__dirname, "client/js/language.js"),
 			"jstorage": path.join(__dirname, "client/js/jstorage.js"),
-			"zebra-js": path.join(__dirname, "client/js/zebra_datepicker.js"),
-			"sprintf-js": path.join(__dirname, "client/js/sprintf.js")	
+			"zebra-js": path.join(__dirname, "client/js/zebra_datepicker.js")
 		} 
 	}
 }

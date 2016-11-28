@@ -28,20 +28,31 @@ var settings_content = {
 		if (isInitialized)
 			return;
 		
+		// default tab when page is first loaded
+		var initialtab = $.jStorage.get("handmade_settingstab");
+		
 		$( "#tabs2" ).tabs({
-			active: $.jStorage.get("handmade_subtab"),			// default tab when page is first loaded
+			active: initialtab,			// default tab when page is first loaded
 			activate: function( event, ui ) {
 				keus = ui.newPanel[0].id;
 				//console.log(ui);
 				switch (keus) {
-					case "specs_sub_tab":		$.jStorage.set("handmade_subtab", 0);
+					case "specs_sub_tab":		$.jStorage.set("handmade_settingstab", 0);		load_data("specs");
 												break;
-					case "formulas_sub_tab": 	$.jStorage.set("handmade_subtab", 1);
+					case "formulas_sub_tab": 	$.jStorage.set("handmade_settingstab", 1);	load_data("formulas");
 												break;
-					case "users_sub_tab": 	$.jStorage.set("handmade_subtab", 2);
+					case "users_sub_tab": 	$.jStorage.set("handmade_settingstab", 2);		load_data("users");
 												break;
-					case "names_sub_tab": 	$.jStorage.set("handmade_subtab", 3);
+					case "names_sub_tab": 	$.jStorage.set("handmade_settingstab", 3);		load_data("names");
 												break;
+				}
+			},
+			create: function( event, ui ) {
+				switch (initialtab) {
+					case 0: load_data("specs"); break;
+					case 1: load_data("formulas"); break;
+					case 2: load_data("users"); break;
+					case 3: load_data("names"); break;
 				}
 			}
 		});

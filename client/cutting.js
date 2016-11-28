@@ -92,31 +92,10 @@ var cutting_content = {
 			m("input[type=button].new", {tabindex:"-1"}),
 		])
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {	// only events and initialisation
 		if (isInitialized) 
 			return;
-		
-		// get the current location 
-		get_current("gwc_handmade.cutting");
-		
-		// no records found - disable all input fields
-		if ($.jStorage.get("handmade.current.cutting") == null) {
-			$("#cutting input").not("[type=button]").attr("disabled", "disabled");
-			$("#cutting textarea").attr("disabled", "disabled");
-		}	
-		
-		// fill the selectbox options
-		$.getJSON('server/get_names.php', function(data) {
-			$('#cutting [name=inspector]').append(data.inspectors);	
-			$('#cutting [name=name]').append(data.sampling);	
-		});
-		$.get('server/get_products.php', function(data) {
-			$('#cutting [name=product]').append(data);	
-		});
-		
-		// display the data
-		show_data("cutting");
-		
+
 		// save data
 		$("#cutting input:text").blur(function () {
 			current = $.jStorage.get("handmade.current.cutting");	

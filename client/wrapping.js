@@ -108,30 +108,9 @@ var wrapping_content = {
 			m("input[type=button].new", {tabindex:"-1"}),
 		])
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
-	
-		// get the current location 
-		get_current("gwc_handmade.wrapping");
-		
-		// no records found - disable all input fields
-		if ($.jStorage.get("handmade.current.wrapping") == null) {
-			$("#wrapping input").not("[type=button]").attr("disabled", "disabled");
-			$("#wrapping textarea").attr("disabled", "disabled");
-		}	
-		
-		// fill the selectbox options
-		$.getJSON('server/get_names.php', function(data) {
-			$('#wrapping [name=inspector]').append(data.inspectors);	
-			$('#wrapping [name=name]').append(data.sampling);	
-		});
-		$.get('server/get_products.php', function(data) {
-			$('#wrapping [name=product]').append(data);	
-		});
-		
-		// display the data
-		show_data("wrapping");
 		
 		// save data
 		$("#wrapping input:text").blur(function () {

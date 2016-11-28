@@ -100,44 +100,9 @@ var stickdefects_content = {
 			m("input[type=button].new", {tabindex:"-1"}),
 		])
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
-
-		// fill the selectbox options
-		$.get('server/get_defects.php?type=stick ring', function(data) {
-			for (var i=1; i<=3; i++)	$('#stickDefects [name=srd'+i+']').append(data);	
-		});
-		$.get('server/get_defects.php?type=stick cel', function(data) {
-			for (var i=1; i<=3; i++)	$('#stickDefects [name=scd'+i+']').append(data);	
-		});
-		$.get('server/get_defects.php?type=stick set', function(data) {
-			for (var i=1; i<=3; i++)	$('#stickDefects [name=ssd'+i+']').append(data);	
-		});
-		$.get('server/get_defects.php?type=pack mark', function(data) {
-			for (var i=1; i<=3; i++) $('#stickDefects [name=spd'+i+']').append(data);	
-		});
-
-		// get the current location 
-		get_current("gwc_handmade.stickDefects");
-
-		// no records found - disable all input fields
-		if ($.jStorage.get("handmade.current.stickDefects") == null) {
-			$("#stickDefects input").not("[type=button]").attr("disabled", "disabled");
-			$("#stickDefects textarea").attr("disabled", "disabled");
-			$("#stickDefects select").attr("disabled", "disabled");
-		}
-		
-		// fill the selectbox options
-		$.getJSON('server/get_names.php', function(data) {
-			$('#stickDefects [name=inspector]').append(data.inspectors);	
-		});
-		$.get('server/get_products.php', function(data) {
-			$('#stickDefects [name=product]').append(data);	
-		});
-
-		// display the data
-		show_data("stickDefects");
 
 		// save data
 		$("#stickDefects input:text").blur(function () {

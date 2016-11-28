@@ -2,17 +2,21 @@ window.$ = require("jquery");
 window.m = require('mithril');
 jQuery = window.$;
 
-require("ui-css");
-require("master-css");
-require("zebra-css");
-
 require('jquery-ui');
 require("jstorage");
 require("zebra-js");
 
-require("script!sprintf-js");
-require("script!language");
-require("script!functions");
+function requireAll(r) { 
+	r.keys().map(r); 
+}
+
+// load all css files
+requireAll(require.context('../styles/', false, /\.css$/));
+
+require("script!charts");
+
+// load all *.script.js files (are loaded by the script-loader)
+requireAll(require.context('./js/', false, /\.script.js$/));
 
 var debug=false;
 
@@ -53,7 +57,7 @@ var handmade = {
 var flagBox = [ 
 	m("span", {config: handmade.controller}, [
 		m("img", {src: require("../assets/CN.jpg"), onclick: function(){$.jStorage.set("lang", 0); fill_labels();} }),
-		m("img", {src: require("../assets/GB.jpg"), onclick: function(){$.jStorage.set("lang", 1); fill_labels();} })
+		m("img", {src: require("../assets/GB.jpg"), onclick: function(){$.jStorage.set("lang" , 1); fill_labels();} })
 	])
 ]
 
@@ -119,13 +123,20 @@ $(document).ready(function() {
 		$.jStorage.set("lang", 0);
 	if ($.jStorage.get("handmade_maintab") == null)
 		$.jStorage.set("handmade_maintab", 0);
-	if ($.jStorage.get("handmade_subtab") == null)
-		$.jStorage.set("handmade_subtab", 0);
+	if ($.jStorage.get("handmade_datatab") == null)
+		$.jStorage.set("handmade_datatab", 0);
+	if ($.jStorage.get("handmade_defectsstab") == null)
+		$.jStorage.set("handmade_defectsstab", 0);
+	if ($.jStorage.get("handmade_settingstab") == null)
+		$.jStorage.set("handmade_settingstab", 0);
 
 	fill_labels();
 
+	// default tab when page is first loaded
+	var initialtab = $.jStorage.get("handmade_maintab");
+		
 	$( "#tabs" ).tabs({
-		active: $.jStorage.get("handmade_maintab"),			// default tab when page is first loaded
+		active: initialtab,
 		activate: function( event, ui ) {
 			keus = ui.newPanel[0].id;
 			switch (keus) {
@@ -136,13 +147,20 @@ $(document).ready(function() {
 					show_history(); 												// update the history
 					$.jStorage.set("handmade_maintab", 1);
 					break;
-				case "evaluate_tab": 		
+				case "evaluate_tab": 
+					show_evaluation();		
 					$.jStorage.set("handmade_maintab", 2);
 					break;
 				case "settings_tab": 	
 					show_specs();
 					$.jStorage.set("handmade_maintab", 3);
 					break;
+			}
+		},
+		create: function( event, ui ) {
+			switch (initialtab) {
+				case 1: show_history(); break;
+				case 2: show_evaluation(); break;
 			}
 		}
 	});

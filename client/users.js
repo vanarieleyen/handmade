@@ -57,23 +57,10 @@ var users_content = {
 			])
 		])
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
-			
-		// get the current location 
-		get_current("gwc_handmade.users");
 
-		// no records found - disable all input fields
-		if ($.jStorage.get("handmade.current.users") == null) {
-			$("#users input").not("[type=button]").attr("disabled", "disabled");
-			$("#users checkbox").attr("disabled", "disabled");
-			$("#users .save").attr("disabled", "disabled");
-		}
-		
-		// display the data
-		show_data("users");
-		
 		// select a product from the specifications list
 		$('#users #userlist tbody').on('click', 'td', function(e) {		
 			$("#users #userlist tbody tr").removeClass('row_selected');
@@ -141,7 +128,7 @@ var users_content = {
 
 	},
 	view: function () {
-		return m("#users", {config: show_users}, [this.header, this.contents]);
+		return m("#users", [this.header, this.contents]);
 	}
 }
 

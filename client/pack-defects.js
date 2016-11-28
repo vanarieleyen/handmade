@@ -86,38 +86,9 @@ var packdefects_content = {
 			m("input[type=button].new", {tabindex:"-1"}),
 		])
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
-
-		// fill the selectbox options
-		$.get('server/get_defects.php?type=pack pack', function(data) {
-			for (var i=1; i<=3; i++)	$('#packDefects [name=ppd'+i+']').append(data);	
-		});
-		$.get('server/get_defects.php?type=pack mark', function(data) {
-			for (var i=1; i<=3; i++)	$('#packDefects [name=pm'+i+']').append(data);
-		});
-
-		// get the current location 
-		get_current("gwc_handmade.packDefects");
-
-		// no records found - disable all input fields
-		if ($.jStorage.get("handmade.current.packDefects") == null) {
-			$("#packDefects input").not("[type=button]").attr("disabled", "disabled");
-			$("#packDefects textarea").attr("disabled", "disabled");
-			$("#packDefects select").attr("disabled", "disabled");
-		}
-		
-		// fill the selectbox options
-		$.getJSON('server/get_names.php', function(data) {
-			$('#packDefects [name=inspector]').append(data.inspectors);	
-		});
-		$.get('server/get_products.php', function(data) {
-			$('#packDefects [name=product]').append(data);	
-		});
-		
-		// display the data
-		show_data("packDefects");
 
 		// save data
 		$("#packDefects input:text").blur(function () {

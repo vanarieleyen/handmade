@@ -25,19 +25,28 @@ var defects_content = {
 	controller: function (element, isInitialized) {
 		if (isInitialized)
 			return;
+
+		// default tab when page is first loaded
+		var initialtab = $.jStorage.get("handmade_defectstab");
 		
 		$( "#tabs3" ).tabs({
-			active: $.jStorage.get("handmade_defectstab"),			// default tab when page is first loaded
+			active: initialtab,
 			activate: function( event, ui ) {
 				keus = ui.newPanel[0].id;
-				//console.log(ui);
 				switch (keus) {
-					case "stick_sub_tab":		$.jStorage.set("handmade_defectstab", 0);
+					case "stick_sub_tab":		$.jStorage.set("handmade_defectstab", 0);	load_data("stickDefects"); 
+												break;	
+					case "pack_sub_tab": 		$.jStorage.set("handmade_defectstab", 1);	load_data("packDefects"); 
+												break;	
+					case "sleeve_sub_tab": 	$.jStorage.set("handmade_defectstab", 2);	load_data("boxDefects"); 
 												break;
-					case "pack_sub_tab": 		$.jStorage.set("handmade_defectstab", 1);
-												break;
-					case "sleeve_sub_tab": 	$.jStorage.set("handmade_defectstab", 2);
-												break;
+				}
+			},
+			create: function( event, ui ) {
+				switch (initialtab) {
+					case 0: load_data("stickDefects"); break;
+					case 1: load_data("packDefects"); break;
+					case 2: load_data("boxDefects"); break;
 				}
 			}
 		});

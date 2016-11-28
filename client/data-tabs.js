@@ -29,24 +29,35 @@ var data_content = {
 	controller: function (element, isInitialized) {
 		if (isInitialized)
 			return;
+
+		// default tab when page is first loaded
+		var initialtab = $.jStorage.get("handmade_datatab");
 		
 		$( "#tabs1" ).tabs({
-			active: $.jStorage.get("handmade_subtab"),			// default tab when page is first loaded
+			active: initialtab,			
 			activate: function( event, ui ) {
 				keus = ui.newPanel[0].id;
 				$.jStorage.set("handmade_lasttab", keus);
 
 				switch (keus) {
-					case "rolling_sub_tab":		$.jStorage.set("handmade_subtab", 0);
+					case "rolling_sub_tab":		$.jStorage.set("handmade_datatab", 0);	load_data("rolling"); 
 												break;
-					case "wrapping_sub_tab": 	$.jStorage.set("handmade_subtab", 1);
+					case "wrapping_sub_tab": 	$.jStorage.set("handmade_datatab", 1);	load_data("wrapping");
 												break;
-					case "cutting_sub_tab": 	$.jStorage.set("handmade_subtab", 2);
+					case "cutting_sub_tab": 	$.jStorage.set("handmade_datatab", 2);	load_data("cutting");
 												break;
-					case "storage_sub_tab": 	$.jStorage.set("handmade_subtab", 3);
+					case "storage_sub_tab": 	$.jStorage.set("handmade_datatab", 3);	load_data("storage");
 												break;
-					case "defects_sub_tab": 	$.jStorage.set("handmade_subtab", 4);
+					case "defects_sub_tab": 	$.jStorage.set("handmade_datatab", 4);
 												break;
+				}
+			},
+			create: function( event, ui ) {
+				switch (initialtab) {
+					case 0: load_data("rolling"); break;
+					case 1: load_data("wrapping"); break;
+					case 2: load_data("cutting"); break;
+					case 3: load_data("storage"); break;
 				}
 			}
 		});

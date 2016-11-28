@@ -123,13 +123,12 @@ var formulas_content = {
 			m("input[type=button].save", {tabindex:"-1"})
 		])
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
 			
-		// display the data
+		// make sure the id of the formulas is set to 1
 		$.jStorage.set("handmade.current.formulas", 1);		// only one fixed record with id=1
-		show_data("formulas");
 		
 		// save the data
 		$("#formulas .save").click(function() {

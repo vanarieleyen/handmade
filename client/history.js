@@ -10,7 +10,7 @@ var history_content = {
 			)
 		)
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
 
@@ -26,10 +26,8 @@ var history_content = {
 			$('.PACKING50').click();
 		});
 
-		// initial filling of the history tab is done by calling show_history() in view-config
-		// filling of the history when changing tabs is done in index.js
 	},
 	view: function () {
-		return m("#history", {config: show_history}, this.contents);
+		return m("#history", this.contents);
 	}
 }

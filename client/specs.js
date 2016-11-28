@@ -111,22 +111,10 @@ var specs_content = {
 			])
 		])
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
-			
-		// get the first spec
-		get_current("gwc_handmade.specs");
-
-		// no records found - disable all input fields
-		if ($.jStorage.get("handmade.current.specs") == null) {
-			$("#specs input").not("[type=button]").attr("disabled", "disabled");
-			$("#specs textarea").attr("disabled", "disabled");
-		}
-		
-		// display the data
-		show_data("specs");
-		
+	
 		// new spec
 		$("#specs .new").click(function() {
 			new_rec("gwc_handmade.specs", "#specs");
@@ -236,7 +224,7 @@ var specs_content = {
 		
 	},
 	view: function () {
-		return m("#specs", {config: show_specs}, this.contents);
+		return m("#specs", this.contents);
 	}
 }
 

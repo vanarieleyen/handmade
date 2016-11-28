@@ -7,16 +7,14 @@ var evaluate_content = {
 					m("tr", [
 						m("td",
 							m("table", {width: "100%"}, [
-								[
-									{label:"label.START_DATE", name:"start"},
-									{label:"label.END_DATE", name:"end"}
-								].map(function (a) {							
+								[	{label:"label.START_DATE", name:"start"},	{label:"label.END_DATE", name:"end"} ].map(function (a) {							
 									return m("tr", [
 													m("td",	m(a.label)),
 													m("td",	m("input.datum[type:text]", {name: a.name}))
 												])
 								}),
 								[
+									{label:"label.STAGE", name:"stage"},
 									{label:"label.PRODUCT", name:"product"},
 									{label:"label.SAMPLINGPOINT", name:"sampling"}
 								].map(function (a) {							
@@ -32,7 +30,7 @@ var evaluate_content = {
 			])			
 		)
 	],
-	controller: function (element, isInitialized) {
+	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
 			
@@ -40,13 +38,6 @@ var evaluate_content = {
 		$('#evaluate [name=start]').val(nu.format("yyyy-MM-dd") );
 		$('#evaluate [name=end]').val(nu.format("yyyy-MM-dd") );
 
-		// fill the selectbox options
-		$.getJSON('server/get_names.php', function(data) {
-			$('#evaluate [name=sampling]').append(data.sampling);	
-		});
-		$.get('server/get_products.php', function(data) {
-			$('#evaluate [name=product]').append(data);	
-		});
 	},
 	view: function () {
 		return m("#evaluate", this.contents);
