@@ -1,3 +1,4 @@
+var options= {id: "test2", "data-type":"radial-gauge"};
 
 var rolling_content = {
 	header: [
@@ -62,9 +63,12 @@ var rolling_content = {
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
 					m("tr", [
-						m("td",	{colspan:"5"}, 
+						m("td",	{colspan:"4"}, 
 							m("#chart-l.minichart",	m("canvas.flot-base"))
-						)			
+						),
+						m("td",	{colspan:"1"}, 
+							m("canvas#l")
+						)		
 					])
 				])
 			]),
@@ -81,9 +85,12 @@ var rolling_content = {
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
 					m("tr", [
-						m("td",	{colspan:"5"}, 
+						m("td",	{colspan:"4"}, 
 							m("#chart-d.minichart",	m("canvas.flot-base"))
-						)
+						),
+						m("td",	{colspan:"1"}, 
+							m("canvas#d")
+						)	
 					])
 				])
 			])
@@ -102,9 +109,12 @@ var rolling_content = {
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
 					m("tr", [
-						m("td",	{colspan:"5"}, 
+						m("td",	{colspan:"4"}, 
 							m("#chart-w.minichart", m("canvas.flot-base"))
-						)
+						),
+						m("td",	{colspan:"1"}, 
+							m("canvas#w")
+						)	
 					])
 				])
 			]),
@@ -121,9 +131,12 @@ var rolling_content = {
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
 					m("tr", [
-						m("td",	{colspan:"5"}, 
+						m("td",	{colspan:"4"}, 
 							m("#chart-p.minichart", m("canvas.flot-base"))
-						)
+						),
+						m("td",	{colspan:"1"}, 
+							m("canvas#p")
+						)	
 					])
 				])
 			])
@@ -153,7 +166,7 @@ var rolling_content = {
 			return;
 
 		$("#rolling [name=pdacc]").addClass("last");		// set the last field
-		
+
 		// save data
 		$("#rolling input:text").blur(function () {
 			current = $.jStorage.get("handmade.current.rolling");	
@@ -171,7 +184,10 @@ var rolling_content = {
 					$("#rolling [name=score]").html(data.score);
 					$("#rolling [name=quality]").html(data.quality);
 					mini_chart("#rolling #chart-"+field[0], field[0], current);		// update the minichart
-					colorize("#rolling", field[0], date, product);
+					pct = colorize("#rolling", field[0], date, product);
+
+					gauge = document.gauges.get(field[0]);
+					gauge.update({value: 100-pct});
 				});
 			});	
 		})
@@ -210,5 +226,4 @@ var rolling_content = {
 		return m("#rolling", [this.header, this.contents]);
 	}
 }
-
 

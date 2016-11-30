@@ -16,6 +16,7 @@ requireAll(require.context('../styles/', false, /\.css$/));
 // load all *.script.js files from js-directory (are loaded by the script-loader)
 requireAll(require.context('./js/', false, /\.script.js$/));
 
+require("script!gauge");
 require("./js/jquery.flot.js");
 require("script!./js/charts.js");
 
@@ -116,10 +117,11 @@ var uiTabs = [
 	])
 ]
 
-
 $(document).ready(function() {
 	m.mount(document.body, handmade );
 		
+	create_gauges();
+
 	if ($.jStorage.get("lang") == null)
 		$.jStorage.set("lang", 0);
 	if ($.jStorage.get("handmade_maintab") == null)

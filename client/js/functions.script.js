@@ -775,12 +775,63 @@ function new_rec(table, element) {
 	});
 }
 
-// get gradient from green to red
-function Gradient(percent) {
-    r = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
-    g = percent>50 ? 255 : Math.floor((percent*2)*255/100);
-    return 'rgb('+r+','+g+',0)';
+function create_gauges() {
+	var scale = Array();
+	//$.each(kleuren, function (key, val) {
+	for (i=100; i>0; i--) {
+		val = kleuren[100-i];
+		scale.push({"from": i-1, "to": i, "color": val});		// load the color
+	}
+	var options = {		// default options for the gauges
+		renderTo: 'l',
+		needleCircleInner: false,
+		needleCircleOuter: true,
+		needleCircleSize: 7,
+		needleWidth: 3,
+		needleShadow: false,
+		needleType: "arrow",
+		colorNeedle: "black",
+		colorNeedleEnd: "black",
+		borders: false,
+		fontNumbersSize: "20pt",
+		majorTicks: [0,20,40,60,80,100],
+		borderShadowWidth: 0,
+		colorPlate: "rgba(255,255,255,0)",
+		highlights: scale,
+		valueBox: false,
+		maxValue: 100,
+		minValue: 0,
+		height: 100,
+		width: 100	
+	};
+
+	options.renderTo = "l";		// rolling: length
+	new RadialGauge(options);
+	
+	options.renderTo = "d";		// rolling: circumference
+	new RadialGauge(options);
+	
+	options.renderTo = "w";		// rolling: weight
+	new RadialGauge(options);
+	
+	options.renderTo = "p";		// rolling: pressuredrop
+	new RadialGauge(options);
+	
+	options.renderTo = "m";		// storage: moisture
+	new RadialGauge(options);
 }
+
+// create an array (0..100) of gradients from green to red
+function Gradient() {
+	this.kleuren = Array();
+	for (percent=100; percent>=0; percent--) {
+ 		r = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
+    g = percent>50 ? 255 : Math.floor((percent*2)*255/100);
+    kleuren.push('rgb('+r+','+g+',0)');
+	}
+	return this.kleuren;
+}
+var kleuren = Gradient();
 
 function colorize(element, soort, date, product) {
 	var specs = $.jStorage.get("handmade.specs");
@@ -799,7 +850,7 @@ function colorize(element, soort, date, product) {
 			break;
 	}
 
-	var result = 0;
+	var result = 0.0;
 	$.each(specs, function (key, row) {
 		if (row.name == product) {
 			if ( (date < row.end) && (date > row.start)) {
@@ -811,13 +862,13 @@ function colorize(element, soort, date, product) {
 					step = sp.delta/100;
 					pct = Math.abs((waarde - sp.norm)/step);
 					pct = Math.min(Math.max(pct, 0.0), 100.0);
-					el.css("background-color", Gradient(100-pct));
-					result += waarde;					
+					el.css("background-color", kleuren[Math.round(pct)] );
+					result += pct;					
 				}
 			}
 		}
-	})
-	return result/10;
+	});
+	return result/aantal;
 }
 
 // load the data for the page
@@ -879,10 +930,21 @@ function show_data(table) {
 					mini_chart("#rolling #chart-w", "w", id);
 					mini_chart("#rolling #chart-p", "p", id);
 					
-					colorize("#rolling", "l", data.date, data.product);
-					colorize("#rolling", "d", data.date, data.product);
-					colorize("#rolling", "w", data.date, data.product);
-					colorize("#rolling", "p", data.date, data.product);
+					pct_L = colorize("#rolling", "l", data.date, data.product);
+					pct_D = colorize("#rolling", "d", data.date, data.product);
+					pct_W = colorize("#rolling", "w", data.date, data.product);
+					pct_P = colorize("#rolling", "p", data.date, data.product);
+					setTimeout(function(){
+						gauge = document.gauges.get('l');
+						gauge.update({value: 100-pct_L});
+						gauge = document.gauges.get('d');
+						gauge.update({value: 100-pct_D});
+						gauge = document.gauges.get('w');
+						gauge.update({value: 100-pct_W});
+						gauge = document.gauges.get('p');
+						gauge.update({value: 100-pct_P});
+					}, 5);
+					
 					break;
 				case "wrapping":
 					// no records found - disable all input fields
@@ -974,7 +1036,12 @@ function show_data(table) {
 						$("#storage [name=m"+i+"]").val(data["m"+i]);
 					}
 					mini_moistchart("#storage #chart-m", id);
-					colorize("#storage", "m", data.date, data.product);
+					pct_M = colorize("#storage", "m", data.date, data.product);
+					setTimeout(function(){
+						gauge = document.gauges.get('m');
+						gauge.update({value: 100-pct_M});
+					}, 5);					
+					
 					break;
 				case "stickDefects":
 					// no records found - disable all input fields

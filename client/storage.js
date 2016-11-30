@@ -91,8 +91,11 @@ var storage_content = {
 					m("tr", [1,2,3,4].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
 					m("tr", [5,6,7,8].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
 					m("tr", [
-						m("td",	{colspan:"4"}, 
+						m("td",	{colspan:"3"}, 
 							m("#chart-m.minichart", m("canvas.flot-base"))
+						),
+						m("td",	{colspan:"1"}, 
+							m("canvas#m")
 						)
 					])
 				])
@@ -132,7 +135,10 @@ var storage_content = {
 					$("#storage [name=score]").html(data.score);
 					$("#storage [name=quality]").html(data.quality);
 					mini_moistchart("#storage #chart-m", current);		// update the minichart
-					colorize("#storage", "m", date, product);
+					pct = colorize("#storage", "m", date, product);
+					
+					gauge = document.gauges.get("m");
+					gauge.update({value: 100-pct});
 				});
 			});
 		})
