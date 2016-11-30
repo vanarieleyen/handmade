@@ -61,6 +61,8 @@ var users_content = {
 		if (isInitialized) 
 			return;
 
+		$("#users [name=names]").addClass("last");		// set the last field
+		
 		// select a product from the specifications list
 		$('#users #userlist tbody').on('click', 'td', function(e) {		
 			$("#users #userlist tbody tr").removeClass('row_selected');

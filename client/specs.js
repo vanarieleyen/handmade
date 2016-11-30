@@ -115,6 +115,8 @@ var specs_content = {
 		if (isInitialized) 
 			return;
 	
+		$("#specs [name=moist_s_max]").addClass("last");		// set the last field
+		
 		// new spec
 		$("#specs .new").click(function() {
 			new_rec("gwc_handmade.specs", "#specs");

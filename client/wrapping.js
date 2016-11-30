@@ -95,7 +95,7 @@ var wrapping_content = {
 						})
 					]),
 					m("tr", [
-						[ {label:"label.SPOTS", field:"spot"}, {label:"label.BLOTS", field:"blot"} ].map(function (a) {
+						[	{label:"label.SPOTS", field:"spot"},	{label:"label.BLOTS", field:"blot"} ].map(function (a) {
 							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
 						})
 					])
@@ -111,6 +111,8 @@ var wrapping_content = {
 	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
+		
+		$("#wrapping [name=blot]").addClass("last");		// set the last field
 		
 		// save data
 		$("#wrapping input:text").blur(function () {

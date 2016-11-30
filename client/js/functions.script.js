@@ -629,6 +629,36 @@ function fill_labels() {
 	show('.M_2INSPEC', 724);
 }
 
+// prevent tabbing away from the last input field
+$(document).on("keydown", ".last", function(e) {
+	var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+	
+	if (key == 9)
+		e.preventDefault();
+});
+
+// read all specifications and store these in localstorage
+function getSpecs() {
+	$.getJSON('server/get_record.php', { 
+		query: 'SELECT * FROM gwc_handmade.specs'
+	}, function(data) {
+		$.jStorage.set("handmade.specs", data.row);
+	});
+}
+
+// return specification limits (min35,min20,norm,max20,max35 and delta)
+function specLimits(lower, upper) { 
+	var spec = {};
+	spec.min35 = parseFloat(lower);
+	spec.max35 = parseFloat(upper);
+	spec.norm = (spec.min35 + spec.max35)/2;
+	spec.delta = Math.max(spec.norm-spec.min35, spec.max35-spec.norm);
+	spec.min20 = spec.norm - (spec.delta/35*20);
+	spec.max20 = spec.norm + (spec.delta/35*20);
+	return spec;
+}
+
+
 // beperk alle inputs van het soort 'number' op getallen 
 $(document).on("keyup", "input.number", function() {
 	var element = $(this);
@@ -745,6 +775,51 @@ function new_rec(table, element) {
 	});
 }
 
+// get gradient from green to red
+function Gradient(percent) {
+    r = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
+    g = percent>50 ? 255 : Math.floor((percent*2)*255/100);
+    return 'rgb('+r+','+g+',0)';
+}
+
+function colorize(element, soort, date, product) {
+	var specs = $.jStorage.get("handmade.specs");
+	switch (element) {
+		case "#rolling":
+				switch (soort) {
+					case "d":	specmin = "rol_c_min";	specmax = "rol_c_max"; break;
+					default:	specmin = "rol_"+soort+"_min";	specmax = "rol_"+soort+"_max";
+				}
+				aantal = 10;
+				break;
+		case "#storage":
+			specmin = "moist_s_min";	
+			specmax = "moist_s_max";
+			aantal = 8;
+			break;
+	}
+
+	var result = 0;
+	$.each(specs, function (key, row) {
+		if (row.name == product) {
+			if ( (date < row.end) && (date > row.start)) {
+				for (var i=1; i<=aantal; i++) {
+					el = $(element+" [name="+soort+i+"]");
+					waarde = parseFloat(el.val());
+					sp = specLimits(row[specmin], row[specmax]);
+
+					step = sp.delta/100;
+					pct = Math.abs((waarde - sp.norm)/step);
+					pct = Math.min(Math.max(pct, 0.0), 100.0);
+					el.css("background-color", Gradient(100-pct));
+					result += waarde;					
+				}
+			}
+		}
+	})
+	return result/10;
+}
+
 // load the data for the page
 function load_data(table) {
 	$.jStorage.set("handmade_table", table);
@@ -799,7 +874,15 @@ function show_data(table) {
 						$("#rolling [name=p"+i+"]").val(data["p"+i]);
 					}
 					
-					mini_chart("#rolling #chart-l", "length");
+					mini_chart("#rolling #chart-l", "l", id);
+					mini_chart("#rolling #chart-d", "d", id);
+					mini_chart("#rolling #chart-w", "w", id);
+					mini_chart("#rolling #chart-p", "p", id);
+					
+					colorize("#rolling", "l", data.date, data.product);
+					colorize("#rolling", "d", data.date, data.product);
+					colorize("#rolling", "w", data.date, data.product);
+					colorize("#rolling", "p", data.date, data.product);
 					break;
 				case "wrapping":
 					// no records found - disable all input fields
@@ -890,6 +973,8 @@ function show_data(table) {
 					for (var i=1; i<=8; i++) {
 						$("#storage [name=m"+i+"]").val(data["m"+i]);
 					}
+					mini_moistchart("#storage #chart-m", id);
+					colorize("#storage", "m", data.date, data.product);
 					break;
 				case "stickDefects":
 					// no records found - disable all input fields
@@ -1211,6 +1296,18 @@ function show_names() {
 	});	
 }
 
+function show_datatab() {
+	// default tab when page is first loaded
+	var initialtab = $.jStorage.get("handmade_datatab");
+	
+	switch (initialtab) {
+		case 0: load_data("rolling"); break;
+		case 1: load_data("wrapping"); break;
+		case 2: load_data("cutting"); break;
+		case 3: load_data("storage"); break;
+	}
+}
+	
 function show_evaluation() {
 	// fill the selectbox options
 	$.getJSON('server/get_names.php', function(data) {

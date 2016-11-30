@@ -127,6 +127,8 @@ var formulas_content = {
 		if (isInitialized) 
 			return;
 			
+		$("#formulas [name=s_batch_quality]").addClass("last");		// set the last field
+		
 		// make sure the id of the formulas is set to 1
 		$.jStorage.set("handmade.current.formulas", 1);		// only one fixed record with id=1
 		

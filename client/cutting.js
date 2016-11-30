@@ -96,6 +96,8 @@ var cutting_content = {
 		if (isInitialized) 
 			return;
 
+		$("#cutting [name=empty]").addClass("last");		// set the last field
+		
 		// save data
 		$("#cutting input:text").blur(function () {
 			current = $.jStorage.get("handmade.current.cutting");	

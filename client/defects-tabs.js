@@ -9,7 +9,7 @@ var defects_content = {
 					{label:"label.SLEEVEBOX", href:"#sleeve_sub_tab"}
 				].map(function (a) {
 					return m("li", 
-									m("a", {href: a.href, tabindex:"-1" }, [
+									m("a", {href: a.href, tabindex:"-1", class: "last" }, [
 										m(a.label)
 									])
 								)

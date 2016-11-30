@@ -10,7 +10,7 @@ var settings_content = {
 					{label:"label.NAAM", href:"#names_sub_tab"}
 				].map(function (a) {
 					return m("li", 
-									m("a", {href: a.href, tabindex:"-1" }, [
+									m("a", {href: a.href, tabindex:"-1", class: "last" }, [
 										m(a.label)
 									])
 								)

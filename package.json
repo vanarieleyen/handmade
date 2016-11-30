@@ -22,7 +22,7 @@
     "webpack-dev-server": "^1.16.2"
   },
   "scripts": {
-    "start": "webpack-dev-server --host 0.0.0.0 --hot", 
+    "start": "webpack-dev-server --host 0.0.0.0 --inline", 
     "test": "webpack -p"
   },
   "author": "",

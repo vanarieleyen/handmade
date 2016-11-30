@@ -97,6 +97,8 @@ var sleevedefects_content = {
 		if (isInitialized) 
 			return;
 
+		$("#boxDefects [name=bm3_nr]").addClass("last");		// set the last field
+		
 		// save data
 		$("#boxDefects input:text").blur(function () {
 			this.current = $.jStorage.get("handmade.current.boxDefects");	

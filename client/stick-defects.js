@@ -103,6 +103,8 @@ var stickdefects_content = {
 	controller: function (element, isInitialized) {		// only events and initialisation
 		if (isInitialized) 
 			return;
+			
+		$("#stickDefects [name=spd3_nr]").addClass("last");		// set the last field
 
 		// save data
 		$("#stickDefects input:text").blur(function () {

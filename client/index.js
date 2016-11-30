@@ -6,17 +6,19 @@ require('jquery-ui');
 require("jstorage");
 require("zebra-js");
 
-function requireAll(r) { 
+function requireAll(r) { 		// load
 	r.keys().map(r); 
 }
 
-// load all css files
+// load all css files from styles-directory
 requireAll(require.context('../styles/', false, /\.css$/));
 
-require("script!charts");
-
-// load all *.script.js files (are loaded by the script-loader)
+// load all *.script.js files from js-directory (are loaded by the script-loader)
 requireAll(require.context('./js/', false, /\.script.js$/));
+
+require("./js/jquery.flot.js");
+require("script!./js/charts.js");
+
 
 var debug=false;
 
@@ -53,7 +55,6 @@ var handmade = {
 }
 
 // the language box
-
 var flagBox = [ 
 	m("span", {config: handmade.controller}, [
 		m("img", {src: require("../assets/CN.jpg"), onclick: function(){$.jStorage.set("lang", 0); fill_labels();} }),
@@ -105,7 +106,7 @@ var uiTabs = [
 				{label:"label.SETTINGS", href:"#settings_tab"}
 			].map(function (a) {
 				return m("li", 
-								m("a", {href: a.href, tabindex:"-1" }, [
+								m("a", {href: a.href, tabindex:"-1", class: "last" }, [
 									m(a.label)
 								])
 							)
@@ -130,6 +131,8 @@ $(document).ready(function() {
 	if ($.jStorage.get("handmade_settingstab") == null)
 		$.jStorage.set("handmade_settingstab", 0);
 
+	getSpecs();
+
 	fill_labels();
 
 	// default tab when page is first loaded
@@ -141,6 +144,7 @@ $(document).ready(function() {
 			keus = ui.newPanel[0].id;
 			switch (keus) {
 				case "data_tab":			
+					show_datatab();
 					$.jStorage.set("handmade_maintab", 0);
 					break;
 				case "history_tab": 	

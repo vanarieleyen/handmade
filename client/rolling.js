@@ -62,7 +62,9 @@ var rolling_content = {
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
 					m("tr", [
-						m("td",	{colspan:"5"}, m("#chart-l.minichart"))
+						m("td",	{colspan:"5"}, 
+							m("#chart-l.minichart",	m("canvas.flot-base"))
+						)			
 					])
 				])
 			]),
@@ -79,7 +81,9 @@ var rolling_content = {
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
 					m("tr", [
-						m("td",	{colspan:"5"}, m("#chart-d.minichart"))
+						m("td",	{colspan:"5"}, 
+							m("#chart-d.minichart",	m("canvas.flot-base"))
+						)
 					])
 				])
 			])
@@ -98,7 +102,9 @@ var rolling_content = {
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
 					m("tr", [
-						m("td",	{colspan:"5"}, m("#chart-w.minichart"))
+						m("td",	{colspan:"5"}, 
+							m("#chart-w.minichart", m("canvas.flot-base"))
+						)
 					])
 				])
 			]),
@@ -115,7 +121,9 @@ var rolling_content = {
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
 					m("tr", [
-						m("td",	{colspan:"5"}, m("#chart-p.minichart"))
+						m("td",	{colspan:"5"}, 
+							m("#chart-p.minichart", m("canvas.flot-base"))
+						)
 					])
 				])
 			])
@@ -124,7 +132,7 @@ var rolling_content = {
 			m("table", {width: "100%", border: "0"}, [
 				m("tr", [
 					[
-						{label:"label.SURFACE_OUT", field:"surfout"},
+						{label:"label.SURFACE_OUtT", field:"surfout"},
 						{label:"label.TIGHTNESS_OUT", field:"tightout"},
 						{label:"label.BLEND_ACC", field:"blendacc"},
 						{label:"label.PD_ACC", field:"pdacc"}
@@ -144,13 +152,17 @@ var rolling_content = {
 		if (isInitialized) 
 			return;
 
+		$("#rolling [name=pdacc]").addClass("last");		// set the last field
+		
 		// save data
 		$("#rolling input:text").blur(function () {
 			current = $.jStorage.get("handmade.current.rolling");	
-			this.field = $(this).attr('name');
+			date = $("#rolling [name=date]").val();
+			product = $("#rolling [name=product]").val();
+			field = $(this).attr('name');
 			this.value = $(this).val();
 			
-			var sql = sprintf('UPDATE gwc_handmade.rolling SET %s="%s" WHERE id=%s', this.field, this.value, current );
+			var sql = sprintf('UPDATE gwc_handmade.rolling SET %s="%s" WHERE id=%s', field, this.value, current );
 			$.getJSON('server/send_query.php', {query: sql}, function (data) {
 				$.getJSON('server/calc_scores.php', {
 					id: current, 
@@ -158,6 +170,8 @@ var rolling_content = {
 				}, function (data) {
 					$("#rolling [name=score]").html(data.score);
 					$("#rolling [name=quality]").html(data.quality);
+					mini_chart("#rolling #chart-"+field[0], field[0], current);		// update the minichart
+					colorize("#rolling", field[0], date, product);
 				});
 			});	
 		})

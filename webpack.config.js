@@ -2,7 +2,7 @@ var path = require("path");
 
 module.exports = {
   entry: [
-  	"webpack-dev-server/client?http://0.0.0.0:8080/",		// enable requests from any client
+  	"webpack-dev-server/client?http://0.0.0.0:8080/",		// enable requests from any client, but seems to give problems in deployed app
   	"./client/index.js"
   ],
   output: {

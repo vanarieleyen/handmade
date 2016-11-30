@@ -34,6 +34,9 @@ var evaluate_content = {
 		if (isInitialized) 
 			return;
 			
+		// todo: set the last field
+		$("#evaluate [name=empty]").addClass("last");		// set the last field
+					
 		var nu = new Date();
 		$('#evaluate [name=start]').val(nu.format("yyyy-MM-dd") );
 		$('#evaluate [name=end]').val(nu.format("yyyy-MM-dd") );

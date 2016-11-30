@@ -41,6 +41,8 @@ var names_content = {
 		if (isInitialized) 
 			return;
 		
+		$("#names [name=incharge]").addClass("last");		// set the last field
+		
 		// save the data
 		$("#names .save").click(function() {
 			var inspectors = $("#names [name=inspector]").val();

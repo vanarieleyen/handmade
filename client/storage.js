@@ -48,63 +48,56 @@ var storage_content = {
 		)
 	],
 	contents: [
-		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
-			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend.PROCESSING_DATE"),
-				m("table", {width: "100%"}, [
-					m("tr", [
-						[	{label:"label.START_DATE", field:"start"}, {label:"label.END_DATE", field:"end"} ].map(function (a) {
-							return [m("td",	m(a.label)), m("td",	m("input.datum", {name: a.field}))]
-						})
+		m("span.flex-row", {style: "background-color:rgba(0,255,255,0.05)"}, [
+			m("span.flex-col", {style: "width:50%"}, [
+				m("fieldset.fieldset_header", [
+					m("legend.PROCESSING_DATE"),
+					m("table", {width: "100%"}, [
+						m("tr", [
+							[	{label:"label.START_DATE", field:"start"}, {label:"label.END_DATE", field:"end"} ].map(function (a) {
+								return [m("td",	m(a.label)), m("td",	m("input.datum", {name: a.field}))]
+							})
+						])
 					])
-				])
-			]),
-			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend.MOISTURE_LIMITS"),
-				m("table", {width: "100%"}, [
-					m("tr", [
-						[	{label:"label.LOWER_LIMIT", field:"moistmin"}, {label:"label.UPPER_LIMIT", field:"moistmax"} ].map(function (a) {
-							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
-						})
+				]),
+				m("fieldset.fieldset_header", [
+					m("legend.APPEARANCE_QUALITY"),
+					m("table", {width: "100%"}, [
+						m("tr", [
+							m("td", m("label.MILDEW_WORMS")),
+							m("td",	{colspan: 3}, m("select", {name: "deworm"}))
+						]),
+						m("tr", [
+							[	{label:"label.HEADEND", field:"headend"},	{label:"label.HEAD_EMPTY", field:"empty"}	].map(function (a) {
+								return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+							})
+						]),
+						m("tr", [
+							[	{label:"label.SEAMS", field:"seam"},	{label:"label.HOLES", field:"hole"}	].map(function (a) {
+								return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+							})
+						]),
+						m("tr", [
+							[	{label:"label.DOPANT", field:"dopant"},	{label:"label.CRACKS", field:"break"}	].map(function (a) {
+								return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
+							})
+						])
 					])
-				])
-			])
-		),
-		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
-			m("fieldset.fieldset_header", {style: "width:50%"}, [
-				m("legend.APPEARANCE_QUALITY"),
-				m("table", {width: "100%"}, [
-					m("tr", [
-						m("td", m("label.MILDEW_WORMS")),
-						m("td",	{colspan: 3}, m("select", {name: "deworm"}))
-					]),
-					m("tr", [
-						[	{label:"label.HEADEND", field:"headend"},	{label:"label.HEAD_EMPTY", field:"empty"}	].map(function (a) {
-							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
-						})
-					]),
-					m("tr", [
-						[	{label:"label.SEAMS", field:"seam"},	{label:"label.HOLES", field:"hole"}	].map(function (a) {
-							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
-						})
-					]),
-					m("tr", [
-						[	{label:"label.DOPANT", field:"dopant"},	{label:"label.CRACKS", field:"break"}	].map(function (a) {
-							return [m("td",	m(a.label)), m("td",	m("input.number", {name: a.field}))]
-						})
-					])
-				])
+				])				
 			]),
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
 				m("legend.MOISTURE"),
 				m("table", {width: "100%", border: "0"}, [
-					m("tr", [1,2].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
-					m("tr", [3,4].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
-					m("tr", [5,6].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
-					m("tr", [7,8].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		}))
+					m("tr", [1,2,3,4].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
+					m("tr", [5,6,7,8].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
+					m("tr", [
+						m("td",	{colspan:"4"}, 
+							m("#chart-m.minichart", m("canvas.flot-base"))
+						)
+					])
 				])
 			])
-		),
+		]),
 		m("div.buttonrow", [
 			m("input[type=button].prev", {value: " <<< ", tabindex:"-1"}),
 			m("input[type=button].next", {value: " >>> ", tabindex:"-1"}),
@@ -115,6 +108,8 @@ var storage_content = {
 		if (isInitialized) 
 			return;
 			
+		$("#storage [name=m8]").addClass("last");		// set the last field
+
 		// set selectbox options
 		$.get('server/get_status.php?lang='+$.jStorage.get("lang"), function(data) {
 			$('#storage [name=deworm]').append(data);	
@@ -123,10 +118,12 @@ var storage_content = {
 		// save data
 		$("#storage input:text").blur(function () {
 			current = $.jStorage.get("handmade.current.storage");	
-			this.field = $(this).attr('name');
+			date = $("#storage [name=date]").val();
+			product = $("#storage [name=product]").val();
+			field = $(this).attr('name');
 			this.value = $(this).val();
 			
-			var sql = sprintf('UPDATE gwc_handmade.storage SET %s="%s" WHERE id=%s', this.field, this.value, current );
+			var sql = sprintf('UPDATE gwc_handmade.storage SET %s="%s" WHERE id=%s', field, this.value, current );
 			$.getJSON('server/send_query.php', {query: sql}, function (data) {
 				$.getJSON('server/calc_scores.php', {
 					id: current, 
@@ -134,6 +131,8 @@ var storage_content = {
 				}, function (data) {
 					$("#storage [name=score]").html(data.score);
 					$("#storage [name=quality]").html(data.quality);
+					mini_moistchart("#storage #chart-m", current);		// update the minichart
+					colorize("#storage", "m", date, product);
 				});
 			});
 		})

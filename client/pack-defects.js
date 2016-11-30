@@ -90,6 +90,8 @@ var packdefects_content = {
 		if (isInitialized) 
 			return;
 
+		$("#packDefects [name=pm3_nr]").addClass("last");		// set the last field
+		
 		// save data
 		$("#packDefects input:text").blur(function () {
 			this.current = $.jStorage.get("handmade.current.packDefects");	

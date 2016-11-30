@@ -25,7 +25,12 @@ if (!isset($query)) {
 }
 
 $database->query($query);
-$result = $database->resultset();
+//echo $database->getQuery($query);	return;
+try {
+	$result = $database->resultset();
+} catch(PDOException $exception) {
+	echo $exception->getMessage();
+}
 
 $row = array();
 $row = $result[0];
