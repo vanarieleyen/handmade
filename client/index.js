@@ -3,22 +3,20 @@ window.m = require('mithril');
 jQuery = window.$;
 
 require('jquery-ui');
-require("jstorage");
-require("zebra-js");
 
-function requireAll(r) { 		// load
+
+function requireAll(r) { 		// load all files from a folder
 	r.keys().map(r); 
 }
 
 // load all css files from styles-directory
 requireAll(require.context('../styles/', false, /\.css$/));
 
-// load all *.script.js files from js-directory (are loaded by the script-loader)
-requireAll(require.context('./js/', false, /\.script.js$/));
+// load all .js files that don't need the <script> encapsulation
+requireAll(require.context('./js/', false, /\.js$/));
 
-require("script!gauge");
-require("./js/jquery.flot.js");
-require("script!./js/charts.js");
+// load all .js files that need the <script> encapsulation (are loaded by the script-loader)
+requireAll(require.context('./js/script/', false, /\.js$/));
 
 
 var debug=false;
@@ -30,34 +28,25 @@ function include(filename) {
 	require('script!./'+filename);
 }
 
-// the complete handmade component
-var handmade = {
-	setStyle: function() {		// dynamically create style - called by (m)config
-		document.styleSheets[0].insertRule('.number {	width: 5em;	}', 0);		// create .number style
-	},	
-	controller: function (element, isInitialized) {	
-	    if (!isInitialized) {
-		    $(element).css({				// place the flags in the upper right corner
-				"position": "absolute",
-				"width": "90px",
-				"height": "27px",
-				"top": "6px",
-				"right": "1em",
-				"display": "-webkit-flex",
-				"-webkit-flex-direction": "row",
-				"-webkit-justify-content": "space-between",
-				"z-index": "1000"
-			})
-		}	
-	},		
-	view: function () {
-		return [	flagBox,	uiTabs,	tabContents	];
-	}
-}
+// the login box
+var loginBox = [
+	m("#loginpop", {style:"display:none"},
+		m("table", [
+			m("tr", [
+				m("td.ENTERPASS"),			
+				m("td", m("input#login", {type:"password"}) )
+			]),
+			m("tr", {align:"center"},	m("td", {colspan:"2", style:"height:1em"})),
+			m("tr", {align:"center"}, 
+				m("td", {colspan:"2"}, m("input.close.login", {type:"button"}))
+			)			
+		])
+	)
+]
 
 // the language box
 var flagBox = [ 
-	m("span", {config: handmade.controller}, [
+	m("span.flagbox", [
 		m("img", {src: require("../assets/CN.jpg"), onclick: function(){$.jStorage.set("lang", 0); fill_labels();} }),
 		m("img", {src: require("../assets/GB.jpg"), onclick: function(){$.jStorage.set("lang" , 1); fill_labels();} })
 	])
@@ -88,13 +77,12 @@ include('users.js');
 include('names.js');	
 include('settings-tabs.js');	// parent
 
-
 // the tabs used by ui-tabs
 var tabContents = [
-	m("#data_tab", {config: handmade.setStyle}, m.component(data_content)),
+	m("#data_tab", m.component(data_content)),
 	m("#history_tab", m.component(history_content)),
 	m("#evaluate_tab", m.component(evaluate_content)),
-	m("#settings_tab", {config: handmade.setStyle}, m.component(settings_content))
+	m("#settings_tab", m.component(settings_content))
 ]
 
 var uiTabs = [
@@ -117,9 +105,30 @@ var uiTabs = [
 	])
 ]
 
+// the complete handmade component
+var handmade = {
+	view: function () {
+		return [loginBox, flagBox,	uiTabs,	tabContents];
+	}
+}
+
 $(document).ready(function() {
 	m.mount(document.body, handmade );
+
+	$.getJSON('server/get_server.php', function (data) {
+		if (data != "127.0.0.1")	
+			$("#loginpop").popup();
+	});
+
+	$("#loginpop").on('keydown', function(e) {
+		if (e.which == 13) 
+			$("#loginpop .login").click();
+	});
 		
+	$("#loginpop .close").click(function() {
+		$("#loginpop").popdown();
+	})	
+	
 	create_gauges();
 
 	if ($.jStorage.get("lang") == null)
@@ -132,8 +141,6 @@ $(document).ready(function() {
 		$.jStorage.set("handmade_defectsstab", 0);
 	if ($.jStorage.get("handmade_settingstab") == null)
 		$.jStorage.set("handmade_settingstab", 0);
-
-	getSpecs();
 
 	fill_labels();
 
@@ -165,6 +172,7 @@ $(document).ready(function() {
 		},
 		create: function( event, ui ) {
 			switch (initialtab) {
+				case 0: show_datatab();
 				case 1: show_history(); break;
 				case 2: show_evaluation(); break;
 			}

@@ -1,11 +1,9 @@
 
-install packages:
-$> npm install webpack webpack-dev-server --save-dev
-etc.....
+install webpack and webpack-dev-server globally:
+$> sudo npm install webpack webpack-dev-server -g
 
-some packages need to be installed globally:
-$> sudo npm install webpack -g
-(webpack webpack-dev-server imports-loader css-loader)
+install all packages also locally (not necessary when using a github clone)
+$> npm install <package name> --save-dev
 
 packages used:
 webpack
@@ -19,6 +17,7 @@ style-loader
 css-loader
 url-loader
 raw-loader
+canvas-gauges
 
 de app wordt lokaal ontwikkeld in ~/handmade
 

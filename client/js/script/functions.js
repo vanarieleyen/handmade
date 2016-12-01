@@ -638,13 +638,13 @@ $(document).on("keydown", ".last", function(e) {
 });
 
 // read all specifications and store these in localstorage
-function getSpecs() {
+(function () {
 	$.getJSON('server/get_record.php', { 
 		query: 'SELECT * FROM gwc_handmade.specs'
 	}, function(data) {
 		$.jStorage.set("handmade.specs", data.row);
 	});
-}
+})();
 
 // return specification limits (min35,min20,norm,max20,max35 and delta)
 function specLimits(lower, upper) { 
@@ -775,23 +775,31 @@ function new_rec(table, element) {
 	});
 }
 
+// create all the gauges used on the rolling and storage pages
 function create_gauges() {
 	var scale = Array();
-	//$.each(kleuren, function (key, val) {
-	for (i=100; i>0; i--) {
-		val = kleuren[100-i];
-		scale.push({"from": i-1, "to": i, "color": val});		// load the color
+	var kleuren = $.jStorage.get("handmade.gradient");
+	
+	for (i=100; i>0; i-=4) {
+		val = kleuren[(100-i)/4];
+		scale.push({"from": i-4, "to": i, "color": val});		// load the gradient for the scale
 	}
 	var options = {		// default options for the gauges
 		renderTo: 'l',
+		animation: true,
+		animationDuration: 250,
+		animatedValue: true,
+		animationRule: "linear",
+		animateOnInit: true,
 		needleCircleInner: false,
 		needleCircleOuter: true,
-		needleCircleSize: 7,
+		needleCircleSize: 5,
 		needleWidth: 3,
 		needleShadow: false,
 		needleType: "arrow",
-		colorNeedle: "black",
-		colorNeedleEnd: "black",
+		colorNeedle: "rgba(0,0,0,0.7)",
+		colorNeedleEnd: "rgba(0,0,0,0.5)",
+		colorNeedleCircleOuter: "darkgrey",
 		borders: false,
 		fontNumbersSize: "20pt",
 		majorTicks: [0,20,40,60,80,100],
@@ -805,33 +813,24 @@ function create_gauges() {
 		width: 100	
 	};
 
-	options.renderTo = "l";		// rolling: length
-	new RadialGauge(options);
-	
-	options.renderTo = "d";		// rolling: circumference
-	new RadialGauge(options);
-	
-	options.renderTo = "w";		// rolling: weight
-	new RadialGauge(options);
-	
-	options.renderTo = "p";		// rolling: pressuredrop
-	new RadialGauge(options);
-	
-	options.renderTo = "m";		// storage: moisture
-	new RadialGauge(options);
+	["l","d","w","p","m"].map(function(choice) {
+		options.renderTo = choice;
+		new RadialGauge(options);
+	});
 }
 
-// create an array (0..100) of gradients from green to red
-function Gradient() {
-	this.kleuren = Array();
-	for (percent=100; percent>=0; percent--) {
- 		r = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
-    g = percent>50 ? 255 : Math.floor((percent*2)*255/100);
-    kleuren.push('rgb('+r+','+g+',0)');
-	}
-	return this.kleuren;
+// create an array (0..25) of gradients from green to red and store it in gradient
+if ($.jStorage.get("handmade.gradient") == null) {
+	(function () {
+		var kleuren = Array();
+		for (percent=100; percent>=0; percent-=4) {
+	 		r = percent<50 ? 255 : Math.floor(255-(percent*2-100)*255/100);
+	    g = percent>50 ? 255 : Math.floor((percent*2)*255/100);
+	    kleuren.push('rgb('+r+','+g+',0)');
+		}
+		$.jStorage.set("handmade.gradient", kleuren);
+	})();
 }
-var kleuren = Gradient();
 
 function colorize(element, soort, date, product) {
 	var specs = $.jStorage.get("handmade.specs");
@@ -850,7 +849,8 @@ function colorize(element, soort, date, product) {
 			break;
 	}
 
-	var result = 0.0;
+	var kleuren = $.jStorage.get("handmade.gradient");
+	var totaal = 0.0;
 	$.each(specs, function (key, row) {
 		if (row.name == product) {
 			if ( (date < row.end) && (date > row.start)) {
@@ -862,13 +862,13 @@ function colorize(element, soort, date, product) {
 					step = sp.delta/100;
 					pct = Math.abs((waarde - sp.norm)/step);
 					pct = Math.min(Math.max(pct, 0.0), 100.0);
-					el.css("background-color", kleuren[Math.round(pct)] );
-					result += pct;					
+					el.css("background-color", kleuren[Math.round(pct/4)] );
+					totaal += pct;					
 				}
 			}
 		}
 	});
-	return result/aantal;
+	return Math.max(1, Math.min(100-totaal/aantal, 99)); // 1..99
 }
 
 // load the data for the page
@@ -925,26 +925,13 @@ function show_data(table) {
 						$("#rolling [name=p"+i+"]").val(data["p"+i]);
 					}
 					
-					mini_chart("#rolling #chart-l", "l", id);
-					mini_chart("#rolling #chart-d", "d", id);
-					mini_chart("#rolling #chart-w", "w", id);
-					mini_chart("#rolling #chart-p", "p", id);
-					
-					pct_L = colorize("#rolling", "l", data.date, data.product);
-					pct_D = colorize("#rolling", "d", data.date, data.product);
-					pct_W = colorize("#rolling", "w", data.date, data.product);
-					pct_P = colorize("#rolling", "p", data.date, data.product);
-					setTimeout(function(){
-						gauge = document.gauges.get('l');
-						gauge.update({value: 100-pct_L});
-						gauge = document.gauges.get('d');
-						gauge.update({value: 100-pct_D});
-						gauge = document.gauges.get('w');
-						gauge.update({value: 100-pct_W});
-						gauge = document.gauges.get('p');
-						gauge.update({value: 100-pct_P});
-					}, 5);
-					
+					["l","d","w","p"].map(function(choice) {
+						mini_chart("#rolling #chart-"+choice, choice, id);
+						setTimeout(function(){
+							avg = colorize("#rolling", choice, data.date, data.product);
+							document.gauges.get(choice).value = avg;
+						}, 5);
+					});
 					break;
 				case "wrapping":
 					// no records found - disable all input fields
@@ -1036,10 +1023,9 @@ function show_data(table) {
 						$("#storage [name=m"+i+"]").val(data["m"+i]);
 					}
 					mini_moistchart("#storage #chart-m", id);
-					pct_M = colorize("#storage", "m", data.date, data.product);
+					avg = colorize("#storage", "m", data.date, data.product);
 					setTimeout(function(){
-						gauge = document.gauges.get('m');
-						gauge.update({value: 100-pct_M});
+						document.gauges.get('m').value = avg;
 					}, 5);					
 					
 					break;
@@ -1366,7 +1352,7 @@ function show_names() {
 function show_datatab() {
 	// default tab when page is first loaded
 	var initialtab = $.jStorage.get("handmade_datatab");
-	
+
 	switch (initialtab) {
 		case 0: load_data("rolling"); break;
 		case 1: load_data("wrapping"); break;

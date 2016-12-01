@@ -20,17 +20,14 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.css$/, loader: "style-loader!css-loader" },
-      { test: /\.script.js$/, loader: "script-loader" },						// use the script loader for *.script.js files
+      { test: /.*script\/.*.js$/, loader: "script-loader" },					// use the script loader for files in the script folder
       { test: /\.(jpg|gif|png)$/i, loader: "base64-image-loader" },
     ]
   },
   resolve: { 
 		alias: { 
 			"Mithril": path.join(__dirname, "node_modules/mithril/mithril.min.js"),
-			"jquery-ui": path.join(__dirname, "node_modules/jquery-ui-bundle/jquery-ui.js"),
-			"gauge": path.join(__dirname, "node_modules/canvas-gauges/gauge.min.js"),
-			"jstorage": path.join(__dirname, "client/js/jstorage.js"),
-			"zebra-js": path.join(__dirname, "client/js/zebra_datepicker.js")
+			"jquery-ui": path.join(__dirname, "node_modules/jquery-ui-bundle/jquery-ui.js")
 		} 
 	}
 }

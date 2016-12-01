@@ -28,6 +28,9 @@ switch ($tab) {
 	case "defects_sub_tab":
 		$fields = "id, date, product, sample, judge, score, inspector";
 		break;
+	default:
+		echo "unknown tab";
+		return;
 }
 
 $column = split(", ", $fields);															// extract the column names from the $fields
@@ -43,6 +46,8 @@ $query = sprintf("SELECT %s	FROM %s ORDER BY id DESC", $fields, $table);
 $database->query($query);
 // echo $database->getQuery($query); return;
 $rows = $database->resultset();
+
+$output = array();
 
 foreach ($rows as $aRow) {
 	$regel = "<tr>";

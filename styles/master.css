@@ -15,6 +15,20 @@ html,body {
 	background-size :65%;
 }
 
+.number {	width: 5em;	}
+
+.flagbox {
+	position: absolute;
+	width: 90px;
+	height: 27px;
+	top: 6px;
+	right: 1em;
+	display: -webkit-flex;
+	-webkit-flex-direction: row;
+	-webkit-justify-content: space-between;
+	z-index: 1000;
+}
+
 .scale {
 	font-size: 120%;	
 }

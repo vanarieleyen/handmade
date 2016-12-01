@@ -138,7 +138,7 @@ var storage_content = {
 					pct = colorize("#storage", "m", date, product);
 					
 					gauge = document.gauges.get("m");
-					gauge.update({value: 100-pct});
+					gauge.update({value: pct});
 				});
 			});
 		})

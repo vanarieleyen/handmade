@@ -187,7 +187,7 @@ var rolling_content = {
 					pct = colorize("#rolling", field[0], date, product);
 
 					gauge = document.gauges.get(field[0]);
-					gauge.update({value: 100-pct});
+					gauge.update({value: pct});
 				});
 			});	
 		})
