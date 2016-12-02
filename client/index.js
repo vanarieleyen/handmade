@@ -30,15 +30,15 @@ function include(filename) {
 
 // the login box
 var loginBox = [
-	m("#loginpop", {style:"display:none"},
+	m("#loginpop.scale", {style:"display:none"},
 		m("table", [
 			m("tr", [
-				m("td.ENTERPASS"),			
-				m("td", m("input#login", {type:"password"}) )
+				m("td.ENTERPASS.scale"),			
+				m("td", m("input#login.scale", {type:"password"}) )
 			]),
 			m("tr", {align:"center"},	m("td", {colspan:"2", style:"height:1em"})),
 			m("tr", {align:"center"}, 
-				m("td", {colspan:"2"}, m("input.close.login", {type:"button"}))
+				m("td", {colspan:"2"}, m("input.close.login.scale", {type:"button"}))
 			)			
 		])
 	)

@@ -41,11 +41,21 @@ var specs_content = {
 							m("td",	 m("hr")),
 							m("td",	m("input[type=text].number", {name: "rol_p_max"}))
 						]),
+						m("tr", {align: "center"}, [
+							m("td",	m("label.BLEND_ACC")),
+							m("td",	m("input[type=text].number", {name: "rol_blendacc_min"})),
+							m("td",	 m("hr")),
+							m("td",	m("input[type=text].number", {name: "rol_blendacc_max"}))
+						]),
+						m("tr", {align: "center"}, [
+							m("td",	m("label.PD_ACC")),
+							m("td",	m("input[type=text].number", {name: "rol_pdacc_min"})),
+							m("td",	 m("hr")),
+							m("td",	m("input[type=text].number", {name: "rol_pdacc_max"}))
+						]),
 						[	
 							{label:"label.SURFACE_OUT", field:"rol_surfout"},	
-							{label:"label.TIGHTNESS_OUT", field:"rol_tightout"},	
-							{label:"label.BLEND_ACC", field:"rol_blendacc"},	
-							{label:"label.PD_ACC", field:"rol_pdacc"} 
+							{label:"label.TIGHTNESS_OUT", field:"rol_tightout"}
 						].map(function (a) {
 							return m("tr",  {align: "center"}, [
 											m("td",	m(a.label)),
@@ -126,6 +136,7 @@ var specs_content = {
 		// save the data
 		$("#specs .save").click(function() {
 			var id = $.jStorage.get("handmade.current.specs");
+			
 			var name = $("#specs [name=name]").val();
 			var nr = $("#specs [name=nr]").val();
 			var rol_l_min = $("#specs [name=rol_l_min]").val();
@@ -138,8 +149,10 @@ var specs_content = {
 			var rol_p_max = $("#specs [name=rol_p_max]").val();
 			var moist_s_min = $("#specs [name=moist_s_min]").val();
 			var moist_s_max = $("#specs [name=moist_s_max]").val();
-			var rol_blendacc = $("#specs [name=rol_blendacc]").val();
-			var rol_pdacc = $("#specs [name=rol_pdacc]").val();
+			var rol_blendacc_min = $("#specs [name=rol_blendacc_min]").val();
+			var rol_blendacc_max = $("#specs [name=rol_blendacc_max]").val();
+			var rol_pdacc_min = $("#specs [name=rol_pdacc_min]").val();
+			var rol_pdacc_max = $("#specs [name=rol_pdacc_max]").val();
 			var rol_surfout = $("#specs [name=rol_surfout]").val();
 			var rol_tightout = $("#specs [name=rol_tightout]").val();
 		
@@ -147,23 +160,32 @@ var specs_content = {
 				query: 'SELECT * FROM gwc_handmade.specs WHERE id='+id
 			}, function(data) {
 				var pid = data.pid;
-				if (data.pid != -1) {		// de specs zijn al eens opgeslagen
+				if (data.pid != "-1") {		// de specs zijn al eens opgeslagen
+					//console.log("add new record");
 					$.getJSON('server/send_query.php', {
-						query: sprintf("UPDATE gwc_handmade.specs SET end=NOW() WHERE id=%s",	id)		// terminate the end-date	
+						query: sprintf("UPDATE gwc_handmade.specs SET end=NOW() WHERE pid=%s AND end='3000-01-01'",	pid)		// terminate the end-date	
 					}, function () {
 						new_rec("gwc_handmade.specs", "#specs");
 						id = $.jStorage.get("handmade.current.specs");
+						
+						var sql = sprintf("UPDATE gwc_handmade.specs SET pid='%s', name='%s', nr='%s', rol_l_min='%s', rol_l_max='%s', rol_c_min='%s', rol_c_max='%s', \
+							rol_w_min='%s', rol_w_max='%s', moist_s_min='%s', moist_s_max='%s', rol_surfout='%s', rol_tightout='%s', rol_p_min='%s', rol_p_max='%s', \
+							rol_blendacc_min='%s', rol_blendacc_max='%s', rol_pdacc_min='%s', rol_pdacc_max='%s' WHERE id=%s",	
+							pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, moist_s_min, moist_s_max, 
+														rol_surfout, rol_tightout, rol_p_min, rol_p_max, rol_blendacc_min, rol_blendacc_max, rol_pdacc_min, rol_pdacc_max, id);
+						$.getJSON('server/send_query.php', {	query: sql	});
 					});						
 				} else {
+					//console.log("update existing record");
 					pid = data.id;
+					
+					var sql = sprintf("UPDATE gwc_handmade.specs SET pid='%s', name='%s', nr='%s', rol_l_min='%s', rol_l_max='%s', rol_c_min='%s', rol_c_max='%s', \
+						rol_w_min='%s', rol_w_max='%s', moist_s_min='%s', moist_s_max='%s', rol_surfout='%s', rol_tightout='%s', rol_p_min='%s', rol_p_max='%s', \
+						rol_blendacc_min='%s', rol_blendacc_max='%s', rol_pdacc_min='%s', rol_pdacc_max='%s' WHERE id=%s",	
+						pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, moist_s_min, moist_s_max, 
+													rol_surfout, rol_tightout, rol_p_min, rol_p_max, rol_blendacc_min, rol_blendacc_max, rol_pdacc_min, rol_pdacc_max, id);
+					$.getJSON('server/send_query.php', {	query: sql	});
 				}
-				
-				// opm: moet misschien vertraagd worden aangeroepen omdat id van new_rec nog niet binnen is.....
-				var sql = sprintf("UPDATE gwc_handmade.specs SET pid='%s', name='%s', nr='%s', rol_l_min='%s', rol_l_max='%s', rol_c_min='%s', rol_c_max='%s', \
-					rol_w_min='%s', rol_w_max='%s', moist_s_min='%s', moist_s_max='%s', rol_surfout='%s', rol_tightout='%s', rol_p_min='%s', rol_p_max='%s', rol_blendacc='%s', rol_pdacc='%s' \
-					WHERE id=%s",	pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, moist_s_min, moist_s_max, 
-												rol_surfout, rol_tightout, rol_p_min, rol_p_max, rol_blendacc, rol_pdacc, id);
-				$.getJSON('server/send_query.php', {	query: sql	});
 				
 				// reload all product select-boxes with the new data
 				$.get('server/get_products.php', function(data) {
@@ -171,6 +193,12 @@ var specs_content = {
 						$(element+' [name=product]').empty().append(data);
 					});
 				});
+			});
+			
+			$.getJSON('server/get_record.php', {		// refresh the specs in localstorage 
+				query: 'SELECT * FROM gwc_handmade.specs'
+			}, function(data) {
+				$.jStorage.set("handmade.specs", data.row);
 			});
 			
 			show_specs();

@@ -145,7 +145,7 @@ var rolling_content = {
 			m("table", {width: "100%", border: "0"}, [
 				m("tr", [
 					[
-						{label:"label.SURFACE_OUtT", field:"surfout"},
+						{label:"label.SURFACE_OUT", field:"surfout"},
 						{label:"label.TIGHTNESS_OUT", field:"tightout"},
 						{label:"label.BLEND_ACC", field:"blendacc"},
 						{label:"label.PD_ACC", field:"pdacc"}
@@ -183,11 +183,16 @@ var rolling_content = {
 				}, function (data) {
 					$("#rolling [name=score]").html(data.score);
 					$("#rolling [name=quality]").html(data.quality);
+
 					mini_chart("#rolling #chart-"+field[0], field[0], current);		// update the minichart
 					pct = colorize("#rolling", field[0], date, product);
-
 					gauge = document.gauges.get(field[0]);
-					gauge.update({value: pct});
+					if (gauge != null)
+						gauge.update({value: pct});
+					
+					["surfout","tightout","blendacc","pdacc"].map(function (label) {
+						setColor("#rolling", label, date, product);
+					});
 				});
 			});	
 		})

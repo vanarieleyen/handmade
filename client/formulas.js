@@ -79,7 +79,13 @@ var formulas_content = {
 						m("tr", [	m("td", {width: "20%"}, m("", "S7 (min)")),	m("td", m("label.PRESSUREDROP" )) ]),
 						m("tr", [	m("td", {width: "20%"}, m("", "S8 (max)")),	m("td", m("label.PRESSUREDROP" )) ]),
 						m("tr", [	m("td", {width: "20%"}, m("", "S9 (min)")),	m("td", m("label.MOISTURE" )) ]),
-						m("tr", [	m("td", {width: "20%"}, m("", "S10 (max)")),m("td", m("label.MOISTURE" )) ])
+						m("tr", [	m("td", {width: "20%"}, m("", "S10 (max)")),m("td", m("label.MOISTURE" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "S11 (min)")), m("td", m("label.BLEND_ACC" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "S12 (max)")), m("td", m("label.BLEND_ACC" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "S13 (min)")), m("td", m("label.PD_ACC" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "S14 (max)")), m("td", m("label.PD_ACC" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "S15")), m("td", m("label.TIGHTNESS" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "S16")), m("td", m("label.SURFACE_OUT" )) ]),
 					])
 				)
 			]),

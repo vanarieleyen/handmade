@@ -787,9 +787,9 @@ function create_gauges() {
 	var options = {		// default options for the gauges
 		renderTo: 'l',
 		animation: true,
-		animationDuration: 250,
+		animationDuration: 300,
 		animatedValue: true,
-		animationRule: "linear",
+		animationRule: "bounce",
 		animateOnInit: true,
 		needleCircleInner: false,
 		needleCircleOuter: true,
@@ -832,13 +832,58 @@ if ($.jStorage.get("handmade.gradient") == null) {
 	})();
 }
 
-function colorize(element, soort, date, product) {
+function setColor(element, soort, date, product) {		// set the color of a single field
+	var specs = $.jStorage.get("handmade.specs");
+	var kleuren = $.jStorage.get("handmade.gradient");
+	
+	switch (soort) {
+		case "surfout":
+			specmin = null;	specmax = "rol_surfout";
+			break;
+		case "tightout":
+			specmin = null;	specmax = "rol_tightout";
+			break;
+		default:	
+			specmin = "rol_"+soort+"_min";
+			specmax = null;
+	}
+	
+	$.each(specs, function (key, row) {
+		if (row.name == product) {
+			if ( (date < row.end) && (date > row.start)) {
+				el = $(element+" [name="+soort+"]");
+				waarde = parseFloat(el.val());
+				if (isNaN(waarde)) {
+					el.css("background-color", "white" );
+				} else {
+					valmin = (specmin==null) ? -row[specmax] : row[specmin];
+					valmax = (specmax==null) ? 200-row["rol_"+soort+"_max"] : row[specmax];
+					sp = specLimits(valmin, valmax);
+					if (isNaN(sp.norm)) {
+						el.css("background-color", "white" );	
+					} else {
+						step = sp.delta/100;
+						pct = Math.abs((waarde - sp.norm)/step);
+						pct = Math.min(Math.max(pct, 0.0), 100.0);
+						el.css("background-color", kleuren[Math.round(pct/4)] );
+					}
+				}
+				return;
+			}
+		}
+	});
+}
+
+function colorize(element, soort, date, product) {		// set the color of a row of fields
 	var specs = $.jStorage.get("handmade.specs");
 	switch (element) {
 		case "#rolling":
 				switch (soort) {
-					case "d":	specmin = "rol_c_min";	specmax = "rol_c_max"; break;
-					default:	specmin = "rol_"+soort+"_min";	specmax = "rol_"+soort+"_max";
+					case "d":	
+						specmin = "rol_c_min";	specmax = "rol_c_max";
+						break;
+					default:	
+						specmin = "rol_"+soort+"_min";	specmax = "rol_"+soort+"_max";
 				}
 				aantal = 10;
 				break;
@@ -857,14 +902,22 @@ function colorize(element, soort, date, product) {
 				for (var i=1; i<=aantal; i++) {
 					el = $(element+" [name="+soort+i+"]");
 					waarde = parseFloat(el.val());
-					sp = specLimits(row[specmin], row[specmax]);
-
-					step = sp.delta/100;
-					pct = Math.abs((waarde - sp.norm)/step);
-					pct = Math.min(Math.max(pct, 0.0), 100.0);
-					el.css("background-color", kleuren[Math.round(pct/4)] );
-					totaal += pct;					
+					if (isNaN(waarde)) {
+						el.css("background-color", "white" );
+					} else {
+						sp = specLimits(row[specmin], row[specmax]);
+						if (isNaN(sp.norm)) {
+							el.css("background-color", "white" );	
+						} else {
+							step = sp.delta/100;
+							pct = Math.abs((waarde - sp.norm)/step);
+							pct = Math.min(Math.max(pct, 0.0), 100.0);
+							el.css("background-color", kleuren[Math.round(pct/4)] );
+						}
+						totaal += pct;					
+					}
 				}
+				return;
 			}
 		}
 	});
@@ -908,16 +961,16 @@ function show_data(table) {
 					});				
 				
 					// add option when it is not in the select
-					Array("inspector", "product").map(function (label) {
+					["inspector", "product"].map(function (label) {
 						if (!$('#rolling [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
 							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#rolling [name='+label+']'));
 						}
 					});
 
-					Array("date","product","name","remarks","inspector","surfout","tightout","blendacc","pdacc").map(function (label) {
+					["date","product","name","remarks","inspector","surfout","tightout","blendacc","pdacc"].map(function (label) {
 						$("#rolling [name="+label+"]").val(data[label]);
 					});
-					Array("score","quality").map(function (label) {	$("#rolling [name="+label+"]").html(data[label]);	});
+					["score","quality"].map(function (label) {	$("#rolling [name="+label+"]").html(data[label]);	});
 					for (var i=1; i<=10; i++) {
 						$("#rolling [name=l"+i+"]").val(data["l"+i]);
 						$("#rolling [name=d"+i+"]").val(data["d"+i]);
@@ -932,6 +985,11 @@ function show_data(table) {
 							document.gauges.get(choice).value = avg;
 						}, 5);
 					});
+					
+					["surfout","tightout","blendacc","pdacc"].map(function (label) {
+						setColor("#rolling", label, data.date, data.product);
+					});
+
 					break;
 				case "wrapping":
 					// no records found - disable all input fields
@@ -1027,7 +1085,6 @@ function show_data(table) {
 					setTimeout(function(){
 						document.gauges.get('m').value = avg;
 					}, 5);					
-					
 					break;
 				case "stickDefects":
 					// no records found - disable all input fields
@@ -1197,15 +1254,16 @@ function show_data(table) {
 }
 		
 function show_history() {
-	var source = sprintf("server/list_history.php?lang=%s&tab=%s&defects=%s", $.jStorage.get("lang"), 
-										$.jStorage.get("handmade_lasttab"), $.jStorage.get("handmade_defectstab"));
+	var defectstab = ($.jStorage.get("handmade_defectsstab") == null) ? "stickDefects" : $.jStorage.get("handmade_defectsstab");
+	var lasttab = ($.jStorage.get("handmade_lasttab") == null) ? "rolling_sub_tab" : $.jStorage.get("handmade_lasttab");
+	var source = sprintf("server/list_history.php?lang=%s&tab=%s&defects=%s", $.jStorage.get("lang"),	lasttab, defectstab);
 	
 	$("#history #lijst thead").empty();
 	$("#history #lijst thead").append('<th style="display:none">ID</th>');
 	$("#history #lijst thead").append('<th><label class="DATE"></label></th>'); 
 	$("#history #lijst thead").append('<th><label class="PRODUCT"></label></th>');
 
-	switch ($.jStorage.get("handmade_lasttab")) {
+	switch (lasttab) {
 		case "rolling_sub_tab":
 		case "wrapping_sub_tab":
 		case "cutting_sub_tab":
@@ -1315,6 +1373,8 @@ function show_spec_history(id) {
 function show_spec_details(id) {
 	var sql = sprintf('SELECT * FROM gwc_handmade.specs WHERE id=%s', id);
 
+	$.jStorage.set("handmade.current.specs", id);
+	//console.log(id);
 	if (id != null)	{
 		$.getJSON('server/get_record.php', { 
 			query: sql
@@ -1331,8 +1391,10 @@ function show_spec_details(id) {
 			$("#specs [name=rol_p_max]").val(data.rol_p_max);
 			$("#specs [name=rol_surfout]").val(data.rol_surfout);
 			$("#specs [name=rol_tightout]").val(data.rol_tightout);
-			$("#specs [name=rol_blendacc]").val(data.rol_blendacc);
-			$("#specs [name=rol_pdacc]").val(data.rol_pdacc);
+			$("#specs [name=rol_blendacc_min]").val(data.rol_blendacc_min);
+			$("#specs [name=rol_blendacc_max]").val(data.rol_blendacc_max);
+			$("#specs [name=rol_pdacc_min]").val(data.rol_pdacc_min);
+			$("#specs [name=rol_pdacc_max]").val(data.rol_pdacc_max);
 			$("#specs [name=moist_s_min]").val(data.moist_s_min);
 			$("#specs [name=moist_s_max]").val(data.moist_s_max);
 		});	
