@@ -113,7 +113,25 @@ var stickdefects_content = {
 			this.value = $(this).val();
 			
 			sql = sprintf('UPDATE gwc_handmade.stickDefects SET %s="%s" WHERE id=%s', this.field, this.value, this.current );
-			$.getJSON('server/send_query.php', {	query: sql	});			
+			$.getJSON('server/send_query.php', {	
+				query: sql	
+			}, function () {
+				// color the fields
+				var sum = 0;
+				var allowed = 6;		// maximum allowed faults
+				var fields = ["srd","scd","ssd","spd"];
+				fields.map(function(label){
+					for (var i=1; i<=3; i++) {
+						var el = $("#stickDefects [name="+label+i+"_nr]");
+						var val = el.val();
+						sum += (val.trim()=="") ? 0 : parseInt(val);
+					}
+				});
+				fields.map(function(label){
+					for (var i=1; i<=3; i++) 
+						setColor("#stickDefects", label+i+"_nr", Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+				});
+			});			
 		})
 
 		$("#stickDefects textarea").blur(function () {

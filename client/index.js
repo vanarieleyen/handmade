@@ -116,7 +116,7 @@ $(document).ready(function() {
 	m.mount(document.body, handmade );
 
 	$.getJSON('server/get_server.php', function (data) {
-		if (data != "127.0.0.1")	
+		if (data != "127.0.0.1")	// dont show login on development server
 			$("#loginpop").popup();
 	});
 	
@@ -124,12 +124,11 @@ $(document).ready(function() {
 		if (e.which == 13) 
 			$("#loginpop .login").click();
 	});
-		
+	
+	// check login and set permissions
 	$("#loginpop .close").click(function() {
-		var login = $("#loginpop #login").val();
-		
 		$.getJSON("server/check_pass.php",{
-			pass: login
+			pass: $("#loginpop #login").val()
 		}, function(data) {
 			if (data.admin == 1) {
 				$("#delete").show();
@@ -137,7 +136,10 @@ $(document).ready(function() {
 				$("[aria-controls=users_sub_tab]").hide();
 				if (data.specs == 0) 			$("#specs input").attr("disabled","disabled");
 				if (data.formulas == 0) 	$("[aria-controls=formulas_sub_tab]").hide();
-				if (data.names == 0) 			$("#names textarea,input").attr("disabled","disabled");
+				if (data.names == 0) {
+					$("#names textarea").attr("disabled","disabled");
+					$("#names input").attr("disabled","disabled");
+				}
 			}
 		})	
 		$("#loginpop").popdown();
@@ -193,8 +195,6 @@ $(document).ready(function() {
 		}
 	});
 
-	$('.datum').Zebra_DatePicker();
-
-	console.log('ready');
+	$('.datum').Zebra_DatePicker();		// set all .datum inputs to datepicker
 });
 

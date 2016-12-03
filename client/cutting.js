@@ -112,6 +112,18 @@ var cutting_content = {
 				}, function (data) {
 					$("#cutting [name=score]").html(data.score);
 					$("#cutting [name=quality]").html(data.quality);
+					
+					var sum = 0;				// faults total
+					var allowed = 6;		// maximum allowed faults
+					var fields = ["incision","seam","empty","crack","headend","crease","blot"];
+					fields.map(function (label) {
+						var el = $("#cutting [name="+label+"]");
+						var val = el.val();
+						sum += (val.trim()=="") ? 0 : parseInt(val);
+					});
+					fields.map(function (label) {
+						setColor("#cutting", label, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+					});
 				});
 			});			
 		})

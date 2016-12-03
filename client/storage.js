@@ -139,6 +139,18 @@ var storage_content = {
 					var spec = getSpec(product, date);
 					pct = colorSeries("#storage", "m", spec);
 					
+					var sum = 0;				// faults total
+					var allowed = 6;		// maximum allowed faults
+					var fields = ["deworm","headend","empty","seam","hole","dopant","break"];
+					fields.map(function (label) {
+						var el = $("#storage [name="+label+"]");
+						var val = el.val();
+						sum += (val.trim()=="") ? 0 : parseInt(val);
+					});
+					fields.map(function (label) {
+						setColor("#storage", label, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+					});	
+					
 					gauge = document.gauges.get("m");
 					gauge.update({value: pct});
 				});

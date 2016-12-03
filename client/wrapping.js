@@ -128,6 +128,18 @@ var wrapping_content = {
 				}, function (data) {
 					$("#wrapping [name=score]").html(data.score);
 					$("#wrapping [name=quality]").html(data.quality);
+					
+					var sum = 0;	// faults total
+					var allowed = 9;		// maximum allowed faults
+					var fields = ["incision","seam","empty","hole","tightness","veins","crack","splice","color","headend","wrapok","crease","spot","blot"];
+					fields.map(function (label) {
+						var el = $("#wrapping [name="+label+"]");
+						var val = el.val();
+						sum += (val.trim()=="") ? 0 : parseInt(val);
+					});
+					fields.map(function (label) {
+						setColor("#wrapping", label, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+					});
 				});
 			});	
 		})

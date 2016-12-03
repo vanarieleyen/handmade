@@ -845,7 +845,7 @@ if ($.jStorage.get("handmade.gradient") == null) {
 	})();
 }
 
-function setColor(element, soort, spec) {		// set the color of a single field
+function setColor(element, soort, spec) {		// set the color of a single field (spec = specifications or value)
 	var kleuren = $.jStorage.get("handmade.gradient");
 	var pct = 0;
 	
@@ -866,11 +866,15 @@ function setColor(element, soort, spec) {		// set the color of a single field
 	el = $(element+" [name="+soort+"]");
 	waarde = parseFloat(el.val());
 	if (isNaN(waarde)) {
-		el.css("background-color", "white" );
+		el.css("background-color", kleuren[0] );
 	} else {
-		valmin = (specmin==null) ? -spec[specmax] : spec[specmin];
-		valmax = (specmax==null) ? 200-spec["rol_"+soort+"_max"] : spec[specmax];
-		sp = specLimits(valmin, valmax);
+		if (typeof spec == "object") {
+			valmin = (specmin==null) ? -spec[specmax] : spec[specmin];
+			valmax = (specmax==null) ? 200-spec["rol_"+soort+"_max"] : spec[specmax];
+			sp = specLimits(valmin, valmax);
+		} else {
+			sp = specLimits(-spec, spec);
+		}
 		if (isNaN(sp.norm)) {
 			el.css("background-color", "white" );	
 		} else {
@@ -993,17 +997,28 @@ function show_data(table) {
 					});
 
 					// add option when it is not in the select
-					Array("inspector", "product").map(function (label) {
+					["inspector", "product"].map(function (label) {
 						if (!$('#wrapping [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
 							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#wrapping [name='+label+']'));
 						}
 					});
 
-					Array("date","product","name","inspector","remarks","incision","seam","empty","hole","tightness","veins",
-								"crack","splice","color","headend","wrapok","crease","spot","blot").map(function (label) {
+					["date","product","name","inspector","remarks","incision","seam","empty","hole","tightness","veins",
+								"crack","splice","color","headend","wrapok","crease","spot","blot"].map(function (label) {
 						$("#wrapping [name="+label+"]").val(data[label]);
 					});
-					Array("score","quality").map(function (label) {	$("#wrapping [name="+label+"]").html(data[label]);	});		
+					
+					var sum = 0;				// faults total
+					var allowed = 9;		// maximum allowed faults
+					var fields = ["incision","seam","empty","hole","tightness","veins","crack","splice","color","headend","wrapok","crease","spot","blot"];
+					fields.map(function (label) {
+						sum += (data[label].trim()=="") ? 0 : parseInt(data[label]);
+					});
+					fields.map(function (label) {
+						setColor("#wrapping", label, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+					});
+
+					["score","quality"].map(function (label) {	$("#wrapping [name="+label+"]").html(data[label]);	});		
 					break;
 				case "cutting":
 					// no records found - disable all input fields
@@ -1022,17 +1037,28 @@ function show_data(table) {
 					});
 
 					// add option when it is not in the select
-					Array("inspector", "product").map(function (label) {
+					["inspector", "product"].map(function (label) {
 						if (!$('#cutting [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
 							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#cutting [name='+label+']'));
 						}
 					});
 
-					Array("date","product","name","inspector","remarks","incision","seam","empty",
-								"crack","headend","crease","spot","blot").map(function (label) {
+					["date","product","name","inspector","remarks","incision","seam","empty",
+								"crack","headend","crease","blot"].map(function (label) {
 						$("#cutting [name="+label+"]").val(data[label]);
 					});
-					Array("score","quality").map(function (label) {	$("#cutting [name="+label+"]").html(data[label]);	});
+					
+					var sum = 0;				// faults total
+					var allowed = 6;		// maximum allowed faults
+					var fields = ["incision","seam","empty","crack","headend","crease","blot"];
+					fields.map(function (label) {
+						sum += (data[label].trim()=="") ? 0 : parseInt(data[label]);
+					});
+					fields.map(function (label) {
+						setColor("#cutting", label, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+					});
+
+					["score","quality"].map(function (label) {	$("#cutting [name="+label+"]").html(data[label]);	});
 					break;
 				case "storage":
 					// no records found - disable all input fields
@@ -1051,17 +1077,28 @@ function show_data(table) {
 					});
 
 					// add option when it is not in the select
-					Array("inspector", "product").map(function (label) {
+					["inspector", "product"].map(function (label) {
 						if (!$('#storage [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
 							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#storage [name='+label+']'));
 						}
 					});
 
-					Array("date","product","incharge","inspector","remarks","start","end","moistmin","moistmax",
-								"deworm","headend","empty","seam","hole","dopant","break").map(function (label) {
+					["date","product","incharge","inspector","remarks","start","end","moistmin","moistmax",
+								"deworm","headend","empty","seam","hole","dopant","break"].map(function (label) {
 						$("#storage [name="+label+"]").val(data[label]);
 					});
-					Array("score","quality").map(function (label) {	$("#storage [name="+label+"]").html(data[label]);	});
+					["score","quality"].map(function (label) {	$("#storage [name="+label+"]").html(data[label]);	});
+					
+					var sum = 0;				// faults total
+					var allowed = 6;		// maximum allowed faults
+					var fields = ["deworm","headend","empty","seam","hole","dopant","break"];
+					fields.map(function (label) {
+						sum += (data[label].trim()=="") ? 0 : parseInt(data[label]);
+					});
+					fields.map(function (label) {
+						setColor("#storage", label, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+					});					
+					
 					for (var i=1; i<=8; i++) {
 						$("#storage [name=m"+i+"]").val(data["m"+i]);
 					}
@@ -1101,26 +1138,33 @@ function show_data(table) {
 					});
 					
 					// add option when it is not in the select
-					Array("inspector", "product").map(function (label) {
+					["inspector", "product"].map(function (label) {
 						if (!$('#stickDefects [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
 							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#stickDefects [name='+label+']'));
 						}
 					});
 
-					Array("date","product","sample","inspector","remarks","sjob","judge","sremarks").map(function (label) {
+					["date","product","sample","inspector","remarks","sjob","judge","sremarks"].map(function (label) {
 						$("#stickDefects [name="+label+"]").val(data[label]);
 					});
 					$("#stickDefects [name=score]").html(data.score);
-					for (var i=1; i<=3; i++) {
-						$("#stickDefects [name=srd"+i+"]").val(data["srd"+i]);
-						$("#stickDefects [name=srd"+i+"_nr]").val(data["srd"+i+"_nr"]);
-						$("#stickDefects [name=scd"+i+"]").val(data["scd"+i]);
-						$("#stickDefects [name=scd"+i+"_nr]").val(data["scd"+i+"_nr"]);
-						$("#stickDefects [name=ssd"+i+"]").val(data["ssd"+i]);
-						$("#stickDefects [name=ssd"+i+"_nr]").val(data["ssd"+i+"_nr"]);
-						$("#stickDefects [name=spd"+i+"]").val(data["spd"+i]);
-						$("#stickDefects [name=spd"+i+"_nr]").val(data["spd"+i+"_nr"]);
-					}
+					
+					var sum = 0;
+					var allowed = 6;		// maximum allowed faults
+					var fields = ["srd","scd","ssd","spd"];
+					fields.map(function(label){
+						for (var i=1; i<=3; i++) {
+							nr = data[label+i+"_nr"];
+							sum += (nr.trim()=="") ? 0 : parseInt(nr);
+							$("#stickDefects [name="+label+i+"_nr]").val(nr);						// set amount
+							$("#stickDefects [name="+label+i+"]").val(data[label+i]);		// set defect
+						}
+					});
+					fields.map(function(label){
+						for (var i=1; i<=3; i++) 
+							setColor("#stickDefects", label+i+"_nr", Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+					});
+					
 					break;
 				case "packDefects":
 					// no records found - disable all input fields
@@ -1145,22 +1189,33 @@ function show_data(table) {
 					});				
 				
 					// add option when it is not in the select
-					Array("inspector", "product").map(function (label) {
+					["inspector", "product"].map(function (label) {
 						if (!$('#packDefects [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
 							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#packDefects [name='+label+']'));
 						}
 					});
 
-					Array("date","product","sample","inspector","remarks","pjob","judge","premarks").map(function (label) {
+					["date","product","sample","inspector","remarks","pjob","judge","premarks"].map(function (label) {
 						$("#packDefects [name="+label+"]").val(data[label]);
 					});
 					$("#packDefects [name=score]").html(data.score);
-					for (var i=1; i<=3; i++) {
-						$("#packDefects [name=ppd"+i+"]").val(data["ppd"+i]);
-						$("#packDefects [name=ppd"+i+"_nr]").val(data["ppd"+i+"_nr"]);
-						$("#packDefects [name=pm"+i+"]").val(data["pm"+i]);
-						$("#packDefects [name=pm"+i+"_nr]").val(data["pm"+i+"_nr"]);
-					}
+					
+					var sum = 0;
+					var allowed = 6;		// maximum allowed faults
+					var fields = ["ppd","pm"];
+					fields.map(function(label){
+						for (var i=1; i<=3; i++) {
+							nr = data[label+i+"_nr"];
+							sum += (nr.trim()=="") ? 0 : parseInt(nr);
+							$("#packDefects [name="+label+i+"_nr]").val(nr);						// set amount
+							$("#packDefects [name="+label+i+"]").val(data[label+i]);		// set defect
+						}
+					});
+					fields.map(function(label){
+						for (var i=1; i<=3; i++) 
+							setColor("#packDefects", label+i+"_nr", Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+					});
+					
 					break;
 				case "boxDefects":
 					// no records found - disable all input fields
@@ -1188,24 +1243,33 @@ function show_data(table) {
 					});
 
 					// add option when it is not in the select
-					Array("inspector", "product").map(function (label) {
+					["inspector", "product"].map(function (label) {
 						if (!$('#boxDefects [name='+label+']').find("option:contains('" + data[label]  + "')").length) {
 							$("<option/>", {value: data[label], text:data[label]}).appendTo($('#boxDefects [name='+label+']'));
 						}
 					});
 
-					Array("date","product","sample","inspector","remarks","bjob","judge","bremarks").map(function (label) {
+					["date","product","sample","inspector","remarks","bjob","judge","bremarks"].map(function (label) {
 						$("#boxDefects [name="+label+"]").val(data[label]);
 					});
 					$("#boxDefects [name=score]").html(data.score);
-					for (var i=1; i<=3; i++) {
-						$("#boxDefects [name=bsd"+i+"]").val(data["bsd"+i]);
-						$("#boxDefects [name=bsd"+i+"_nr]").val(data["bsd"+i+"_nr"]);
-						$("#boxDefects [name=bb"+i+"]").val(data["bb"+i]);
-						$("#boxDefects [name=bb"+i+"_nr]").val(data["bb"+i+"_nr"]);
-						$("#boxDefects [name=bm"+i+"]").val(data["bm"+i]);
-						$("#boxDefects [name=bm"+i+"_nr]").val(data["bm"+i+"_nr"]);
-					}
+					
+					var sum = 0;
+					var allowed = 6;		// maximum allowed faults
+					var fields = ["bsd","bb","bm"];
+					fields.map(function(label){
+						for (var i=1; i<=3; i++) {
+							nr = data[label+i+"_nr"];
+							sum += (nr.trim()=="") ? 0 : parseInt(nr);
+							$("#boxDefects [name="+label+i+"_nr]").val(nr);						// set amount
+							$("#boxDefects [name="+label+i+"]").val(data[label+i]);		// set defect
+						}
+					});
+					fields.map(function(label){
+						for (var i=1; i<=3; i++) 
+							setColor("#boxDefects", label+i+"_nr", Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+					});
+					
 					break;
 				case "specs":
 					// no records found - disable all input fields
@@ -1216,9 +1280,9 @@ function show_data(table) {
 					show_specs();
 					break;
 				case "formulas":
-					Array("l_outlow","l_outhigh","l_inspec","c_outlow","c_outhigh","c_inspec","w_outlow","w_outhigh","w_inspec",
+					["l_outlow","l_outhigh","l_inspec","c_outlow","c_outhigh","c_inspec","w_outlow","w_outhigh","w_inspec",
 								"p_outlow","p_outhigh","p_inspec","m_outlow","m_outhigh","m_inspec","m_2inspec","r_batch_score","r_batch_quality",
-								"w_batch_score","w_batch_quality","c_batch_score","c_batch_quality","s_batch_score","s_batch_quality").map(function (label) {
+								"w_batch_score","w_batch_quality","c_batch_score","c_batch_quality","s_batch_score","s_batch_quality"].map(function (label) {
 						$("#formulas [name="+label+"]").val(data[label]);
 					});
 					break;
