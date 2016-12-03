@@ -185,13 +185,15 @@ var rolling_content = {
 					$("#rolling [name=quality]").html(data.quality);
 
 					mini_chart("#rolling #chart-"+field[0], field[0], current);		// update the minichart
-					pct = colorize("#rolling", field[0], date, product);
+					
+					var spec = getSpec(product, date);
+					pct = colorSeries("#rolling", field[0], spec);
 					gauge = document.gauges.get(field[0]);
 					if (gauge != null)
 						gauge.update({value: pct});
-					
+
 					["surfout","tightout","blendacc","pdacc"].map(function (label) {
-						setColor("#rolling", label, date, product);
+						setColor("#rolling", label, spec);
 					});
 				});
 			});	

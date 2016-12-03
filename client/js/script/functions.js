@@ -658,6 +658,19 @@ function specLimits(lower, upper) {
 	return spec;
 }
 
+// return the specifications for a product on a certain date
+function getSpec(product, date) {
+	var specs = $.jStorage.get("handmade.specs");
+
+	for (i=0; specs[i]; i++) {
+		row = specs[i];
+		if (row.name == product) {
+			if ( (date < row.end) && (date >= row.start)) {
+				return row;
+			}
+		}
+	}
+}
 
 // beperk alle inputs van het soort 'number' op getallen 
 $(document).on("keyup", "input.number", function() {
@@ -787,9 +800,9 @@ function create_gauges() {
 	var options = {		// default options for the gauges
 		renderTo: 'l',
 		animation: true,
-		animationDuration: 300,
+		animationDuration: 500,
 		animatedValue: true,
-		animationRule: "bounce",
+		animationRule: "linear",
 		animateOnInit: true,
 		needleCircleInner: false,
 		needleCircleOuter: true,
@@ -832,9 +845,9 @@ if ($.jStorage.get("handmade.gradient") == null) {
 	})();
 }
 
-function setColor(element, soort, date, product) {		// set the color of a single field
-	var specs = $.jStorage.get("handmade.specs");
+function setColor(element, soort, spec) {		// set the color of a single field
 	var kleuren = $.jStorage.get("handmade.gradient");
+	var pct = 0;
 	
 	switch (soort) {
 		case "surfout":
@@ -843,39 +856,36 @@ function setColor(element, soort, date, product) {		// set the color of a single
 		case "tightout":
 			specmin = null;	specmax = "rol_tightout";
 			break;
-		default:	
+		case "surfacc":
+		case "pdacc":
 			specmin = "rol_"+soort+"_min";
 			specmax = null;
+			break;
 	}
 	
-	$.each(specs, function (key, row) {
-		if (row.name == product) {
-			if ( (date < row.end) && (date > row.start)) {
-				el = $(element+" [name="+soort+"]");
-				waarde = parseFloat(el.val());
-				if (isNaN(waarde)) {
-					el.css("background-color", "white" );
-				} else {
-					valmin = (specmin==null) ? -row[specmax] : row[specmin];
-					valmax = (specmax==null) ? 200-row["rol_"+soort+"_max"] : row[specmax];
-					sp = specLimits(valmin, valmax);
-					if (isNaN(sp.norm)) {
-						el.css("background-color", "white" );	
-					} else {
-						step = sp.delta/100;
-						pct = Math.abs((waarde - sp.norm)/step);
-						pct = Math.min(Math.max(pct, 0.0), 100.0);
-						el.css("background-color", kleuren[Math.round(pct/4)] );
-					}
-				}
-				return;
-			}
+	el = $(element+" [name="+soort+"]");
+	waarde = parseFloat(el.val());
+	if (isNaN(waarde)) {
+		el.css("background-color", "white" );
+	} else {
+		valmin = (specmin==null) ? -spec[specmax] : spec[specmin];
+		valmax = (specmax==null) ? 200-spec["rol_"+soort+"_max"] : spec[specmax];
+		sp = specLimits(valmin, valmax);
+		if (isNaN(sp.norm)) {
+			el.css("background-color", "white" );	
+		} else {
+			step = sp.delta/100;
+			pct = Math.abs((waarde - sp.norm)/step);
+			pct = Math.min(Math.max(pct, 0.0), 100.0);
+			el.css("background-color", kleuren[Math.round(pct/4)] );
 		}
-	});
+	}
+	return pct;
 }
 
-function colorize(element, soort, date, product) {		// set the color of a row of fields
-	var specs = $.jStorage.get("handmade.specs");
+function colorSeries(element, soort, spec) {		// set the color of a row of fields (l1,l2... m1,m2...)
+	var totaal = 0.0;
+
 	switch (element) {
 		case "#rolling":
 				switch (soort) {
@@ -894,33 +904,9 @@ function colorize(element, soort, date, product) {		// set the color of a row of
 			break;
 	}
 
-	var kleuren = $.jStorage.get("handmade.gradient");
-	var totaal = 0.0;
-	$.each(specs, function (key, row) {
-		if (row.name == product) {
-			if ( (date < row.end) && (date > row.start)) {
-				for (var i=1; i<=aantal; i++) {
-					el = $(element+" [name="+soort+i+"]");
-					waarde = parseFloat(el.val());
-					if (isNaN(waarde)) {
-						el.css("background-color", "white" );
-					} else {
-						sp = specLimits(row[specmin], row[specmax]);
-						if (isNaN(sp.norm)) {
-							el.css("background-color", "white" );	
-						} else {
-							step = sp.delta/100;
-							pct = Math.abs((waarde - sp.norm)/step);
-							pct = Math.min(Math.max(pct, 0.0), 100.0);
-							el.css("background-color", kleuren[Math.round(pct/4)] );
-						}
-						totaal += pct;					
-					}
-				}
-				return;
-			}
-		}
-	});
+	for (var i=1; i<=aantal; i++) {
+		totaal += setColor(element, soort+i, spec);
+	}
 	return Math.max(1, Math.min(100-totaal/aantal, 99)); // 1..99
 }
 
@@ -978,16 +964,15 @@ function show_data(table) {
 						$("#rolling [name=p"+i+"]").val(data["p"+i]);
 					}
 					
+					var spec = getSpec(data.product, data.date);
 					["l","d","w","p"].map(function(choice) {
 						mini_chart("#rolling #chart-"+choice, choice, id);
-						setTimeout(function(){
-							avg = colorize("#rolling", choice, data.date, data.product);
-							document.gauges.get(choice).value = avg;
-						}, 5);
+						avg = colorSeries("#rolling", choice, spec);
+						document.gauges.get(choice).value = avg;
 					});
 					
 					["surfout","tightout","blendacc","pdacc"].map(function (label) {
-						setColor("#rolling", label, data.date, data.product);
+						setColor("#rolling", label, spec);
 					});
 
 					break;
@@ -1081,10 +1066,11 @@ function show_data(table) {
 						$("#storage [name=m"+i+"]").val(data["m"+i]);
 					}
 					mini_moistchart("#storage #chart-m", id);
-					avg = colorize("#storage", "m", data.date, data.product);
-					setTimeout(function(){
-						document.gauges.get('m').value = avg;
-					}, 5);					
+					
+					var spec = getSpec(data.product, data.date);
+					avg = colorSeries("#storage", "m", spec);
+					document.gauges.get('m').value = avg;
+					
 					break;
 				case "stickDefects":
 					// no records found - disable all input fields

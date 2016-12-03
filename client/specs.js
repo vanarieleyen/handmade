@@ -115,7 +115,7 @@ var specs_content = {
 		m("div.buttonrow", [
 			m("input[type=button].save", {tabindex:"-1"}),
 			m("input[type=button].new", {tabindex:"-1"}),
-			m("span", [
+			m("span#delete", {style: "display:none"}, [
 				m("input[type=checkbox].toggle"),
 				m("input[type=button].delete", {tabindex:"-1", disabled:"disabled"})
 			])

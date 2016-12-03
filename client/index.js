@@ -119,13 +119,27 @@ $(document).ready(function() {
 		if (data != "127.0.0.1")	
 			$("#loginpop").popup();
 	});
-
+	
 	$("#loginpop").on('keydown', function(e) {
 		if (e.which == 13) 
 			$("#loginpop .login").click();
 	});
 		
 	$("#loginpop .close").click(function() {
+		var login = $("#loginpop #login").val();
+		
+		$.getJSON("server/check_pass.php",{
+			pass: login
+		}, function(data) {
+			if (data.admin == 1) {
+				$("#delete").show();
+			} else {
+				$("[aria-controls=users_sub_tab]").hide();
+				if (data.specs == 0) 			$("#specs input").attr("disabled","disabled");
+				if (data.formulas == 0) 	$("[aria-controls=formulas_sub_tab]").hide();
+				if (data.names == 0) 			$("#names textarea,input").attr("disabled","disabled");
+			}
+		})	
 		$("#loginpop").popdown();
 	})	
 	

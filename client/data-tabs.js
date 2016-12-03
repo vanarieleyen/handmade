@@ -54,10 +54,10 @@ var data_content = {
 			},
 			create: function( event, ui ) {
 				switch (initialtab) {
-					case 0: load_data("rolling");  break;
-					case 1: load_data("wrapping"); break;
-					case 2: load_data("cutting"); break;
-					case 3: load_data("storage"); break;
+					//case 0: load_data("rolling");  break;		// removed all: has to be called in functions
+					//case 1: load_data("wrapping"); break;
+					//case 2: load_data("cutting"); break;
+					//case 3: load_data("storage"); break;
 				}
 			}
 		});

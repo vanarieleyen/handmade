@@ -135,7 +135,9 @@ var storage_content = {
 					$("#storage [name=score]").html(data.score);
 					$("#storage [name=quality]").html(data.quality);
 					mini_moistchart("#storage #chart-m", current);		// update the minichart
-					pct = colorize("#storage", "m", date, product);
+					
+					var spec = getSpec(product, date);
+					pct = colorSeries("#storage", "m", spec);
 					
 					gauge = document.gauges.get("m");
 					gauge.update({value: pct});
