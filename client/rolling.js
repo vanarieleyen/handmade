@@ -184,13 +184,32 @@ var rolling_content = {
 					$("#rolling [name=score]").html(data.score);
 					$("#rolling [name=quality]").html(data.quality);
 
-					mini_chart("#rolling #chart-"+field[0], field[0], current);		// update the minichart
-					
 					var spec = getSpec(product, date);
-					pct = colorSeries("#rolling", field[0], spec);
-					gauge = document.gauges.get(field[0]);
-					if (gauge != null)
-						gauge.update({value: pct});
+					mini_chart("#rolling #chart-"+field[0], field[0], current);		// update the minichart
+					colorSeries("#rolling", field[0], spec);
+					
+					if (spec != null) {
+						// calculate and show the cpk
+						var serie = [];
+						for (i=1; i<=10; i++)	{
+							var waarde = parseFloat( $("#rolling [name="+field[0]+i+"]").val() );
+							if (!isNaN(waarde))
+								serie.push(waarde);
+						}
+						keus = (field[0]=="d") ? "c" : field[0];
+						var result = cpk(spec["rol_"+keus+"_min"], spec["rol_"+keus+"_max"], serie);
+						gauge = document.gauges.get(field[0]);
+						if (gauge != null) {
+							gauge.value = Math.min(Math.max(result, 0), 1);
+							gauge.update();
+						}
+					} else {	// product is not filled, so no specs
+						gauge = document.gauges.get(field[0]);
+						if (gauge != null) {
+							gauge.value = 0.0;
+							gauge.update();
+						}
+					}
 
 					["surfout","tightout","blendacc","pdacc"].map(function (label) {
 						setColor("#rolling", label, spec);

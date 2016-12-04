@@ -670,6 +670,7 @@ function getSpec(product, date) {
 			}
 		}
 	}
+	return null;
 }
 
 // beperk alle inputs van het soort 'number' op getallen 
@@ -795,10 +796,13 @@ function create_gauges() {
 	
 	for (i=100; i>0; i-=4) {
 		val = kleuren[(100-i)/4];
-		scale.push({"from": i-4, "to": i, "color": val});		// load the gradient for the scale
+		scale.push({"from": (i-4)/100, "to": i/100, "color": val});		// load the gradient for the scale
 	}
 	var options = {		// default options for the gauges
 		renderTo: 'l',
+		title: "CPK",
+		fontTitleSize: "30pt",
+		colorTitle: "black",
 		animation: true,
 		animationDuration: 500,
 		animatedValue: true,
@@ -815,13 +819,13 @@ function create_gauges() {
 		colorNeedleCircleOuter: "darkgrey",
 		borders: false,
 		fontNumbersSize: "20pt",
-		majorTicks: [0,20,40,60,80,100],
+		majorTicks: [0, 0.2, 0.4, 0.6, 0.8, 1.0],
 		borderShadowWidth: 0,
 		colorPlate: "rgba(255,255,255,0)",
 		highlights: scale,
 		valueBox: false,
-		maxValue: 100,
-		minValue: 0,
+		maxValue: 1.0,
+		minValue: 0.0,
 		height: 100,
 		width: 100	
 	};
@@ -864,6 +868,11 @@ function setColor(element, soort, spec) {		// set the color of a single field (s
 	}
 	
 	el = $(element+" [name="+soort+"]");
+	
+	if (spec == null) {
+		el.css("background-color", "white");
+		return 0;	
+	}
 	waarde = parseFloat(el.val());
 	if (isNaN(waarde)) {
 		el.css("background-color", kleuren[0] );
@@ -970,15 +979,36 @@ function show_data(table) {
 					
 					var spec = getSpec(data.product, data.date);
 					["l","d","w","p"].map(function(choice) {
-						mini_chart("#rolling #chart-"+choice, choice, id);
-						avg = colorSeries("#rolling", choice, spec);
-						document.gauges.get(choice).value = avg;
+						mini_chart("#rolling #chart-"+choice, choice, id);		// show minichart
+						colorSeries("#rolling", choice, spec);								// color the inputs
+						
+						if (spec != null) {
+							// calculate and show the cpk
+							var serie = [];
+							for (i=1; i<=10; i++)	{
+								var waarde = parseFloat(data[choice+i]);
+								if (!isNaN(waarde))
+									serie.push(waarde);
+							}
+							keus = (choice=="d") ? "c" : choice;
+							var result = cpk(spec["rol_"+keus+"_min"], spec["rol_"+keus+"_max"], serie);
+							gauge = document.gauges.get(choice);
+							if (gauge != null) {
+								gauge.value = Math.min(Math.max(result, 0), 1);
+								gauge.update();
+							}
+						} else {	// product is not filled, so no specs
+							gauge = document.gauges.get(choice);
+							if (gauge != null) {
+								gauge.value = 0.0;
+								gauge.update();
+							}
+						}
 					});
 					
 					["surfout","tightout","blendacc","pdacc"].map(function (label) {
 						setColor("#rolling", label, spec);
 					});
-
 					break;
 				case "wrapping":
 					// no records found - disable all input fields
@@ -1102,12 +1132,33 @@ function show_data(table) {
 					for (var i=1; i<=8; i++) {
 						$("#storage [name=m"+i+"]").val(data["m"+i]);
 					}
-					mini_moistchart("#storage #chart-m", id);
 					
 					var spec = getSpec(data.product, data.date);
+					mini_moistchart("#storage #chart-m", id);
 					avg = colorSeries("#storage", "m", spec);
-					document.gauges.get('m').value = avg;
-					
+
+					if (spec != null) {
+						// calculate and show the cpk
+						serie = [];
+						for (i=1; i<=8; i++)	{
+							var waarde = parseFloat(data["m"+i]);
+							if (!isNaN(waarde))
+								serie.push(waarde);
+						}
+						var result = cpk(spec["moist_s_min"], spec["moist_s_max"], serie);
+						gauge = document.gauges.get("m");
+						if (gauge != null) {
+							gauge.value = Math.min(Math.max(result, 0), 1);
+							gauge.update();
+						}
+					} else {	// product is not filled, so no specs
+						gauge = document.gauges.get("m");
+						if (gauge != null) {
+							gauge.value = 0.0;
+							gauge.update();
+						}
+					}
+											
 					break;
 				case "stickDefects":
 					// no records found - disable all input fields
@@ -1488,3 +1539,26 @@ function show_evaluation() {
 	});
 }
 
+// calculate Cp (process capability)
+function cp(LSL, USL, VAL) {
+	var cp, sigma;
+	
+	sigma = jStat.stdev(VAL, true);
+	if (sigma==0) sigma=0.001;
+	cp = (USL-LSL)/(6*sigma);
+	return cp.toFixed(2);
+}
+
+// calculate Cpk (process capability index)
+function cpk(LSL, USL, VAL) {
+	var avg, sigma, cpl, cpu, cpk;
+	
+	sigma = jStat.stdev(VAL, true);
+	if (sigma==0) sigma=0.001;
+	avg = jStat.mean(VAL);
+	cpl = (avg-LSL)/(3*sigma);
+ 	cpu = (USL-avg)/(3*sigma);
+ 	cpk = Math.min(cpl, cpu);
+ 	return cpk.toFixed(2);	
+}
+	

@@ -134,10 +134,33 @@ var storage_content = {
 				}, function (data) {
 					$("#storage [name=score]").html(data.score);
 					$("#storage [name=quality]").html(data.quality);
-					mini_moistchart("#storage #chart-m", current);		// update the minichart
+					
 					
 					var spec = getSpec(product, date);
-					pct = colorSeries("#storage", "m", spec);
+					mini_moistchart("#storage #chart-m", current);		// update the minichart
+					colorSeries("#storage", "m", spec);
+					
+					if (spec != null) {
+						// calculate and show the cpk
+						serie = [];
+						for (i=1; i<=8; i++)	{
+							var waarde = parseFloat($("#storage [name=m"+i+"]").val());
+							if (!isNaN(waarde))
+								serie.push(waarde);
+						}
+						var result = cpk(spec["moist_s_min"], spec["moist_s_max"], serie);
+						gauge = document.gauges.get("m");
+						if (gauge != null) {
+							gauge.value = Math.min(Math.max(result, 0), 1);
+							gauge.update();
+						}
+					} else {	// product is not filled, so no specs
+						gauge = document.gauges.get("m");
+						if (gauge != null) {
+							gauge.value = 0.0;
+							gauge.update();
+						}
+					}
 					
 					var sum = 0;				// faults total
 					var allowed = 6;		// maximum allowed faults
@@ -145,14 +168,13 @@ var storage_content = {
 					fields.map(function (label) {
 						var el = $("#storage [name="+label+"]");
 						var val = el.val();
-						sum += (val.trim()=="") ? 0 : parseInt(val);
+						if (val != null)
+							sum += (val.trim()=="") ? 0 : parseInt(val);
 					});
 					fields.map(function (label) {
 						setColor("#storage", label, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
 					});	
-					
-					gauge = document.gauges.get("m");
-					gauge.update({value: pct});
+
 				});
 			});
 		})
