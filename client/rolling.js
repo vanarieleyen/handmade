@@ -76,20 +76,20 @@ var rolling_content = {
 				m("legend.HANDMADE_CIRCUMFERENCE"),
 				m("table", {width: "100%", border: "0"}, [
 					m("tr", [1,2,3,4,5].map(function(n) {
-						return m("td",	m("input.number", {name: "d"+n}))
+						return m("td",	m("input.number", {name: "c"+n}))
 					})), 
 					m("tr", [6,7,8,9,10].map(function(n) {
-						return m("td",	m("input.number", {name: "d"+n}))
+						return m("td",	m("input.number", {name: "c"+n}))
 					})),
 					m("tr", [
 						m("td",	{colspan:"5"}, m("hr"))
 					]),
 					m("tr", [
 						m("td",	{colspan:"4"}, 
-							m("#chart-d.minichart",	m("canvas.flot-base"))
+							m("#chart-c.minichart",	m("canvas.flot-base"))
 						),
 						m("td",	{colspan:"1"}, 
-							m("canvas#d")
+							m("canvas#c")
 						)	
 					])
 				])
@@ -196,8 +196,8 @@ var rolling_content = {
 							if (!isNaN(waarde))
 								serie.push(waarde);
 						}
-						keus = (field[0]=="d") ? "c" : field[0];
-						var result = cpk(spec["rol_"+keus+"_min"], spec["rol_"+keus+"_max"], serie);
+
+						var result = cpk(spec["rol_"+field[0]+"_min"], spec["rol_"+field[0]+"_max"], serie);
 						gauge = document.gauges.get(field[0]);
 						if (gauge != null) {
 							gauge.value = Math.min(Math.max(result, 0), 1);

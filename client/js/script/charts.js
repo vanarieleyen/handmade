@@ -87,10 +87,9 @@ function plotMiniChart(element, line, specs) {
 }
 
 function mini_chart(element, soort, id) {		// mini timechart
-	switch (soort) {
-		case "d":	specmin = "rol_c_min";	specmax = "rol_c_max"; break;
-		default:	specmin = "rol_"+soort+"_min";	specmax = "rol_"+soort+"_max";
-	}
+	var specmin = "rol_"+soort+"_min";	
+	var specmax = "rol_"+soort+"_max";
+
 	var sql = "SELECT * FROM gwc_handmade.rolling t1 \
 							JOIN gwc_handmade.specs t2 ON t1.product=t2.name AND t1.date BETWEEN t2.start AND t2.end \
 						WHERE t1.id="+id;

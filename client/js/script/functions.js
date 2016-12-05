@@ -6,6 +6,54 @@ functies om de inputvelden van data uit de database te voorzien
 $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "Content-Type: text/html; charset=utf-8"});
 $.ajaxSetup({async:false});
 
+// database structure diagram with fieldnames and corresponding specnames, used for summaries
+var db = {
+	rolling: {
+		lengte:				{field: ["l1","l2","l3","l4","l5","l6","l7","l8","l9","l10"], spec: ["rol_l_min","rol_l_max"]},
+		omtrek:				{field: ["c1","c2","c3","c4","c5","c6","c7","c8","c9","c10"], spec: ["rol_c_min","rol_c_max"]},
+		gewicht: 			{field: ["w1","w2","w3","w4","w5","w6","w7","w8","w9","w10"], spec: ["rol_w_min","rol_w_max"]},
+		pd:						{field: ["p1","p2","p3","p4","p5","p6","p7","p8","p9","p10"], spec: ["rol_p_min","rol_p_max"]},
+		surfout:			{field: ["surfout"], spec: ["rol_surfout"]},
+		tightout:			{field: ["tightout"], spec: ["rol_tightout"]},
+		blendacc:			{field: ["blendacc"], spec: ["rol_blendacc_min","rol_blendacc_max"]},
+		pdacc:				{field: ["pdacc"], spec: ["rol_pdacc_min","rol_pdacc_max"]} 
+	},
+	wrapping: {
+		headend:			{field: ["headend"],spec: []},
+		wrapok:				{field: ["wrapok"],spec: []},
+		incision:			{field: ["incision"],spec: []},
+		leeg:					{field: ["empty"],spec: []},
+		tightness:		{field: ["tightness"],spec: []},
+		veins:				{field: ["veins"],spec: []},
+		crease:				{field: ["crease"],spec: []},
+		spot:					{field: ["spot"],spec: []},
+		blot:					{field: ["blot"],spec: []},
+		seam:					{field: ["seam"],spec: []},
+		hole:					{field: ["hole"],spec: []},
+		crack:				{field: ["crack"],spec: []},
+		splices:			{field: ["splice"],spec: []}
+	},
+	cutting: {
+		headend:			{field: ["headend"],spec: []},
+		incision:			{field: ["incision"],spec: []},
+		leeg:					{field: ["empty"],spec: []},
+		crease:				{field: ["crease"],spec: []},
+		blot:					{field: ["blot"],spec: []},
+		seam:					{field: ["seam"],spec: []},
+		crack:				{field: ["crack"],spec: []}
+	},
+	storage: {
+		moisture: 		{field: ["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10"],spec: ["moist_m_min","moist_m_max"]},
+		deworm:				{field: ["deworm"],spec: []},
+		dopant:				{field: ["dopant"],spec: []},
+		headend:			{field: ["headend"],spec: []},
+		leeg:					{field: ["empty"],spec: []},
+		seam:					{field: ["seam"],spec: []},
+		hole:					{field: ["hole"],spec: []},
+		crack:				{field: ["break"],spec: []}
+	}
+}
+
 // change the :contains-selector to match on whole words
 jQuery.expr[":"].contains = $.expr.createPseudo(function(arg) {
   return function( elem ) {
@@ -174,6 +222,7 @@ function fill_labels() {
 	show('.REASON', 111);
 	show('.DELETE', 172);
 	show('.NEW', 112);
+	show('.SELECT', 650);
 	
 	setButton(".calibrate", 148);
 	setButton(".calc", 145);
@@ -830,7 +879,7 @@ function create_gauges() {
 		width: 100	
 	};
 
-	["l","d","w","p","m"].map(function(choice) {
+	["l","c","w","p","m"].map(function(choice) {
 		options.renderTo = choice;
 		new RadialGauge(options);
 	});
@@ -901,13 +950,7 @@ function colorSeries(element, soort, spec) {		// set the color of a row of field
 
 	switch (element) {
 		case "#rolling":
-				switch (soort) {
-					case "d":	
-						specmin = "rol_c_min";	specmax = "rol_c_max";
-						break;
-					default:	
-						specmin = "rol_"+soort+"_min";	specmax = "rol_"+soort+"_max";
-				}
+				specmin = "rol_"+soort+"_min";	specmax = "rol_"+soort+"_max";
 				aantal = 10;
 				break;
 		case "#storage":
@@ -970,15 +1013,14 @@ function show_data(table) {
 						$("#rolling [name="+label+"]").val(data[label]);
 					});
 					["score","quality"].map(function (label) {	$("#rolling [name="+label+"]").html(data[label]);	});
-					for (var i=1; i<=10; i++) {
-						$("#rolling [name=l"+i+"]").val(data["l"+i]);
-						$("#rolling [name=d"+i+"]").val(data["d"+i]);
-						$("#rolling [name=w"+i+"]").val(data["w"+i]);
-						$("#rolling [name=p"+i+"]").val(data["p"+i]);
-					}
+
+					db.rolling.lengte.field.map(function(field) {		$("#rolling [name="+field+"]").val(data[field]);	});
+					db.rolling.omtrek.field.map(function(field) {		$("#rolling [name="+field+"]").val(data[field]);	});
+					db.rolling.gewicht.field.map(function(field) {	$("#rolling [name="+field+"]").val(data[field]);	});
+					db.rolling.pd.field.map(function(field) {				$("#rolling [name="+field+"]").val(data[field]);	});
 					
 					var spec = getSpec(data.product, data.date);
-					["l","d","w","p"].map(function(choice) {
+					["l","c","w","p"].map(function(choice) {
 						mini_chart("#rolling #chart-"+choice, choice, id);		// show minichart
 						colorSeries("#rolling", choice, spec);								// color the inputs
 						
@@ -990,8 +1032,7 @@ function show_data(table) {
 								if (!isNaN(waarde))
 									serie.push(waarde);
 							}
-							keus = (choice=="d") ? "c" : choice;
-							var result = cpk(spec["rol_"+keus+"_min"], spec["rol_"+keus+"_max"], serie);
+							var result = cpk(spec["rol_"+choice+"_min"], spec["rol_"+choice+"_max"], serie);
 							gauge = document.gauges.get(choice);
 							if (gauge != null) {
 								gauge.value = Math.min(Math.max(result, 0), 1);
@@ -1525,19 +1566,116 @@ function show_datatab() {
 }
 	
 function show_evaluation() {
+	var start_date = $("#evaluate [name=start]").val();
+	var end_date = $("#evaluate [name=end]").val();
+	
 	// fill the selectbox options
-	$.getJSON('server/get_names.php', function(data) {
-		$('#evaluate [name=sampling]').append(data.sampling);	
-	});
-	$.get('server/get_products.php', function(data) {
-		$('#evaluate [name=product]').append(data);	
-	});
-	$.getJSON('server/get_stage.php', {
+	$.getJSON('server/get_evalselect.php', {
+		start: start_date,
+		end: end_date,
+		prod: 0,
+		samp: 0,
+		step: 0,
 		lang: $.jStorage.get("lang")
+	},function(data) {	
+		$('#evaluate [name=sampling]').empty().append(data.sampling);	
+		$('#evaluate [name=product]').empty().append(data.product);
+		$('#evaluate [name=stage]').empty().append(data.stage);	
+	});
+
+	// set the onchange events for start/end date
+	setTimeout(function() {
+		$("#evaluate .datum").each(function () {
+			var zd = $(this).data('Zebra_DatePicker');
+			zd.update({
+			  onSelect: function () { 
+					var start_date = $("#evaluate [name=start]").val();
+					var end_date = $("#evaluate [name=end]").val();
+					
+					$("#evaluate .summaries table").css("display","none");		// hide all summaries
+					
+					$("#evaluate .summaries th[name]").each(function () {
+						$(this).text("");		// clear all summaries
+					});
+
+					// fill the selectbox options
+					$.getJSON('server/get_evalselect.php', {
+						start: start_date,
+						end: end_date,
+						prod: 0,
+						samp: 0,
+						step: 0,
+						lang: $.jStorage.get("lang")
+					},function(data) {	
+						$('#evaluate [name=sampling]').empty().append(data.sampling);	
+						$('#evaluate [name=product]').empty().append(data.product);
+						$('#evaluate [name=stage]').empty().append(data.stage);	
+					});
+			  }
+			});
+		})
+	}, 100);
+	
+}
+
+function calcSummary(stage, what, data, spec) {		
+	var amount = 0;
+	var outspec = 0;
+	var serie = [];
+	var dbs = db[stage][what];
+	$.each(data.row, function (key, row) {
+		$.each(dbs.field, function(key, field) {
+			if (row[field] != "") {
+				waarde = parseFloat(row[field]);
+				serie.push(waarde);
+				amount++;
+				if (waarde < spec[dbs.spec[0]] || waarde > spec[dbs.spec[1]])
+					outspec++;
+			}
+		});
+	});
+	$("#evaluate #"+stage+" [name="+what+"] [name=amount]").text( amount );
+	$("#evaluate #"+stage+" [name="+what+"] [name=cpk]").text( cpk(spec[dbs.spec[0]], spec[dbs.spec[1]], serie) );
+	$("#evaluate #"+stage+" [name="+what+"] [name=avg]").text( jStat.mean(serie).toFixed(2) );
+	$("#evaluate #"+stage+" [name="+what+"] [name=dev]").text( jStat.stdev(serie).toFixed(2) );
+	$("#evaluate #"+stage+" [name="+what+"] [name=var]").text( jStat.variance(serie).toFixed(2) );
+	$("#evaluate #"+stage+" [name="+what+"] [name=out]").text( outspec );
+}
+
+// show the summary in the evaluation page
+function showSummary() {
+	var start_date = $("#evaluate [name=start]").val();
+	var end_date = $("#evaluate [name=end]").val();
+	var product = $("#evaluate [name=product]").val();
+	var sampling = $("#evaluate [name=sampling]").val();
+	var stage = $("#evaluate [name=stage]").val();
+	var spec = getSpec(product, end_date);
+	
+	if (spec == null)	return;		// no summary without specs
+
+	pc = (product != "0") ? sprintf(" AND product='%s' ", product) : "";
+	sc = (sampling != '0')  ? sprintf(" AND name='%s' ", sampling) : "";
+	sql = sprintf("SELECT * FROM gwc_handmade.%s WHERE DATE(date) BETWEEN '%s' AND '%s'%s%s", stage, start_date, end_date, pc, sc);
+
+	$.getJSON('server/get_record.php', { 
+		query: sql
 	}, function(data) {
-		$('#evaluate [name=stage]').append(data);	
+		switch (stage) {
+			case "rolling":
+				["lengte","omtrek","gewicht","pd"].map(function(keus) {
+					calcSummary(stage, keus, data, spec);
+				});
+				break;
+			case "storage":
+				["moisture"].map(function(keus) {
+					calcSummary(stage, keus, data, spec);
+				});
+				break;
+		}
 	});
 }
+
+
 
 // calculate Cp (process capability)
 function cp(LSL, USL, VAL) {

@@ -188,7 +188,7 @@ $(document).ready(function() {
 		},
 		create: function( event, ui ) {
 			switch (initialtab) {
-				case 0: show_datatab();
+				case 0: show_datatab(); break;
 				case 1: show_history(); break;
 				case 2: show_evaluation(); break;
 			}
@@ -196,5 +196,17 @@ $(document).ready(function() {
 	});
 
 	$('.datum').Zebra_DatePicker();		// set all .datum inputs to datepicker
+	
+	/*
+	// set the events for start/end date
+	var start_date = $('#evaluate [name=start]').data('Zebra_DatePicker');
+	var end_date = $('#evaluate [name=end]').data('Zebra_DatePicker');
+	start_date.update({
+	  onSelect: function () { alert() }
+	});
+	end_date.update({
+	  onSelect: function () { alert() }
+	});
+	*/
 });
 
