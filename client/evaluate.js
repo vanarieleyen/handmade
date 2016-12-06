@@ -42,6 +42,22 @@ var evaluate_content = {
 							])
 						})				
 					),
+					m("table#wrapping", {width: "100%", border: "0", style: "display:none"},
+						m("tr", {style: "background-color: rgba(0,0,0,0.1)"}, 
+							["", "AMOUNT", "CPK", "AVG", "DEVIATION", "VARIANCE", "OUTSPEC"].map(function(label) {
+								return m("th."+label)
+							})
+						),
+						[ {label:".MOISTURE", field:"moisture"}, {label:".WEIGHT", field:"weight"}
+						].map(function(a) {
+							return m("tr", {name: a.field}, [
+								m("td"+a.label),
+								["amount", "cpk", "avg", "dev", "var", "out"].map(function(label) {
+									return m("th", {name: label})
+								})
+							])
+						})				
+					),
 					m("table#storage", {width: "100%", border: "0", style: "display:none"},
 						m("tr", {style: "background-color: rgba(0,0,0,0.1)"}, 
 							["", "AMOUNT", "CPK", "AVG", "DEVIATION", "VARIANCE", "OUTSPEC"].map(function(label) {
@@ -100,6 +116,8 @@ var evaluate_content = {
 				$("#evaluate .summaries table").css("display","none");		// hide all summaries
 				switch (stage) {
 					case 'rolling': $("#evaluate #rolling").show();
+						break;
+					case 'wrapping': $("#evaluate #wrapping").show();
 						break;
 					case 'storage': $("#evaluate #storage").show();
 						break;

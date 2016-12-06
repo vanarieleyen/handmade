@@ -6,21 +6,56 @@ functies om de inputvelden van data uit de database te voorzien
 $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "Content-Type: text/html; charset=utf-8"});
 $.ajaxSetup({async:false});
 
+
 // database structure diagram with fieldnames and corresponding specnames, used for summaries
+var dbs = {
+	product:	{field: "name"},
+	number:		{field: "nr"},
+	rolling:	{
+		lengte:		{min:"rol_l_min",	max:"rol_l_max"},
+		omtrek:		{min:"rol_c_min", max:"rol_c_max"},
+		gewicht:	{min:"rol_w_min", max:"rol_w_max"},
+		pd:				{min:"rol_p_min", max:"rol_p_max"},
+		surfout:	{norm:"rol_surfout"},
+		tightout:	{norm:"rol_tightout"},
+		blendacc:	{min:"rol_blendacc_min", max:"rol_blendacc_max"},
+		pdacc:		{min:"rol_pdacc_min", max:"rol_pdacc_max"}
+	},
+	wrapping:	{
+		gewicht:	{min:"weight_w_min", max:"weight_w_max"},
+		moisture:	{min:"moist_w_min", max:"moist_w_max"}
+	},
+	storage:	{
+		moisture:	{min:"moist_s_min", max:"moist_s_max"}
+	}
+}
+
 var db = {
 	rolling: {
-		lengte:				{field: ["l1","l2","l3","l4","l5","l6","l7","l8","l9","l10"], spec: ["rol_l_min","rol_l_max"]},
-		omtrek:				{field: ["c1","c2","c3","c4","c5","c6","c7","c8","c9","c10"], spec: ["rol_c_min","rol_c_max"]},
-		gewicht: 			{field: ["w1","w2","w3","w4","w5","w6","w7","w8","w9","w10"], spec: ["rol_w_min","rol_w_max"]},
-		pd:						{field: ["p1","p2","p3","p4","p5","p6","p7","p8","p9","p10"], spec: ["rol_p_min","rol_p_max"]},
-		surfout:			{field: ["surfout"], spec: ["rol_surfout"]},
-		tightout:			{field: ["tightout"], spec: ["rol_tightout"]},
-		blendacc:			{field: ["blendacc"], spec: ["rol_blendacc_min","rol_blendacc_max"]},
-		pdacc:				{field: ["pdacc"], spec: ["rol_pdacc_min","rol_pdacc_max"]} 
+		id:						{field: ["id"],spec: []},
+		date:					{field: ["date"],spec: []},
+		product:			{field: ["product"],spec: []},
+		sampling:			{field: ["name"],spec: []},
+		lengte:				{field: ["l1","l2","l3","l4","l5","l6","l7","l8","l9","l10"], spec: [dbs.rolling.lengte.min, dbs.rolling.lengte.max]},
+		omtrek:				{field: ["c1","c2","c3","c4","c5","c6","c7","c8","c9","c10"], spec: [dbs.rolling.omtrek.min, dbs.rolling.omtrek.max]},
+		gewicht: 			{field: ["w1","w2","w3","w4","w5","w6","w7","w8","w9","w10"], spec: [dbs.rolling.gewicht.min, dbs.rolling.gewicht.max]},
+		pd:						{field: ["p1","p2","p3","p4","p5","p6","p7","p8","p9","p10"], spec: [dbs.rolling.pd.min, dbs.rolling.pd.max]},
+		surfout:			{field: ["surfout"], spec: [dbs.rolling.surfout.norm]},
+		tightout:			{field: ["tightout"], spec: [dbs.rolling.tightout.norm]},
+		blendacc:			{field: ["blendacc"], spec: [dbs.rolling.blendacc.min, dbs.rolling.blendacc.max]}, 
+		pdacc:				{field: ["pdacc"], spec: [dbs.rolling.pdacc.min, dbs.rolling.pdacc.max]}, 
+		score:				{field: ["score"],spec: []},
+		quality:			{field: ["quality"],spec: []},
+		inspector:		{field: ["inspector"],spec: []},
+		remarks:			{field: ["remarks"],spec: []}
 	},
 	wrapping: {
-		gewicht: 			{field: ["w1","w2","w3","w4","w5","w6","w7","w8","w9","w10"], spec: ["weight_w_min","weight_w_max"]},
-		moisture:			{field: ["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10"], spec: ["moist_w_min","moist_w_max"]},
+		id:						{field: ["id"],spec: []},
+		date:					{field: ["date"],spec: []},
+		product:			{field: ["product"],spec: []},
+		sampling:			{field: ["name"],spec: []},
+		gewicht: 			{field: ["w1","w2","w3","w4","w5","w6","w7","w8","w9","w10"], spec: [dbs.wrapping.gewicht.min, dbs.wrapping.gewicht.max]},
+		moisture:			{field: ["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10"], spec: [dbs.wrapping.moisture.min, dbs.wrapping.moisture.max]},
 		headend:			{field: ["headend"],spec: []},
 		wrapok:				{field: ["wrapok"],spec: []},
 		incision:			{field: ["incision"],spec: []},
@@ -33,29 +68,115 @@ var db = {
 		seam:					{field: ["seam"],spec: []},
 		hole:					{field: ["hole"],spec: []},
 		crack:				{field: ["crack"],spec: []},
-		splices:			{field: ["splice"],spec: []}
+		splices:			{field: ["splice"],spec: []},
+		score:				{field: ["score"],spec: []},
+		quality:			{field: ["quality"],spec: []},
+		inspector:		{field: ["inspector"],spec: []},
+		remarks:			{field: ["remarks"],spec: []}
 	},
 	cutting: {
+		id:						{field: ["id"],spec: []},
+		date:					{field: ["date"],spec: []},
+		product:			{field: ["product"],spec: []},
+		sampling:			{field: ["name"],spec: []},
 		headend:			{field: ["headend"],spec: []},
 		incision:			{field: ["incision"],spec: []},
 		leeg:					{field: ["empty"],spec: []},
 		crease:				{field: ["crease"],spec: []},
 		blot:					{field: ["blot"],spec: []},
 		seam:					{field: ["seam"],spec: []},
-		crack:				{field: ["crack"],spec: []}
+		crack:				{field: ["crack"],spec: []},
+		score:				{field: ["score"],spec: []},
+		quality:			{field: ["quality"],spec: []},
+		inspector:		{field: ["inspector"],spec: []},
+		remarks:			{field: ["remarks"],spec: []}
 	},
 	storage: {
-		moisture: 		{field: ["m1","m2","m3","m4","m5","m6","m7","m8"],spec: ["moist_s_min","moist_s_max"]},
+		id:						{field: ["id"],spec: []},
+		date:					{field: ["date"],spec: []},
+		product:			{field: ["product"],spec: []},
+		start:				{field: ["start"],spec: []},
+		end:					{field: ["end"],spec: []},
+		moisture: 		{field: ["m1","m2","m3","m4","m5","m6","m7","m8"], spec: [dbs.storage.moisture.min, dbs.storage.moisture.max]},
 		deworm:				{field: ["deworm"],spec: []},
 		dopant:				{field: ["dopant"],spec: []},
 		headend:			{field: ["headend"],spec: []},
 		leeg:					{field: ["empty"],spec: []},
 		seam:					{field: ["seam"],spec: []},
 		hole:					{field: ["hole"],spec: []},
-		crack:				{field: ["break"],spec: []}
+		crack:				{field: ["break"],spec: []},
+		score:				{field: ["score"],spec: []},
+		quality:			{field: ["quality"],spec: []},
+		inspector:		{field: ["inspector"],spec: []},
+		incharge:			{field: ["incharge"],spec: []},
+		remarks:			{field: ["remarks"],spec: []}
+	},
+	stickDefects: {
+		id:						{field: ["id"],spec: []},
+		date:					{field: ["date"],spec: []},
+		product:			{field: ["product"],spec: []},
+		sample:				{field: ["sample"],spec: []},
+		score:				{field: ["score"],spec: []},
+		inspector:		{field: ["inspector"],spec: []},
+		remarks:			{field: ["remarks"],spec: []},
+		sjob:					{field: ["sjob"],spec: []},
+		judge:				{field: ["judge"],spec: []},
+		sremarks:			{field: ["sremarks"],spec: []},
+		ring:					{field: ["srd1","srd2","srd3"], spec: []},
+		ringAmount:		{field: ["srd1_nr","srd2_nr","srd3_nr"], spec: []},
+		cell:					{field: ["scd1","scd2","scd3"], spec: []},
+		cellAmount:		{field: ["scd1_nr","scd2_nr","scd3_nr"], spec: []},
+		set:					{field: ["ssd1","ssd2","ssd3"], spec: []},
+		setAmount:		{field: ["ssd1_nr","ssd2_nr","ssd3_nr"], spec: []},
+		pack:					{field: ["spd1","spd2","spd3"], spec: []},
+		packAmount:		{field: ["spd1_nr","spd2_nr","spd3_nr"], spec: []}
+	},
+	packDefects: {
+		id:						{field: ["id"],spec: []},
+		date:					{field: ["date"],spec: []},
+		product:			{field: ["product"],spec: []},
+		sample:				{field: ["sample"],spec: []},
+		score:				{field: ["score"],spec: []},
+		inspector:		{field: ["inspector"],spec: []},
+		remarks:			{field: ["remarks"],spec: []},
+		pjob:					{field: ["pjob"],spec: []},
+		judge:				{field: ["judge"],spec: []},
+		premarks:			{field: ["premarks"],spec: []},
+		quality:			{field: ["ppd1","ppd2","ppd3"], spec: []},
+		qualityAmount:{field: ["ppd1_nr","ppd2_nr","ppd3_nr"], spec: []},
+		pack:					{field: ["pm1","pm2","pm3"], spec: []},
+		packAmount:		{field: ["pm1_nr","pm2_nr","pm3_nr"], spec: []}
+	},
+	boxDefects: {
+		id:						{field: ["id"],spec: []},
+		date:					{field: ["date"],spec: []},
+		product:			{field: ["product"],spec: []},
+		sample:				{field: ["sample"],spec: []},
+		score:				{field: ["score"],spec: []},
+		inspector:		{field: ["inspector"],spec: []},
+		remarks:			{field: ["remarks"],spec: []},
+		bjob:					{field: ["bjob"],spec: []},
+		judge:				{field: ["judge"],spec: []},
+		bremarks:			{field: ["bremarks"],spec: []},
+		sleeve:				{field: ["bsd1","bsd2","bsd3"], spec: []},
+		sleeveAmount:	{field: ["bsd1_nr","bsd2_nr","bsd3_nr"], spec: []},
+		box:					{field: ["bb1","bb2","bb3"], spec: []},
+		boxAmount:		{field: ["bb1_nr","bb2_nr","bb3_nr"], spec: []},
+		pack:					{field: ["bm1","bm2","bm3"], spec: []},
+		packAmount:		{field: ["bm1_nr","bm2_nr","bm3_nr"], spec: []}
 	}
 }
 var specmin, specmax;		// fieldnames of min and max
+
+// walk through the (dbs) field tree and fill the array (t) with the fieldnames
+function getFields(obj, t) {
+	$.each(obj, function (i, k) {
+		if (typeof obj[i] == "object" && obj[i] !== null)
+			getFields(k, t);
+		else
+			t.push(k);
+	})
+}
 
 // change the :contains-selector to match on whole words
 jQuery.expr[":"].contains = $.expr.createPseudo(function(arg) {
@@ -1237,16 +1358,16 @@ function show_data(table) {
 					
 					// fill the selectbox options
 					$.get('server/get_defects.php?type=stick ring', function(data) {
-						for (var i=1; i<=3; i++)	$('#stickDefects [name=srd'+i+']').append(data);	
+						db.stickDefects.ring.field.map(function(field){	$('#stickDefects [name='+field+']').append(data);	});
 					});
 					$.get('server/get_defects.php?type=stick cel', function(data) {
-						for (var i=1; i<=3; i++)	$('#stickDefects [name=scd'+i+']').append(data);	
+						db.stickDefects.cell.field.map(function(field){	$('#stickDefects [name='+field+']').append(data);	});
 					});
 					$.get('server/get_defects.php?type=stick set', function(data) {
-						for (var i=1; i<=3; i++)	$('#stickDefects [name=ssd'+i+']').append(data);	
+						db.stickDefects.set.field.map(function(field){	$('#stickDefects [name='+field+']').append(data);	});
 					});
 					$.get('server/get_defects.php?type=pack mark', function(data) {
-						for (var i=1; i<=3; i++) $('#stickDefects [name=spd'+i+']').append(data);	
+						db.stickDefects.pack.field.map(function(field){	$('#stickDefects [name='+field+']').append(data);	});
 					});
 					$.getJSON('server/get_names.php', function(data) {
 						$('#stickDefects [name=inspector]').empty().append(data.inspectors);	
@@ -1266,21 +1387,23 @@ function show_data(table) {
 						$("#stickDefects [name="+label+"]").val(data[label]);
 					});
 					$("#stickDefects [name=score]").html(data.score);
-					
+
 					var sum = 0;
 					var allowed = 6;		// maximum allowed faults
-					var fields = ["srd","scd","ssd","spd"];
+					var fields = ["ringAmount","cellAmount","setAmount","packAmount"];
 					fields.map(function(label){
-						for (var i=1; i<=3; i++) {
-							nr = data[label+i+"_nr"];
+						db.stickDefects[label].field.map(function(field) {
+							nr = data[field];
 							sum += (nr.trim()=="") ? 0 : parseInt(nr);
-							$("#stickDefects [name="+label+i+"_nr]").val(nr);						// set amount
-							$("#stickDefects [name="+label+i+"]").val(data[label+i]);		// set defect
-						}
+							$("#stickDefects [name="+field+"]").val(nr);						// set amount
+							var defect = field.slice(0,-3);	// remove the _nr part
+							$("#stickDefects [name="+defect+"]").val(data[defect]);		// set defect
+						});
 					});
 					fields.map(function(label){
-						for (var i=1; i<=3; i++) 
-							setColor("#stickDefects", label+i+"_nr", Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+						db.stickDefects[label].field.map(function(field) {
+							setColor("#stickDefects", field, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+						});
 					});
 					
 					break;
@@ -1320,18 +1443,20 @@ function show_data(table) {
 					
 					var sum = 0;
 					var allowed = 6;		// maximum allowed faults
-					var fields = ["ppd","pm"];
+					var fields = ["qualityAmount","packAmount"];
 					fields.map(function(label){
-						for (var i=1; i<=3; i++) {
-							nr = data[label+i+"_nr"];
+						db.packDefects[label].field.map(function(field) {
+							nr = data[field];
 							sum += (nr.trim()=="") ? 0 : parseInt(nr);
-							$("#packDefects [name="+label+i+"_nr]").val(nr);						// set amount
-							$("#packDefects [name="+label+i+"]").val(data[label+i]);		// set defect
-						}
+							$("#packDefects [name="+field+"]").val(nr);						// set amount
+							var defect = field.slice(0,-3);	// remove the _nr part
+							$("#packDefects [name="+defect+"]").val(data[defect]);		// set defect
+						});
 					});
 					fields.map(function(label){
-						for (var i=1; i<=3; i++) 
-							setColor("#packDefects", label+i+"_nr", Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+						db.packDefects[label].field.map(function(field) {
+							setColor("#packDefects", field, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+						});
 					});
 					
 					break;
@@ -1374,20 +1499,21 @@ function show_data(table) {
 					
 					var sum = 0;
 					var allowed = 6;		// maximum allowed faults
-					var fields = ["bsd","bb","bm"];
+					var fields = ["sleeveAmount","boxAmount","packAmount"];
 					fields.map(function(label){
-						for (var i=1; i<=3; i++) {
-							nr = data[label+i+"_nr"];
+						db.boxDefects[label].field.map(function(field) {
+							nr = data[field];
 							sum += (nr.trim()=="") ? 0 : parseInt(nr);
-							$("#boxDefects [name="+label+i+"_nr]").val(nr);						// set amount
-							$("#boxDefects [name="+label+i+"]").val(data[label+i]);		// set defect
-						}
+							$("#boxDefects [name="+field+"]").val(nr);						// set amount
+							var defect = field.slice(0,-3);	// remove the _nr part
+							$("#boxDefects [name="+defect+"]").val(data[defect]);		// set defect
+						});
 					});
 					fields.map(function(label){
-						for (var i=1; i<=3; i++) 
-							setColor("#boxDefects", label+i+"_nr", Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+						db.boxDefects[label].field.map(function(field) {
+							setColor("#boxDefects", field, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
+						});
 					});
-					
 					break;
 				case "specs":
 					// no records found - disable all input fields
@@ -1540,38 +1666,22 @@ function show_spec_history(id) {
 // display all the details of the selected specification
 function show_spec_details(id) {
 	var sql = sprintf('SELECT * FROM gwc_handmade.specs WHERE id=%s', id);
+	var fields = [];
 
 	$.jStorage.set("handmade.current.specs", id);
-	//console.log(id);
+
 	if (id != null)	{
 		$.getJSON('server/get_record.php', { 
 			query: sql
 		}, function(data) {
-			$("#specs [name=name]").val(data.name);
-			$("#specs [name=nr]").val(data.nr);
-			$("#specs [name=rol_l_min]").val(data.rol_l_min);
-			$("#specs [name=rol_l_max]").val(data.rol_l_max);
-			$("#specs [name=rol_c_min]").val(data.rol_c_min);
-			$("#specs [name=rol_c_max]").val(data.rol_c_max);
-			$("#specs [name=rol_w_min]").val(data.rol_w_min);
-			$("#specs [name=rol_w_max]").val(data.rol_w_max);
-			$("#specs [name=rol_p_min]").val(data.rol_p_min);
-			$("#specs [name=rol_p_max]").val(data.rol_p_max);
-			$("#specs [name=rol_surfout]").val(data.rol_surfout);
-			$("#specs [name=rol_tightout]").val(data.rol_tightout);
-			$("#specs [name=rol_blendacc_min]").val(data.rol_blendacc_min);
-			$("#specs [name=rol_blendacc_max]").val(data.rol_blendacc_max);
-			$("#specs [name=rol_pdacc_min]").val(data.rol_pdacc_min);
-			$("#specs [name=rol_pdacc_max]").val(data.rol_pdacc_max);
-			$("#specs [name=moist_s_min]").val(data.moist_s_min);
-			$("#specs [name=moist_s_max]").val(data.moist_s_max);
-			$("#specs [name=moist_w_min]").val(data.moist_w_min);
-			$("#specs [name=moist_w_max]").val(data.moist_w_max);
-			$("#specs [name=weight_w_min]").val(data.weight_w_min);
-			$("#specs [name=weight_w_max]").val(data.weight_w_max);
+			getFields(dbs, fields);		// get all the field names from dbs
+			fields.map(function(fieldname){
+				$("#specs [name="+fieldname+"]").val(data[fieldname]);
+			});
 		});	
 	}
 }
+
 
 function show_names() {
 	$.getJSON('server/get_record.php', { 
@@ -1696,6 +1806,11 @@ function showSummary() {
 		switch (stage) {
 			case "rolling":
 				["lengte","omtrek","gewicht","pd"].map(function(keus) {
+					calcSummary(stage, keus, data, spec);
+				});
+				break;
+			case "wrapping":
+				["gewicht","moisture"].map(function(keus) {
 					calcSummary(stage, keus, data, spec);
 				});
 				break;
