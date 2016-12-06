@@ -14,7 +14,7 @@ $database->execute();
 // set table and field names with corresponding label
 $fields = "id, date, name, gebruik";
 
-$column = split(", ", $fields);															// extract the column names from the $fields
+$column = explode(", ", $fields);															// extract the column names from the $fields
 
 $query = sprintf("SELECT %s	FROM gwc_handmade.users ORDER BY id DESC", $fields);
 $database->query($query);

@@ -18,7 +18,7 @@ $database->execute();
 // set table and field names with corresponding label
 $fields = "id, start, end";
 
-$column = split(", ", $fields);															// extract the column names from the $fields
+$column = explode(", ", $fields);															// extract the column names from the $fields
 
 $query = sprintf("SELECT %s FROM gwc_handmade.specs WHERE pid=(SELECT pid FROM gwc_handmade.specs WHERE id=%s) ORDER BY end DESC",
 									$fields, $id);

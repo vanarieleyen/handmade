@@ -33,8 +33,9 @@ switch ($tab) {
 		return;
 }
 
-$column = split(", ", $fields);															// extract the column names from the $fields
-$table = sprintf("gwc_handmade.%s", split("_", $tab)[0]);		// get the tablename from the $tab-name
+$column = explode(", ", $fields);		
+											// extract the column names from the $fields
+$table = sprintf("gwc_handmade.%s", explode("_", $tab)[0]);		// get the tablename from the $tab-name
 
 if ($table == "gwc_handmade.defects") {		// er zijn 3 defects tables..
 	$type = ["stickDefects", "packDefects", "boxDefects"];
