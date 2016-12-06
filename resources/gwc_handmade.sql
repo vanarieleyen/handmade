@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.13.1deb1
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 21, 2016 at 04:22 PM
--- Server version: 5.6.31-0ubuntu0.15.10.1
--- PHP Version: 5.6.11-1ubuntu3.4
+-- Generation Time: Dec 06, 2016 at 08:06 AM
+-- Server version: 10.1.13-MariaDB-1~trusty
+-- PHP Version: 5.5.9-1ubuntu4.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,11 +14,57 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `gwc_handmade`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `boxDefects`
+--
+
+DROP TABLE IF EXISTS `boxDefects`;
+CREATE TABLE IF NOT EXISTS `boxDefects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` datetime NOT NULL,
+  `product` varchar(20) NOT NULL,
+  `sample` varchar(5) NOT NULL,
+  `score` varchar(4) NOT NULL,
+  `inspector` varchar(4) NOT NULL,
+  `remarks` varchar(200) NOT NULL,
+  `bjob` varchar(4) NOT NULL,
+  `judge` varchar(4) NOT NULL,
+  `bremarks` varchar(200) NOT NULL,
+  `bsd1` varchar(4) NOT NULL,
+  `bsd2` varchar(4) NOT NULL,
+  `bsd3` varchar(4) NOT NULL,
+  `bsd1_nr` varchar(4) NOT NULL,
+  `bsd2_nr` varchar(4) NOT NULL,
+  `bsd3_nr` varchar(4) NOT NULL,
+  `bb1` varchar(4) NOT NULL,
+  `bb2` varchar(4) NOT NULL,
+  `bb3` varchar(4) NOT NULL,
+  `bb1_nr` varchar(4) NOT NULL,
+  `bb2_nr` varchar(4) NOT NULL,
+  `bb3_nr` varchar(4) NOT NULL,
+  `bm1` varchar(4) NOT NULL,
+  `bm2` varchar(4) NOT NULL,
+  `bm3` varchar(4) NOT NULL,
+  `bm1_nr` varchar(4) NOT NULL,
+  `bm2_nr` varchar(4) NOT NULL,
+  `bm3_nr` varchar(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=gbk AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `boxDefects`
+--
+
+INSERT INTO `boxDefects` (`id`, `date`, `product`, `sample`, `score`, `inspector`, `remarks`, `bjob`, `judge`, `bremarks`, `bsd1`, `bsd2`, `bsd3`, `bsd1_nr`, `bsd2_nr`, `bsd3_nr`, `bb1`, `bb2`, `bb3`, `bb1_nr`, `bb2_nr`, `bb3_nr`, `bm1`, `bm2`, `bm3`, `bm1_nr`, `bm2_nr`, `bm3_nr`) VALUES
+(1, '2016-11-17 11:30:56', '长城（3号）', '2', '', '卿萍', '', '0015', '', '', 'B1', '0', '0', '3', '', '', '0', 'B1', '0', '', '1', '', '0', '0', '0', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -28,7 +74,7 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `cutting`;
 CREATE TABLE IF NOT EXISTS `cutting` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` datetime NOT NULL,
   `product` varchar(20) NOT NULL,
   `name` varchar(10) NOT NULL,
@@ -42,17 +88,18 @@ CREATE TABLE IF NOT EXISTS `cutting` (
   `score` varchar(4) NOT NULL,
   `quality` varchar(4) NOT NULL,
   `inspector` varchar(4) NOT NULL,
-  `remarks` varchar(200) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=gbk;
+  `remarks` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=gbk AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `cutting`
 --
 
 INSERT INTO `cutting` (`id`, `date`, `product`, `name`, `headend`, `incision`, `empty`, `crease`, `blot`, `seam`, `crack`, `score`, `quality`, `inspector`, `remarks`) VALUES
-(1, '2016-11-16 16:58:10', '1', '2', '9', '10', '11', '5', '6', '7', '8', '', '', '3', '4'),
-(2, '2016-11-16 16:58:53', 'test', '', '', '', '', '', '', '', '', '', '', '', ''),
-(3, '2016-11-17 09:23:16', '', 'sample', '', '', '0', '', '', '', '', '', '', '', '');
+(1, '2016-11-16 16:58:10', '试验', '', '0', '1', '0', '3', '0', '0', '0', '98.9', '合格', '3', '4'),
+(2, '2016-11-16 16:58:53', '试验', '', '1', '0', '1', '0', '0', '2', '0', '97.5', '合格', '', ''),
+(3, '2016-11-17 09:23:16', '长城（3号）', '何民霞', '0', '2', '0', '0', '1', '0', '0', '98.5', '合格', '卿萍', '');
 
 -- --------------------------------------------------------
 
@@ -62,11 +109,13 @@ INSERT INTO `cutting` (`id`, `date`, `product`, `name`, `headend`, `incision`, `
 
 DROP TABLE IF EXISTS `defectlabels`;
 CREATE TABLE IF NOT EXISTS `defectlabels` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(5) CHARACTER SET gbk NOT NULL,
   `text` varchar(200) CHARACTER SET gbk NOT NULL,
-  `type` varchar(20) CHARACTER SET gbk NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=280 DEFAULT CHARSET=latin1;
+  `type` varchar(20) CHARACTER SET gbk NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `type_idx` (`type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=280 ;
 
 --
 -- Dumping data for table `defectlabels`
@@ -355,101 +404,12 @@ INSERT INTO `defectlabels` (`id`, `code`, `text`, `type`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `defects`
---
-
-DROP TABLE IF EXISTS `defects`;
-CREATE TABLE IF NOT EXISTS `defects` (
-  `id` int(11) NOT NULL,
-  `date` datetime NOT NULL,
-  `product` varchar(20) NOT NULL,
-  `sample` varchar(5) NOT NULL,
-  `sscore` varchar(4) NOT NULL,
-  `pscore` varchar(4) NOT NULL,
-  `bscore` varchar(4) NOT NULL,
-  `inspector` varchar(4) NOT NULL,
-  `remarks` varchar(200) NOT NULL,
-  `sjob` varchar(4) NOT NULL,
-  `sjudge` varchar(4) NOT NULL,
-  `sremarks` varchar(200) NOT NULL,
-  `pjob` varchar(4) NOT NULL,
-  `pjudge` varchar(4) NOT NULL,
-  `premarks` varchar(200) NOT NULL,
-  `bjob` varchar(4) NOT NULL,
-  `bjudge` varchar(4) NOT NULL,
-  `bremarks` varchar(200) NOT NULL,
-  `srd1` varchar(4) NOT NULL,
-  `srd2` varchar(4) NOT NULL,
-  `srd3` varchar(4) NOT NULL,
-  `srd1_nr` varchar(4) NOT NULL,
-  `srd2_nr` varchar(4) NOT NULL,
-  `srd3_nr` varchar(4) NOT NULL,
-  `scd1` varchar(4) NOT NULL,
-  `scd2` varchar(4) NOT NULL,
-  `scd3` varchar(4) NOT NULL,
-  `scd1_nr` varchar(4) NOT NULL,
-  `scd2_nr` varchar(4) NOT NULL,
-  `scd3_nr` varchar(4) NOT NULL,
-  `ssd1` varchar(4) NOT NULL,
-  `ssd2` varchar(4) NOT NULL,
-  `ssd3` varchar(4) NOT NULL,
-  `ssd1_nr` varchar(4) NOT NULL,
-  `ssd2_nr` varchar(4) NOT NULL,
-  `ssd3_nr` varchar(4) NOT NULL,
-  `spd1` varchar(4) NOT NULL,
-  `spd2` varchar(4) NOT NULL,
-  `spd3` varchar(4) NOT NULL,
-  `spd1_nr` varchar(4) NOT NULL,
-  `spd2_nr` varchar(4) NOT NULL,
-  `spd3_nr` varchar(4) NOT NULL,
-  `ppd1` varchar(4) NOT NULL,
-  `ppd2` varchar(4) NOT NULL,
-  `ppd3` varchar(4) NOT NULL,
-  `ppd1_nr` varchar(4) NOT NULL,
-  `ppd2_nr` varchar(4) NOT NULL,
-  `ppd3_nr` varchar(4) NOT NULL,
-  `pm1` varchar(4) NOT NULL,
-  `pm2` varchar(4) NOT NULL,
-  `pm3` varchar(4) NOT NULL,
-  `pm1_nr` varchar(4) NOT NULL,
-  `pm2_nr` varchar(4) NOT NULL,
-  `pm3_nr` varchar(4) NOT NULL,
-  `bsd1` varchar(4) NOT NULL,
-  `bsd2` varchar(4) NOT NULL,
-  `bsd3` varchar(4) NOT NULL,
-  `bsd1_nr` varchar(4) NOT NULL,
-  `bsd2_nr` varchar(4) NOT NULL,
-  `bsd3_nr` varchar(4) NOT NULL,
-  `bb1` varchar(4) NOT NULL,
-  `bb2` varchar(4) NOT NULL,
-  `bb3` varchar(4) NOT NULL,
-  `bb1_nr` varchar(4) NOT NULL,
-  `bb2_nr` varchar(4) NOT NULL,
-  `bb3_nr` varchar(4) NOT NULL,
-  `bm1` varchar(4) NOT NULL,
-  `bm2` varchar(4) NOT NULL,
-  `bm3` varchar(4) NOT NULL,
-  `bm1_nr` varchar(4) NOT NULL,
-  `bm2_nr` varchar(4) NOT NULL,
-  `bm3_nr` varchar(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=gbk;
-
---
--- Dumping data for table `defects`
---
-
-INSERT INTO `defects` (`id`, `date`, `product`, `sample`, `sscore`, `pscore`, `bscore`, `inspector`, `remarks`, `sjob`, `sjudge`, `sremarks`, `pjob`, `pjudge`, `premarks`, `bjob`, `bjudge`, `bremarks`, `srd1`, `srd2`, `srd3`, `srd1_nr`, `srd2_nr`, `srd3_nr`, `scd1`, `scd2`, `scd3`, `scd1_nr`, `scd2_nr`, `scd3_nr`, `ssd1`, `ssd2`, `ssd3`, `ssd1_nr`, `ssd2_nr`, `ssd3_nr`, `spd1`, `spd2`, `spd3`, `spd1_nr`, `spd2_nr`, `spd3_nr`, `ppd1`, `ppd2`, `ppd3`, `ppd1_nr`, `ppd2_nr`, `ppd3_nr`, `pm1`, `pm2`, `pm3`, `pm1_nr`, `pm2_nr`, `pm3_nr`, `bsd1`, `bsd2`, `bsd3`, `bsd1_nr`, `bsd2_nr`, `bsd3_nr`, `bb1`, `bb2`, `bb3`, `bb1_nr`, `bb2_nr`, `bb3_nr`, `bm1`, `bm2`, `bm3`, `bm1_nr`, `bm2_nr`, `bm3_nr`) VALUES
-(1, '2016-11-17 11:30:56', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'A5', '', '', '3', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'A8', '', '', '2', '', '', 'B12', 'B1', '0', '1', '2', '', '', '', '', '', '', '', '', '', '', '', '', '');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `formulas`
 --
 
 DROP TABLE IF EXISTS `formulas`;
 CREATE TABLE IF NOT EXISTS `formulas` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `l_outlow` varchar(500) CHARACTER SET gbk NOT NULL,
   `l_outhigh` varchar(500) CHARACTER SET gbk NOT NULL,
   `l_inspec` varchar(500) CHARACTER SET gbk NOT NULL,
@@ -473,97 +433,78 @@ CREATE TABLE IF NOT EXISTS `formulas` (
   `c_batch_score` varchar(500) CHARACTER SET gbk NOT NULL,
   `c_batch_quality` varchar(500) CHARACTER SET gbk NOT NULL,
   `s_batch_score` varchar(500) CHARACTER SET gbk NOT NULL,
-  `s_batch_quality` varchar(500) CHARACTER SET gbk NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `s_batch_quality` varchar(500) CHARACTER SET gbk NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `formulas`
 --
 
 INSERT INTO `formulas` (`id`, `l_outlow`, `l_outhigh`, `l_inspec`, `c_outlow`, `c_outhigh`, `c_inspec`, `w_outlow`, `w_outhigh`, `w_inspec`, `p_outlow`, `p_outhigh`, `p_inspec`, `m_outlow`, `m_outhigh`, `m_inspec`, `m_2inspec`, `r_batch_score`, `r_batch_quality`, `w_batch_score`, `w_batch_quality`, `c_batch_score`, `c_batch_quality`, `s_batch_score`, `s_batch_quality`) VALUES
-(1, '=COUNTIF(B1:B10,"<"&S1)', '=COUNTIF(B1:B10,">"&S2)', '=COUNTIF(B1:B10,">="&S1) - COUNTIF(B1:B10,">"&S2)', '=COUNTIF(C1:C10,"<"&S3)', '=COUNTIF(C1:C10,">"&S4)', '=COUNTIF(C1:C10,">="&S3) - COUNTIF(C1:C10,">"&S4)', '=COUNTIF(D1:D10,"<"&S5)', '=COUNTIF(D1:D10,">"&S6)', '=COUNTIF(D1:D10,">="&S5) - COUNTIF(D1:D10,">"&S6)', '=COUNTIF(E1:E10,"<"&S7)', '=COUNTIF(E1:E10,">"&S8)', '=COUNTIF(E1:E10,">="&S7) - COUNTIF(E1:E10,">"&S8)', '=COUNTIF(F1:F8,"<"&S9)', '=COUNTIF(F1:F8,">"&S10)', '=COUNTIF(F1:F8,">="&S9) - COUNTIF(F1:F8,">"&S10)', '=COUNTIF(F1:F8,">="&(S9-0.5))-COUNTIF(F1:F8,">="&S9)+COUNTIF(F1:F8,">"&S10)-COUNTIF(F1:F8,">"&(S10+0.5))', '=100-(A1+A2)*0.5-(A4+A5)*0.4-(A7+A8)*0.3-A13*0.4-A17*0.5-(A10+A11)*1+(IF(A14="","",IF(A14<80,-4,IF(A14>=85,IF(A14<90,-1,0),-2))))+(IF(A15="","",IF(A15<85,-5,IF(A15>=90,IF(A15<95,-2,0),-4))))', '=IF(OR(A16<85,(A1+A2)>6,(A4+A5)>6,(A7+A8)>6,A13>6,(A1+A2+A4+A5+A7+A8+A13)>13,A17>6,A14<70,A15<75),"不合格","合格")', '=100-A18*0.2-A19*0.5-A20*0.2-A21*0.5-A22*1-A23*0.5-A24*0.2-A25*0.2-A26*0.2-A27*0.5-A28*0.5-A29*1-A30*1-A31*0.5', '=IF(OR(A32<96,(A18+A20+A24+A25+A26)>8,(A19+A21+A23+A27+A28+A31)>6,(A18+A19+A20+A21+A22+A23+A24+A25+A26+A27+A28+A29+A30+A31)>9),"不合格","合格")', '=100-A33*0.5-A34*0.5-A35*1-A36*0.2-A37*0.5-A38*0.5-A39*1', '=IF(OR(A40<90),"不合格","合格")', '=100-A41*0.2-A42*0.5-A43*1-A44*0.5-A45*1-A46*1-(A47+A48)*0.5+IF(OR(A49="生 霉",A49="虫 蛀"),-60,0)', '=IF(OR(A50<85,A51<4,AND(A51=4,A52<3)),"不合格","合格")');
+(1, '=COUNTIF(B1:B10,"<"&S1)', '=COUNTIF(B1:B10,">"&S2)', '=COUNTIF(B1:B10,">="&S1) - COUNTIF(B1:B10,">"&S2)', '=COUNTIF(C1:C10,"<"&S3)', '=COUNTIF(C1:C10,">"&S4)', '=COUNTIF(C1:C10,">="&S3) - COUNTIF(C1:C10,">"&S4)', '=COUNTIF(D1:D10,"<"&S5)', '=COUNTIF(D1:D10,">"&S6)', '=COUNTIF(D1:D10,">="&S5) - COUNTIF(D1:D10,">"&S6)', '=COUNTIF(E1:E10,"<"&S7)', '=COUNTIF(E1:E10,">"&S8)', '=COUNTIF(E1:E10,">="&S7) - COUNTIF(E1:E10,">"&S8)', '=COUNTIF(F1:F8,"<"&S9)', '=COUNTIF(F1:F8,">"&S10)', '=COUNTIF(F1:F8,">="&S9) - COUNTIF(F1:F8,">"&S10)', '=COUNTIF(F1:F8,">="&(S9-0.5))-COUNTIF(F1:F8,">="&S9)+COUNTIF(F1:F8,">"&S10)-COUNTIF(F1:F8,">"&(S10+0.5))', '=100-(A1+A2)*0.5-(A4+A5)*0.4-(A7+A8)*0.3-A13*0.4-A16*0.5-(A10+A11)*1+(IF(A14="","",IF(A14<S11,-4,IF(A14>=((S11+S12)/2),IF(A14<S12,-1,0),-2))))+(IF(A15="","",IF(A15<S13,-5,IF(A15>=((S14-13)/2),IF(A15<S14,-2,0),-4))))', '=IF(OR(A17<85,(A1+A2)>6,(A4+A5)>6,(A7+A8)>6,A13>S16,(A1+A2+A4+A5+A7+A8+A13)>13,A16>S15,A14<(S11-10),A15<(S13-10)),"不合格","合格")', '=100-A18*0.2-A19*0.5-A20*0.2-A21*0.5-A22*1-A23*0.5-A24*0.2-A25*0.2-A26*0.2-A27*0.5-A28*0.5-A29*1-A30*1-A31*0.5', '=IF(OR(A32<96,(A18+A20+A24+A25+A26)>8,(A19+A21+A23+A27+A28+A31)>6,(A18+A19+A20+A21+A22+A23+A24+A25+A26+A27+A28+A29+A30+A31)>9),"不合格","合格")', '=100-A33*0.5-A34*0.5-A35*1-A36*0.2-A37*0.5-A38*0.5-A39*1', '=IF(OR(A40<90),"不合格","合格")', '=100-A41*0.2-A42*0.5-A43*1-A44*0.5-A45*1-A46*1-(A49+A48)*0.5+IF(OR(A47="生 霉",A47="虫 蛀"),-60,0)', '=IF(OR(A52<85,A50<4,AND(A50=4,A51<3)),"不合格","合格")');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `packing`
+-- Table structure for table `names`
 --
 
-DROP TABLE IF EXISTS `packing`;
-CREATE TABLE IF NOT EXISTS `packing` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `names`;
+CREATE TABLE IF NOT EXISTS `names` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `inspector` text CHARACTER SET gbk NOT NULL,
+  `name` text CHARACTER SET gbk NOT NULL,
+  `incharge` text CHARACTER SET gbk NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='names of persons, each line one name' AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `names`
+--
+
+INSERT INTO `names` (`id`, `inspector`, `name`, `incharge`) VALUES
+(1, '李静\n曾燕\n张科\n卿萍\n黄锦萱\n见备注', '1 刘浩\n2 刘长勇\n3 李秋月\n4 陈寒竹\n5 陈小霞\n6 陈艳\n7 刁萍\n8 何民霞\n9 何婷\n10 李静\n11 李俊\n12 李瑶\n13 廖婷婷\n14 刘万春\n15 吕琴\n16 潘大锐\n17 唐晓蓉\n18 王雪梅\n19 魏小丽\n20 徐春霞\n21 曾春阳\n22 李军\n23 宋杨\n24 邹泽兰\n25 陈欢\n26 李凤妮\n27 李佳\n28 李娟\n29 廖俊红\n30 王国威', '张科\n曾燕\n李静');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `packDefects`
+--
+
+DROP TABLE IF EXISTS `packDefects`;
+CREATE TABLE IF NOT EXISTS `packDefects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` datetime NOT NULL,
   `product` varchar(20) NOT NULL,
-  `sample` varchar(10) NOT NULL,
-  `sjob` varchar(10) NOT NULL,
-  `srd1` int(3) NOT NULL DEFAULT '0',
-  `srd2` int(3) NOT NULL DEFAULT '0',
-  `srd3` int(3) NOT NULL DEFAULT '0',
-  `srd1_nr` int(11) NOT NULL DEFAULT '0',
-  `srd2_nr` int(11) NOT NULL DEFAULT '0',
-  `srd3_nr` int(11) NOT NULL DEFAULT '0',
-  `scd1` int(11) NOT NULL DEFAULT '0',
-  `scd2` int(11) NOT NULL DEFAULT '0',
-  `scd3` int(11) NOT NULL DEFAULT '0',
-  `scd1_nr` int(11) NOT NULL DEFAULT '0',
-  `scd2_nr` int(11) NOT NULL DEFAULT '0',
-  `scd3_nr` int(11) NOT NULL DEFAULT '0',
-  `ssd1` int(11) NOT NULL DEFAULT '0',
-  `ssd2` int(11) NOT NULL DEFAULT '0',
-  `ssd3` int(11) NOT NULL DEFAULT '0',
-  `ssd1_nr` int(11) NOT NULL DEFAULT '0',
-  `ssd2_nr` int(11) NOT NULL DEFAULT '0',
-  `ssd3_nr` int(11) NOT NULL DEFAULT '0',
-  `spd1` int(11) NOT NULL DEFAULT '0',
-  `spd2` int(11) NOT NULL DEFAULT '0',
-  `spd3` int(11) NOT NULL DEFAULT '0',
-  `spd1_nr` int(11) NOT NULL DEFAULT '0',
-  `spd2_nr` int(11) NOT NULL DEFAULT '0',
-  `spd3_nr` int(11) NOT NULL DEFAULT '0',
-  `sscore` varchar(4) NOT NULL,
-  `sjudge` varchar(4) NOT NULL,
-  `sremarks` varchar(200) NOT NULL,
-  `pjob` varchar(10) NOT NULL,
-  `ppd1` int(11) NOT NULL DEFAULT '0',
-  `ppd2` int(11) NOT NULL DEFAULT '0',
-  `ppd3` int(11) NOT NULL DEFAULT '0',
-  `ppd1_nr` int(11) NOT NULL DEFAULT '0',
-  `ppd2_nr` int(11) NOT NULL DEFAULT '0',
-  `ppd3_nr` int(11) NOT NULL DEFAULT '0',
-  `pm1` int(11) NOT NULL DEFAULT '0',
-  `pm2` int(11) NOT NULL DEFAULT '0',
-  `pm3` int(11) NOT NULL DEFAULT '0',
-  `pm1_nr` int(11) NOT NULL DEFAULT '0',
-  `pm2_nr` int(11) NOT NULL DEFAULT '0',
-  `pm3_nr` int(11) NOT NULL DEFAULT '0',
-  `pscore` varchar(4) NOT NULL,
-  `pjudge` varchar(4) NOT NULL,
+  `sample` varchar(5) NOT NULL,
+  `score` varchar(4) NOT NULL,
+  `inspector` varchar(4) NOT NULL,
+  `remarks` varchar(200) NOT NULL,
+  `pjob` varchar(4) NOT NULL,
+  `judge` varchar(4) NOT NULL,
   `premarks` varchar(200) NOT NULL,
-  `bjob` varchar(10) NOT NULL,
-  `bsd1` int(11) NOT NULL DEFAULT '0',
-  `bsd2` int(11) NOT NULL DEFAULT '0',
-  `bsd3` int(11) NOT NULL DEFAULT '0',
-  `bsd1_nr` int(11) NOT NULL DEFAULT '0',
-  `bsd2_nr` int(11) NOT NULL DEFAULT '0',
-  `bsd3_nr` int(11) NOT NULL DEFAULT '0',
-  `bb1` int(11) NOT NULL DEFAULT '0',
-  `bb2` int(11) NOT NULL DEFAULT '0',
-  `bb3` int(11) NOT NULL DEFAULT '0',
-  `bb1_nr` int(11) NOT NULL DEFAULT '0',
-  `bb2_nr` int(11) NOT NULL DEFAULT '0',
-  `bb3_nr` int(11) NOT NULL DEFAULT '0',
-  `bm1` int(11) NOT NULL DEFAULT '0',
-  `bm2` int(11) NOT NULL DEFAULT '0',
-  `bm3` int(11) NOT NULL DEFAULT '0',
-  `bm1_nr` int(11) NOT NULL DEFAULT '0',
-  `bm2_nr` int(11) NOT NULL DEFAULT '0',
-  `bm3_nr` int(11) NOT NULL DEFAULT '0',
-  `bscore` varchar(4) NOT NULL,
-  `bjudge` varchar(4) NOT NULL,
-  `bremarks` varchar(200) NOT NULL,
-  `inspector` varchar(10) NOT NULL,
-  `remarks` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=gbk;
+  `ppd1` varchar(4) NOT NULL,
+  `ppd2` varchar(4) NOT NULL,
+  `ppd3` varchar(4) NOT NULL,
+  `ppd1_nr` varchar(4) NOT NULL,
+  `ppd2_nr` varchar(4) NOT NULL,
+  `ppd3_nr` varchar(4) NOT NULL,
+  `pm1` varchar(4) NOT NULL,
+  `pm2` varchar(4) NOT NULL,
+  `pm3` varchar(4) NOT NULL,
+  `pm1_nr` varchar(4) NOT NULL,
+  `pm2_nr` varchar(4) NOT NULL,
+  `pm3_nr` varchar(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=gbk AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `packDefects`
+--
+
+INSERT INTO `packDefects` (`id`, `date`, `product`, `sample`, `score`, `inspector`, `remarks`, `pjob`, `judge`, `premarks`, `ppd1`, `ppd2`, `ppd3`, `ppd1_nr`, `ppd2_nr`, `ppd3_nr`, `pm1`, `pm2`, `pm3`, `pm1_nr`, `pm2_nr`, `pm3_nr`) VALUES
+(1, '2016-11-17 11:30:56', '长城（3号）', '2', '', '卿萍', '', '0015', '', '', 'A1', '0', '0', '2', '', '', 'A2', 'A5', '0', '1', '1', '');
 
 -- --------------------------------------------------------
 
@@ -573,7 +514,7 @@ CREATE TABLE IF NOT EXISTS `packing` (
 
 DROP TABLE IF EXISTS `rolling`;
 CREATE TABLE IF NOT EXISTS `rolling` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` datetime NOT NULL,
   `product` varchar(20) NOT NULL,
   `name` varchar(10) NOT NULL,
@@ -587,16 +528,16 @@ CREATE TABLE IF NOT EXISTS `rolling` (
   `l8` varchar(4) NOT NULL,
   `l9` varchar(4) NOT NULL,
   `l10` varchar(4) NOT NULL,
-  `d1` varchar(4) NOT NULL,
-  `d2` varchar(4) NOT NULL,
-  `d3` varchar(4) NOT NULL,
-  `d4` varchar(4) NOT NULL,
-  `d5` varchar(4) NOT NULL,
-  `d6` varchar(4) NOT NULL,
-  `d7` varchar(4) NOT NULL,
-  `d8` varchar(4) NOT NULL,
-  `d9` varchar(4) NOT NULL,
-  `d10` varchar(4) NOT NULL,
+  `c1` varchar(4) NOT NULL,
+  `c2` varchar(4) NOT NULL,
+  `c3` varchar(4) NOT NULL,
+  `c4` varchar(4) NOT NULL,
+  `c5` varchar(4) NOT NULL,
+  `c6` varchar(4) NOT NULL,
+  `c7` varchar(4) NOT NULL,
+  `c8` varchar(4) NOT NULL,
+  `c9` varchar(4) NOT NULL,
+  `c10` varchar(4) NOT NULL,
   `w1` varchar(4) NOT NULL,
   `w2` varchar(4) NOT NULL,
   `w3` varchar(4) NOT NULL,
@@ -624,16 +565,20 @@ CREATE TABLE IF NOT EXISTS `rolling` (
   `score` varchar(5) NOT NULL,
   `quality` varchar(5) NOT NULL,
   `inspector` varchar(10) NOT NULL,
-  `remarks` varchar(200) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=gbk;
+  `remarks` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=gbk AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `rolling`
 --
 
-INSERT INTO `rolling` (`id`, `date`, `product`, `name`, `l1`, `l2`, `l3`, `l4`, `l5`, `l6`, `l7`, `l8`, `l9`, `l10`, `d1`, `d2`, `d3`, `d4`, `d5`, `d6`, `d7`, `d8`, `d9`, `d10`, `w1`, `w2`, `w3`, `w4`, `w5`, `w6`, `w7`, `w8`, `w9`, `w10`, `p1`, `p2`, `p3`, `p4`, `p5`, `p6`, `p7`, `p8`, `p9`, `p10`, `surfout`, `tightout`, `blendacc`, `pdacc`, `score`, `quality`, `inspector`, `remarks`) VALUES
-(4, '2016-11-16 00:00:00', 'sigaar', 'arie', '5', '6', '7', '8', '9', '1', '2', '3', '4', '5', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '50', '55', '88', '77', 'sc', 'qu', 'insp', '7'),
-(5, '2016-11-21 00:00:00', 'test', '', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '', '', '', '', '', '', '', '');
+INSERT INTO `rolling` (`id`, `date`, `product`, `name`, `l1`, `l2`, `l3`, `l4`, `l5`, `l6`, `l7`, `l8`, `l9`, `l10`, `c1`, `c2`, `c3`, `c4`, `c5`, `c6`, `c7`, `c8`, `c9`, `c10`, `w1`, `w2`, `w3`, `w4`, `w5`, `w6`, `w7`, `w8`, `w9`, `w10`, `p1`, `p2`, `p3`, `p4`, `p5`, `p6`, `p7`, `p8`, `p9`, `p10`, `surfout`, `tightout`, `blendacc`, `pdacc`, `score`, `quality`, `inspector`, `remarks`) VALUES
+(4, '2016-12-02 15:00:00', '试验', '1 刘浩', '79', '79.5', '77', '82', '79', '80', '81', '79', '82', '80', '12.4', '13.1', '13.8', '13.2', '15', '14.2', '13.8', '14.9', '13.6', '14', '8.7', '7.9', '8.3', '8.4', '10.1', '7.7', '9.7', '8', '9.1', '10.3', '85', '89', '78', '91', '104', '92', '83', '89', '98', '101', '5', '2', '88', '89', '90.3', '不合格', '卿萍', '7'),
+(5, '2016-12-02 15:00:00', '长城（生肖版）', '', '150', '149.', '150.', '149.', '150.', '150', '150.', '149.', '149.', '150.', '50', '49.7', '49.8', '49.8', '50', '50.2', '50.1', '50', '49.9', '49.8', '8', '8.5', '8.9', '9.2', '9.5', '9.4', '9', '9.1', '10', '9.3', '60', '65', '70', '68', '69', '85', '89', '79', '77', '84', '0', '3', '88', '100', '86.5', '不合格', '卿萍', ''),
+(6, '2016-12-02 15:00:00', '试验', '1 刘浩', '80', '80.7', '79.1', '80.1', '80.3', '79', '80.1', '79.5', '79.8', '80', '15.3', '14.8', '13.8', '13', '14.8', '13.5', '13.9', '14.1', '15.4', '14', '10.1', '11', '8.4', '8.9', '9.2', '7.8', '8', '8.3', '9.1', '10', '105', '94', '101', '84', '99', '101', '78', '104', '84', '91', '2', '4', '79', '87', '91.3', '不合格', '曾燕', ''),
+(7, '2016-12-02 15:00:00', '试验', '1 刘浩', '78.1', '77.3', '80.1', '81', '80.2', '81.1', '81', '80.5', '80', '80.3', '14.7', '13.5', '14', '14.5', '14.3', '13.8', '14.2', '15.1', '15.2', '14.5', '8.3', '8.5', '8.6', '9.1', '7.9', '8.1', '8.7', '9.2', '8.3', '8.4', '89', '88', '106', '99', '112', '92', '95', '87', '109', '101', '1', '5', '87', '92', '91.3', '不合格', '', ''),
+(8, '2016-12-02 15:00:00', '长城（3号）', '1 刘浩', '81', '80', '79', '80.7', '80.3', '80', '80.2', '79.8', '79.9', '80.4', '12.5', '13', '12', '14.9', '13', '13.7', '15.1', '13.1', '13.3', '14', '8.3', '8.7', '8.1', '8.4', '9.4', '8.9', '9.4', '10.1', '9.4', '9.9', '114', '101', '113', '110', '78', '104', '119', '102', '115', '110', '4', '5', '83', '90', '76.4', '不合格', '', '');
 
 -- --------------------------------------------------------
 
@@ -643,10 +588,10 @@ INSERT INTO `rolling` (`id`, `date`, `product`, `name`, `l1`, `l2`, `l3`, `l4`, 
 
 DROP TABLE IF EXISTS `specs`;
 CREATE TABLE IF NOT EXISTS `specs` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` datetime NOT NULL,
   `pid` varchar(4) NOT NULL DEFAULT '-1',
-  `start` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `start` datetime NOT NULL,
   `end` datetime NOT NULL DEFAULT '3000-01-01 00:00:00',
   `name` varchar(20) NOT NULL,
   `nr` varchar(20) NOT NULL,
@@ -660,22 +605,103 @@ CREATE TABLE IF NOT EXISTS `specs` (
   `rol_p_max` varchar(4) NOT NULL,
   `rol_surfout` varchar(4) NOT NULL,
   `rol_tightout` varchar(4) NOT NULL,
-  `rol_blendacc` varchar(4) NOT NULL,
-  `rol_pdacc` varchar(4) NOT NULL,
+  `rol_blendacc_min` varchar(4) NOT NULL,
+  `rol_blendacc_max` varchar(4) NOT NULL,
+  `rol_pdacc_min` varchar(4) NOT NULL,
+  `rol_pdacc_max` varchar(4) NOT NULL,
   `moist_s_min` varchar(4) NOT NULL,
-  `moist_s_max` varchar(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=gbk;
+  `moist_s_max` varchar(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=gbk AUTO_INCREMENT=69 ;
 
 --
 -- Dumping data for table `specs`
 --
 
-INSERT INTO `specs` (`id`, `date`, `pid`, `start`, `end`, `name`, `nr`, `rol_l_min`, `rol_l_max`, `rol_c_min`, `rol_c_max`, `rol_w_min`, `rol_w_max`, `rol_p_min`, `rol_p_max`, `rol_surfout`, `rol_tightout`, `rol_blendacc`, `rol_pdacc`, `moist_s_min`, `moist_s_max`) VALUES
-(26, '2016-11-18 16:28:58', '26', '2016-11-18 16:28:58', '2016-11-18 16:29:10', 'test', '1', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(27, '2016-11-18 16:29:10', '26', '2016-11-18 16:29:10', '2016-11-18 16:29:14', 'test', '12', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(28, '2016-11-18 16:29:14', '26', '2016-11-18 16:29:14', '2016-11-18 16:29:40', 'test', '123', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(29, '2016-11-18 16:29:40', '26', '2016-11-18 16:29:40', '2016-11-19 10:36:06', 'laatste test', '123', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(32, '2016-11-21 14:26:09', '26', '2016-11-21 14:26:09', '3000-01-01 00:00:00', 'laatste test', '123', '5', '6', '2', '', '3', '', '4', '', '', '', '', '', '1', '2');
+INSERT INTO `specs` (`id`, `date`, `pid`, `start`, `end`, `name`, `nr`, `rol_l_min`, `rol_l_max`, `rol_c_min`, `rol_c_max`, `rol_w_min`, `rol_w_max`, `rol_p_min`, `rol_p_max`, `rol_surfout`, `rol_tightout`, `rol_blendacc_min`, `rol_blendacc_max`, `rol_pdacc_min`, `rol_pdacc_max`, `moist_s_min`, `moist_s_max`) VALUES
+(33, '2016-11-27 13:54:33', '33', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（2号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(34, '2016-11-27 13:54:50', '34', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（3号）', 'check specs!!!', '149', '150', '49', '50', '8.5', '9.5', '60', '80', '6', '6', '80', '90', '85', '95', '13', '14'),
+(35, '2016-11-27 13:55:03', '35', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（经典2号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(36, '2016-11-27 13:55:19', '36', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（经典3号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(38, '2016-11-27 13:55:45', '38', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（传奇3号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(39, '2016-11-27 13:56:00', '39', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（导师2号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(40, '2016-11-27 13:56:14', '40', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（导师3号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(41, '2016-11-27 13:56:28', '41', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（盛世3号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(42, '2016-11-27 13:56:40', '42', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（盛世5号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(43, '2016-11-27 13:56:52', '43', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（盛世6号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(44, '2016-11-27 13:57:05', '44', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（132秘制）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(45, '2016-11-27 13:57:17', '45', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（传奇1号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(47, '2016-11-27 13:57:42', '47', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（传奇1918）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(50, '2016-11-27 13:58:20', '50', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（大号铝管5支）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(51, '2016-11-27 13:58:34', '51', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（揽胜2号精选）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(52, '2016-11-27 13:58:46', '52', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（揽胜2号经典）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(53, '2016-11-27 13:58:57', '53', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（汇通天下2号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(54, '2016-11-27 13:59:11', '54', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（10支汉邦1号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(55, '2016-11-27 13:59:26', '55', '2016-11-27 14:54:01', '3000-01-01 00:00:00', '长城（20支汉邦2号）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(56, '2016-11-27 13:59:40', '56', '2016-11-27 14:54:01', '2016-12-01 16:50:53', '长城（红色132）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(57, '2016-11-27 13:59:53', '57', '2016-11-27 14:54:01', '2016-12-01 16:46:17', '长城（生肖版）', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+(58, '2016-11-27 14:00:18', '58', '2016-11-27 14:54:01', '2016-11-28 12:59:41', '试验', '', '', '', '', '', '', '', '', '', '6', '6', '80', '90', '85', '95', '', ''),
+(59, '2016-11-28 12:59:42', '58', '2016-11-28 12:59:42', '2016-12-02 11:42:10', '试验', '', '78', '82', '12', '15', '8', '10', '80', '110', '6', '6', '80', '90', '85', '95', '12', '15'),
+(60, '2016-12-01 16:46:17', '57', '2016-12-01 16:46:17', '2016-12-01 16:55:44', '长城（生肖版）', '2016003', '134', '136', '65', '67', '13.5', '15.5', '30', '90', '0', '0', '', '95', '', '90', '12.5', '14'),
+(61, '2016-12-01 16:50:53', '56', '2016-12-01 16:50:53', '2016-12-01 16:52:59', '长城（红色132）', '2016003', '89', '91', '52.4', '54.4', '6.2', '7.2', '50', '110', '0', '0', '', '95', '', '90', '12.5', '14'),
+(62, '2016-12-01 16:52:59', '56', '2016-12-01 16:52:59', '2016-12-02 11:41:35', '长城（红色132）', 'QJ/08J.0CC4660A-2016', '89', '91', '52.4', '54.4', '6.2', '7.2', '50', '110', '0', '0', '', '95', '', '90', '12.5', '14'),
+(63, '2016-12-01 16:55:44', '57', '2016-12-01 16:55:44', '2016-12-02 11:41:09', '长城（生肖版）', 'QJ/08J.0CC4180A-2016', '134', '136', '65', '67', '13.5', '15.5', '30', '90', '0', '0', '', '95', '', '90', '12.5', '14'),
+(65, '2016-12-02 11:41:09', '57', '2016-12-02 11:41:09', '3000-01-01 00:00:00', '长城（生肖版）', 'QJ/08J.0CC4180A-2016', '134', '136', '65', '67', '13.5', '15.5', '30', '90', '6', '6', '85', '95', '80', '90', '12.5', '14'),
+(66, '2016-12-02 11:41:35', '56', '2016-12-02 11:41:35', '3000-01-01 00:00:00', '长城（红色132）', 'QJ/08J.0CC4660A-2016', '89', '91', '52.4', '54.4', '6.2', '7.2', '50', '110', '6', '6', '85', '95', '80', '90', '12.5', '14'),
+(67, '2016-12-02 11:42:10', '58', '2016-12-02 11:42:10', '3000-01-01 00:00:00', '试验', '', '78', '82', '12', '15', '8', '10', '80', '110', '6', '6', '80', '90', '85', '95', '12', '15'),
+(68, '2016-12-05 11:32:39', '68', '2016-12-05 11:32:39', '3000-01-01 00:00:00', '长城（胜利）', 'QJ/08J.0CC4850A-2016', '151', '153', '65', '67', '16.4', '16.6', '15', '85', '', '', '', '', '', '', '12.5', '14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stickDefects`
+--
+
+DROP TABLE IF EXISTS `stickDefects`;
+CREATE TABLE IF NOT EXISTS `stickDefects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` datetime NOT NULL,
+  `product` varchar(20) NOT NULL,
+  `sample` varchar(5) NOT NULL,
+  `score` varchar(4) NOT NULL,
+  `inspector` varchar(4) NOT NULL,
+  `remarks` varchar(200) NOT NULL,
+  `sjob` varchar(4) NOT NULL,
+  `judge` varchar(4) NOT NULL,
+  `sremarks` varchar(200) NOT NULL,
+  `srd1` varchar(4) NOT NULL,
+  `srd2` varchar(4) NOT NULL,
+  `srd3` varchar(4) NOT NULL,
+  `srd1_nr` varchar(4) NOT NULL,
+  `srd2_nr` varchar(4) NOT NULL,
+  `srd3_nr` varchar(4) NOT NULL,
+  `scd1` varchar(4) NOT NULL,
+  `scd2` varchar(4) NOT NULL,
+  `scd3` varchar(4) NOT NULL,
+  `scd1_nr` varchar(4) NOT NULL,
+  `scd2_nr` varchar(4) NOT NULL,
+  `scd3_nr` varchar(4) NOT NULL,
+  `ssd1` varchar(4) NOT NULL,
+  `ssd2` varchar(4) NOT NULL,
+  `ssd3` varchar(4) NOT NULL,
+  `ssd1_nr` varchar(4) NOT NULL,
+  `ssd2_nr` varchar(4) NOT NULL,
+  `ssd3_nr` varchar(4) NOT NULL,
+  `spd1` varchar(4) NOT NULL,
+  `spd2` varchar(4) NOT NULL,
+  `spd3` varchar(4) NOT NULL,
+  `spd1_nr` varchar(4) NOT NULL,
+  `spd2_nr` varchar(4) NOT NULL,
+  `spd3_nr` varchar(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=gbk AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `stickDefects`
+--
+
+INSERT INTO `stickDefects` (`id`, `date`, `product`, `sample`, `score`, `inspector`, `remarks`, `sjob`, `judge`, `sremarks`, `srd1`, `srd2`, `srd3`, `srd1_nr`, `srd2_nr`, `srd3_nr`, `scd1`, `scd2`, `scd3`, `scd1_nr`, `scd2_nr`, `scd3_nr`, `ssd1`, `ssd2`, `ssd3`, `ssd1_nr`, `ssd2_nr`, `ssd3_nr`, `spd1`, `spd2`, `spd3`, `spd1_nr`, `spd2_nr`, `spd3_nr`) VALUES
+(1, '2016-11-17 11:30:56', '长城（3号）', '2', '', '卿萍', '', '0011', '', '', 'A5', '0', '0', '2', '', '', '0', '0', '0', '', '', '', 'B7', '0', '0', '1', '', '', '0', '0', '0', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -685,13 +711,11 @@ INSERT INTO `specs` (`id`, `date`, `pid`, `start`, `end`, `name`, `nr`, `rol_l_m
 
 DROP TABLE IF EXISTS `storage`;
 CREATE TABLE IF NOT EXISTS `storage` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` datetime NOT NULL,
   `product` varchar(20) NOT NULL,
   `start` datetime NOT NULL,
   `end` datetime NOT NULL,
-  `moistmin` varchar(4) NOT NULL,
-  `moistmax` varchar(4) NOT NULL,
   `deworm` varchar(4) NOT NULL,
   `dopant` varchar(4) NOT NULL,
   `headend` varchar(4) NOT NULL,
@@ -708,18 +732,19 @@ CREATE TABLE IF NOT EXISTS `storage` (
   `m7` varchar(4) NOT NULL,
   `m8` varchar(4) NOT NULL,
   `score` varchar(4) NOT NULL,
-  `batchok` varchar(5) NOT NULL,
+  `quality` varchar(5) NOT NULL,
   `inspector` varchar(10) NOT NULL,
   `incharge` varchar(10) NOT NULL,
-  `remarks` varchar(200) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=gbk;
+  `remarks` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=gbk AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `storage`
 --
 
-INSERT INTO `storage` (`id`, `date`, `product`, `start`, `end`, `moistmin`, `moistmax`, `deworm`, `dopant`, `headend`, `empty`, `seam`, `hole`, `break`, `m1`, `m2`, `m3`, `m4`, `m5`, `m6`, `m7`, `m8`, `score`, `batchok`, `inspector`, `incharge`, `remarks`) VALUES
-(1, '2016-11-17 09:46:48', '1', '2016-11-01 00:00:00', '2016-11-20 00:00:00', '5', '6', '1', '5', '1', '2', '3', '4', '6', '1', '2', '3', '4', '5', '6', '7', '8', '', '', '3', '2', '4');
+INSERT INTO `storage` (`id`, `date`, `product`, `start`, `end`, `deworm`, `dopant`, `headend`, `empty`, `seam`, `hole`, `break`, `m1`, `m2`, `m3`, `m4`, `m5`, `m6`, `m7`, `m8`, `score`, `quality`, `inspector`, `incharge`, `remarks`) VALUES
+(1, '2016-11-29 00:00:00', '长城（3号）', '2016-11-01 00:00:00', '2016-11-20 00:00:00', '2', '0', '0 ', '0', '1', '1', '0', '13', '13.5', '12.9', '14', '13.2', '13.3', '12.7', '13.1', '#VAL', '不合格', '---', '', '');
 
 -- --------------------------------------------------------
 
@@ -729,7 +754,7 @@ INSERT INTO `storage` (`id`, `date`, `product`, `start`, `end`, `moistmin`, `moi
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` datetime NOT NULL,
   `identity` varchar(18) NOT NULL,
   `gebruik` int(11) NOT NULL DEFAULT '0',
@@ -739,16 +764,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `formulas` tinyint(1) NOT NULL DEFAULT '0',
   `admin` tinyint(1) NOT NULL DEFAULT '0',
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
-  `names` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+  `names` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `date`, `identity`, `gebruik`, `login`, `name`, `specs`, `formulas`, `admin`, `readonly`, `names`) VALUES
-(2, '2016-11-19 14:29:01', '127.0.0.1', 15, 'leyen', 'Arie', 0, 0, 1, 0, 0),
-(3, '2016-10-21 11:54:15', '', 0, '963852', 'alex', 1, 1, 0, 0, 1),
+(2, '2016-12-04 11:35:23', '10.164.115.146', 16, 'leyen', 'Arie', 0, 0, 1, 0, 0),
+(3, '2016-12-05 11:32:32', '10.164.117.20', 1, '963852', 'alex', 1, 1, 0, 0, 1),
 (6, '2016-11-21 11:27:33', '', 0, '132132', 'Gao San', 1, 1, 0, 0, 1);
 
 -- --------------------------------------------------------
@@ -759,7 +785,7 @@ INSERT INTO `users` (`id`, `date`, `identity`, `gebruik`, `login`, `name`, `spec
 
 DROP TABLE IF EXISTS `wrapping`;
 CREATE TABLE IF NOT EXISTS `wrapping` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` datetime NOT NULL,
   `product` varchar(20) NOT NULL,
   `name` varchar(10) NOT NULL,
@@ -780,137 +806,19 @@ CREATE TABLE IF NOT EXISTS `wrapping` (
   `score` varchar(4) NOT NULL,
   `quality` varchar(4) NOT NULL,
   `inspector` varchar(4) NOT NULL,
-  `remarks` varchar(200) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=gbk;
+  `remarks` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=gbk AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `wrapping`
 --
 
 INSERT INTO `wrapping` (`id`, `date`, `product`, `name`, `color`, `headend`, `wrapok`, `incision`, `empty`, `tightness`, `veins`, `crease`, `spot`, `blot`, `seam`, `hole`, `crack`, `splice`, `score`, `quality`, `inspector`, `remarks`) VALUES
-(1, '2016-11-16 16:26:55', 'p', 's', '9', '0', '1', '1', '2', '5', '6', '2', '3', '4', '3', '4', '7', '8', '', '', 'i', 'r'),
-(2, '2016-11-16 16:38:47', '2', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(3, '2016-11-16 16:39:40', '3', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+(1, '2016-11-16 16:26:55', '试验', 's', '0', '0', '2', '1', '2', '0', '0', '1', '0', '1', '0', '0', '0', '0', '96.4', '合格', '李静', 'r'),
+(2, '2016-11-16 16:38:47', '试验', '', '0', '0', '0', '0', '2', '1', '1', '1', '2', '0', '0', '0', '0', '1', '96.2', '合格', '', ''),
+(3, '2016-11-16 16:39:40', '长城（3号）', '3 李秋月', '0', '1', '0', '1', '0', '0', '0', '0', '2', '0', '0', '3', '0', '0', '95.6', '不合格', '卿萍', '');
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `cutting`
---
-ALTER TABLE `cutting`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `defectlabels`
---
-ALTER TABLE `defectlabels`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `type_idx` (`type`);
-
---
--- Indexes for table `defects`
---
-ALTER TABLE `defects`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `formulas`
---
-ALTER TABLE `formulas`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `packing`
---
-ALTER TABLE `packing`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `rolling`
---
-ALTER TABLE `rolling`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `specs`
---
-ALTER TABLE `specs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `storage`
---
-ALTER TABLE `storage`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `wrapping`
---
-ALTER TABLE `wrapping`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `cutting`
---
-ALTER TABLE `cutting`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `defectlabels`
---
-ALTER TABLE `defectlabels`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=280;
---
--- AUTO_INCREMENT for table `defects`
---
-ALTER TABLE `defects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `formulas`
---
-ALTER TABLE `formulas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `packing`
---
-ALTER TABLE `packing`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `rolling`
---
-ALTER TABLE `rolling`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT for table `specs`
---
-ALTER TABLE `specs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
---
--- AUTO_INCREMENT for table `storage`
---
-ALTER TABLE `storage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
---
--- AUTO_INCREMENT for table `wrapping`
---
-ALTER TABLE `wrapping`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
