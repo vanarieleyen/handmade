@@ -9,7 +9,7 @@ var specs_content = {
 						[ {label:"label.NAME", field:"name"}, {label:"label.PRODNR", field:"nr"} ].map(function (a) {
 							return m("tr", [
 											m("td",	m(a.label)),
-											m("td",	m("input[type=text]", {name: a.field}))
+											m("td",	m("input[type=text]", {name: a.field, style:"width:20em"}))
 										])
 						})
 					])
@@ -66,7 +66,20 @@ var specs_content = {
 				]),
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
 					m("legend.WRAPPING_PROCESS"),
-					m("div", {style: "height: 4em"})
+					m("table", {width: "100%"}, [
+						m("tr", {align: "center"}, [
+							m("td",	m("label.WEIGHT")),
+							m("td",	m("input[type=text].number", {name: "weight_w_min"})),
+							m("td",	 m("hr")),
+							m("td",	m("input[type=text].number", {name: "weight_w_max"}))
+						]),
+						m("tr", {align: "center"}, [
+							m("td",	m("label.MOISTURE")),
+							m("td",	m("input[type=text].number", {name: "moist_w_min"})),
+							m("td",	 m("hr")),
+							m("td",	m("input[type=text].number", {name: "moist_w_max"}))
+						])
+					])
 				]),
 				m("fieldset.fieldset_header", {style: "width:95%"}, [
 					m("legend.MACHINE_CUTTING"),
@@ -155,6 +168,10 @@ var specs_content = {
 			var rol_pdacc_max = $("#specs [name=rol_pdacc_max]").val();
 			var rol_surfout = $("#specs [name=rol_surfout]").val();
 			var rol_tightout = $("#specs [name=rol_tightout]").val();
+			var moist_w_min = $("#specs [name=moist_w_min]").val();
+			var moist_w_max = $("#specs [name=moist_w_max]").val();
+			var weight_w_min = $("#specs [name=weight_w_min]").val();
+			var weight_w_max = $("#specs [name=weight_w_max]").val();
 		
 			$.getJSON('server/get_record.php', { 
 				query: 'SELECT * FROM gwc_handmade.specs WHERE id='+id
@@ -170,9 +187,10 @@ var specs_content = {
 						
 						var sql = sprintf("UPDATE gwc_handmade.specs SET pid='%s', name='%s', nr='%s', rol_l_min='%s', rol_l_max='%s', rol_c_min='%s', rol_c_max='%s', \
 							rol_w_min='%s', rol_w_max='%s', moist_s_min='%s', moist_s_max='%s', rol_surfout='%s', rol_tightout='%s', rol_p_min='%s', rol_p_max='%s', \
-							rol_blendacc_min='%s', rol_blendacc_max='%s', rol_pdacc_min='%s', rol_pdacc_max='%s' WHERE id=%s",	
-							pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, moist_s_min, moist_s_max, 
-														rol_surfout, rol_tightout, rol_p_min, rol_p_max, rol_blendacc_min, rol_blendacc_max, rol_pdacc_min, rol_pdacc_max, id);
+							rol_blendacc_min='%s', rol_blendacc_max='%s', rol_pdacc_min='%s', rol_pdacc_max='%s', \
+							moist_w_min='%s', moist_w_max='%s', weight_w_min='%s', weight_w_max='%s' WHERE id=%s",	
+							pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, moist_s_min, moist_s_max, rol_surfout, rol_tightout, 
+							rol_p_min, rol_p_max, rol_blendacc_min, rol_blendacc_max, rol_pdacc_min, rol_pdacc_max, moist_w_min, moist_w_max, weight_w_min, weight_w_max, id);
 						$.getJSON('server/send_query.php', {	query: sql	});
 					});						
 				} else {
@@ -181,9 +199,10 @@ var specs_content = {
 					
 					var sql = sprintf("UPDATE gwc_handmade.specs SET pid='%s', name='%s', nr='%s', rol_l_min='%s', rol_l_max='%s', rol_c_min='%s', rol_c_max='%s', \
 						rol_w_min='%s', rol_w_max='%s', moist_s_min='%s', moist_s_max='%s', rol_surfout='%s', rol_tightout='%s', rol_p_min='%s', rol_p_max='%s', \
-						rol_blendacc_min='%s', rol_blendacc_max='%s', rol_pdacc_min='%s', rol_pdacc_max='%s' WHERE id=%s",	
-						pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, moist_s_min, moist_s_max, 
-													rol_surfout, rol_tightout, rol_p_min, rol_p_max, rol_blendacc_min, rol_blendacc_max, rol_pdacc_min, rol_pdacc_max, id);
+						rol_blendacc_min='%s', rol_blendacc_max='%s', rol_pdacc_min='%s', rol_pdacc_max='%s', \
+						moist_w_min='%s', moist_w_max='%s', weight_w_min='%s', weight_w_max='%s' WHERE id=%s",	
+						pid, name, nr, rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, moist_s_min, moist_s_max, rol_surfout, rol_tightout, 
+						rol_p_min, rol_p_max, rol_blendacc_min, rol_blendacc_max, rol_pdacc_min, rol_pdacc_max, moist_w_min, moist_w_max, weight_w_min, weight_w_max, id);
 					$.getJSON('server/send_query.php', {	query: sql	});
 				}
 				

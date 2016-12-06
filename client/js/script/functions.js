@@ -19,6 +19,8 @@ var db = {
 		pdacc:				{field: ["pdacc"], spec: ["rol_pdacc_min","rol_pdacc_max"]} 
 	},
 	wrapping: {
+		gewicht: 			{field: ["w1","w2","w3","w4","w5","w6","w7","w8","w9","w10"], spec: ["weight_w_min","weight_w_max"]},
+		moisture:			{field: ["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10"], spec: ["moist_w_min","moist_w_max"]},
 		headend:			{field: ["headend"],spec: []},
 		wrapok:				{field: ["wrapok"],spec: []},
 		incision:			{field: ["incision"],spec: []},
@@ -43,7 +45,7 @@ var db = {
 		crack:				{field: ["crack"],spec: []}
 	},
 	storage: {
-		moisture: 		{field: ["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10"],spec: ["moist_m_min","moist_m_max"]},
+		moisture: 		{field: ["m1","m2","m3","m4","m5","m6","m7","m8"],spec: ["moist_s_min","moist_s_max"]},
 		deworm:				{field: ["deworm"],spec: []},
 		dopant:				{field: ["dopant"],spec: []},
 		headend:			{field: ["headend"],spec: []},
@@ -53,6 +55,7 @@ var db = {
 		crack:				{field: ["break"],spec: []}
 	}
 }
+var specmin, specmax;		// fieldnames of min and max
 
 // change the :contains-selector to match on whole words
 jQuery.expr[":"].contains = $.expr.createPseudo(function(arg) {
@@ -848,7 +851,7 @@ function create_gauges() {
 		scale.push({"from": (i-4)/100, "to": i/100, "color": val});		// load the gradient for the scale
 	}
 	var options = {		// default options for the gauges
-		renderTo: 'l',
+		renderTo: 'rl',
 		title: "CPK",
 		fontTitleSize: "30pt",
 		colorTitle: "black",
@@ -879,7 +882,7 @@ function create_gauges() {
 		width: 100	
 	};
 
-	["l","c","w","p","m"].map(function(choice) {
+	["r-lengte","r-omtrek","r-gewicht","r-pd","w-moisture","w-gewicht","s-moisture"].map(function(choice) {
 		options.renderTo = choice;
 		new RadialGauge(options);
 	});
@@ -947,22 +950,15 @@ function setColor(element, soort, spec) {		// set the color of a single field (s
 
 function colorSeries(element, soort, spec) {		// set the color of a row of fields (l1,l2... m1,m2...)
 	var totaal = 0.0;
+	var aantal = 0;
 
-	switch (element) {
-		case "#rolling":
-				specmin = "rol_"+soort+"_min";	specmax = "rol_"+soort+"_max";
-				aantal = 10;
-				break;
-		case "#storage":
-			specmin = "moist_s_min";	
-			specmax = "moist_s_max";
-			aantal = 8;
-			break;
-	}
-
-	for (var i=1; i<=aantal; i++) {
-		totaal += setColor(element, soort+i, spec);
-	}
+	specmin = db[element][soort].spec[0];
+	specmax = db[element][soort].spec[1];
+	
+	db[element][soort].field.map(function (field) {
+		totaal += setColor("#"+element, field, spec);
+		aantal++;
+	});
 	return Math.max(1, Math.min(100-totaal/aantal, 99)); // 1..99
 }
 
@@ -1020,26 +1016,25 @@ function show_data(table) {
 					db.rolling.pd.field.map(function(field) {				$("#rolling [name="+field+"]").val(data[field]);	});
 					
 					var spec = getSpec(data.product, data.date);
-					["l","c","w","p"].map(function(choice) {
-						mini_chart("#rolling #chart-"+choice, choice, id);		// show minichart
-						colorSeries("#rolling", choice, spec);								// color the inputs
+					["lengte","omtrek","gewicht","pd"].map(function(choice) {
+						mini_chart("rolling", choice, id);		// show minichart
+						colorSeries("rolling", choice, spec);								// color the inputs
 						
-						if (spec != null) {
-							// calculate and show the cpk
+						if (spec != null) { // calculate and show the cpk
 							var serie = [];
-							for (i=1; i<=10; i++)	{
-								var waarde = parseFloat(data[choice+i]);
+							db.rolling[choice].field.map(function (field) {
+								var waarde = parseFloat(data[field]);
 								if (!isNaN(waarde))
 									serie.push(waarde);
-							}
-							var result = cpk(spec["rol_"+choice+"_min"], spec["rol_"+choice+"_max"], serie);
-							gauge = document.gauges.get(choice);
+							});
+							var result = cpk(spec[db.rolling[choice].spec[0]], spec[db.rolling[choice].spec[1]], serie);
+							gauge = document.gauges.get("r-"+choice);
 							if (gauge != null) {
 								gauge.value = Math.min(Math.max(result, 0), 1);
 								gauge.update();
 							}
 						} else {	// product is not filled, so no specs
-							gauge = document.gauges.get(choice);
+							gauge = document.gauges.get("r-"+choice);
 							if (gauge != null) {
 								gauge.value = 0.0;
 								gauge.update();
@@ -1074,6 +1069,37 @@ function show_data(table) {
 						}
 					});
 
+					db.wrapping.gewicht.field.map(function(field) {		$("#wrapping [name="+field+"]").val(data[field]);	});
+					db.wrapping.moisture.field.map(function(field) {	$("#wrapping [name="+field+"]").val(data[field]);	});
+					
+					var spec = getSpec(data.product, data.date);
+
+					["gewicht","moisture"].map(function(choice) {
+						mini_chart("wrapping", choice, id);				// show minichart
+						colorSeries("wrapping", choice, spec);		// color the inputs
+						
+						if (spec != null) { // calculate and show the cpk
+							var serie = [];
+							db.wrapping[choice].field.map(function (field) {
+								var waarde = parseFloat(data[field]);
+								if (!isNaN(waarde))
+									serie.push(waarde);
+							});
+							var result = cpk(spec[db.wrapping[choice].spec[0]], spec[db.wrapping[choice].spec[1]], serie);
+							gauge = document.gauges.get("w-"+choice);
+							if (gauge != null) {
+								gauge.value = Math.min(Math.max(result, 0), 1);
+								gauge.update();
+							}
+						} else {	// product is not filled, so no specs
+							gauge = document.gauges.get("w-"+choice);
+							if (gauge != null) {
+								gauge.value = 0.0;
+								gauge.update();
+							}
+						}
+					});
+					
 					["date","product","name","inspector","remarks","incision","seam","empty","hole","tightness","veins",
 								"crack","splice","color","headend","wrapok","crease","spot","blot"].map(function (label) {
 						$("#wrapping [name="+label+"]").val(data[label]);
@@ -1175,25 +1201,25 @@ function show_data(table) {
 					}
 					
 					var spec = getSpec(data.product, data.date);
-					mini_moistchart("#storage #chart-m", id);
-					avg = colorSeries("#storage", "m", spec);
+					mini_chart("storage", "moisture", id);
+					colorSeries("storage", "moisture", spec);
 
 					if (spec != null) {
 						// calculate and show the cpk
 						serie = [];
-						for (i=1; i<=8; i++)	{
-							var waarde = parseFloat(data["m"+i]);
+						db.storage.moisture.field.map(function (field) {
+							var waarde = parseFloat(data[field]);
 							if (!isNaN(waarde))
 								serie.push(waarde);
-						}
-						var result = cpk(spec["moist_s_min"], spec["moist_s_max"], serie);
-						gauge = document.gauges.get("m");
+						});
+						var result = cpk(spec[db.storage.moisture.spec[0]], spec[db.storage.moisture.spec[1]], serie);
+						gauge = document.gauges.get("s-moisture");
 						if (gauge != null) {
 							gauge.value = Math.min(Math.max(result, 0), 1);
 							gauge.update();
 						}
 					} else {	// product is not filled, so no specs
-						gauge = document.gauges.get("m");
+						gauge = document.gauges.get("s-moisture");
 						if (gauge != null) {
 							gauge.value = 0.0;
 							gauge.update();
@@ -1539,6 +1565,10 @@ function show_spec_details(id) {
 			$("#specs [name=rol_pdacc_max]").val(data.rol_pdacc_max);
 			$("#specs [name=moist_s_min]").val(data.moist_s_min);
 			$("#specs [name=moist_s_max]").val(data.moist_s_max);
+			$("#specs [name=moist_w_min]").val(data.moist_w_min);
+			$("#specs [name=moist_w_max]").val(data.moist_w_max);
+			$("#specs [name=weight_w_min]").val(data.weight_w_min);
+			$("#specs [name=weight_w_max]").val(data.weight_w_max);
 		});	
 	}
 }
@@ -1627,13 +1657,16 @@ function calcSummary(stage, what, data, spec) {
 		$.each(dbs.field, function(key, field) {
 			if (row[field] != "") {
 				waarde = parseFloat(row[field]);
-				serie.push(waarde);
-				amount++;
-				if (waarde < spec[dbs.spec[0]] || waarde > spec[dbs.spec[1]])
-					outspec++;
+				if (!isNaN(waarde)) {
+					serie.push(waarde);
+					amount++;
+					if (waarde < spec[dbs.spec[0]] || waarde > spec[dbs.spec[1]])
+						outspec++;
+				}
 			}
 		});
 	});
+	//console.log(serie+" "+spec[dbs.spec[0]]+" - "+spec[dbs.spec[1]]);
 	$("#evaluate #"+stage+" [name="+what+"] [name=amount]").text( amount );
 	$("#evaluate #"+stage+" [name="+what+"] [name=cpk]").text( cpk(spec[dbs.spec[0]], spec[dbs.spec[1]], serie) );
 	$("#evaluate #"+stage+" [name="+what+"] [name=avg]").text( jStat.mean(serie).toFixed(2) );
@@ -1697,6 +1730,6 @@ function cpk(LSL, USL, VAL) {
 	cpl = (avg-LSL)/(3*sigma);
  	cpu = (USL-avg)/(3*sigma);
  	cpk = Math.min(cpl, cpu);
- 	return cpk.toFixed(2);	
+ 	return isNaN(cpk) ? "--" : cpk.toFixed(2);	
 }
 	

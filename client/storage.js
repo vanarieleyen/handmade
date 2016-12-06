@@ -92,10 +92,10 @@ var storage_content = {
 					m("tr", [5,6,7,8].map(function(n) {		return m("td",	m("input.number", {name: "m"+n}))		})),
 					m("tr", [
 						m("td",	{colspan:"3"}, 
-							m("#chart-m.minichart", m("canvas.flot-base"))
+							m("#minichart-moisture.minichart", m("canvas.flot-base"))
 						),
 						m("td",	{colspan:"1"}, 
-							m("canvas#m")
+							m("canvas#s-moisture")
 						)
 					])
 				])
@@ -132,36 +132,35 @@ var storage_content = {
 					id: current, 
 					table: "storage"
 				}, function (data) {
+					var spec = getSpec(product, date);
+					
 					$("#storage [name=score]").html(data.score);
 					$("#storage [name=quality]").html(data.quality);
 					
+					mini_chart("storage", "moisture", current);		// update the minichart
+					colorSeries("storage", "moisture", spec);
 					
-					var spec = getSpec(product, date);
-					mini_moistchart("#storage #chart-m", current);		// update the minichart
-					colorSeries("#storage", "m", spec);
-					
-					if (spec != null) {
-						// calculate and show the cpk
-						serie = [];
-						for (i=1; i<=8; i++)	{
-							var waarde = parseFloat($("#storage [name=m"+i+"]").val());
+					if (spec != null) { // calculate and show the cpk
+						var serie = [];
+						db.storage.moisture.field.map(function (field) {
+							var waarde = parseFloat($("#storage [name="+field+"]").val());
 							if (!isNaN(waarde))
 								serie.push(waarde);
-						}
-						var result = cpk(spec["moist_s_min"], spec["moist_s_max"], serie);
-						gauge = document.gauges.get("m");
+						});
+						var result = cpk(spec[db.storage.moisture.spec[0]], spec[db.storage.moisture.spec[1]], serie);
+						gauge = document.gauges.get("s-moisture");
 						if (gauge != null) {
 							gauge.value = Math.min(Math.max(result, 0), 1);
 							gauge.update();
 						}
 					} else {	// product is not filled, so no specs
-						gauge = document.gauges.get("m");
+						gauge = document.gauges.get("s-moisture");
 						if (gauge != null) {
 							gauge.value = 0.0;
 							gauge.update();
 						}
 					}
-					
+
 					var sum = 0;				// faults total
 					var allowed = 6;		// maximum allowed faults
 					var fields = ["deworm","headend","empty","seam","hole","dopant","break"];

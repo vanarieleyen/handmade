@@ -48,7 +48,53 @@ var wrapping_content = {
 		)
 	],
 	contents: [
-		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
+		m("span.flex-row", {style: "background-color:rgba(0,255,255,0.05); width:100%"}, [
+			m("fieldset.fieldset_header", {style: "width:50%"}, [
+				m("legend.WEIGHT"),
+				m("table", {width: "100%", border: "0"}, [
+					m("tr", [1,2,3,4,5].map(function(n) {
+						return m("td",	m("input.number", {name: "w"+n}))
+					})), 
+					m("tr", [6,7,8,9,10].map(function(n) {
+						return m("td",	m("input.number", {name: "w"+n}))
+					})),
+					m("tr", [
+						m("td",	{colspan:"5"}, m("hr"))
+					]),
+					m("tr", [
+						m("td",	{colspan:"4"}, 
+							m("#minichart-gewicht.minichart",	m("canvas.flot-base"))
+						),
+						m("td",	{colspan:"1"}, 
+							m("canvas#w-gewicht", {style:"width:100px"})
+						)	
+					])
+				])
+			]),
+			m("fieldset.fieldset_header", {style: "width:50%"}, [
+				m("legend.MOISTURE"),
+				m("table", {width: "100%", border: "0"}, [
+					m("tr", [1,2,3,4,5].map(function(n) {
+						return m("td",	m("input.number", {name: "m"+n}))
+					})), 
+					m("tr", [6,7,8,9,10].map(function(n) {
+						return m("td",	m("input.number", {name: "m"+n}))
+					})),
+					m("tr", [
+						m("td",	{colspan:"5"}, m("hr"))
+					]),
+					m("tr", [
+						m("td",	{colspan:"4"}, 
+							m("#minichart-moisture.minichart",	m("canvas.flot-base"))
+						),
+						m("td",	{colspan:"1"}, 
+							m("canvas#w-moisture", {style:"width:100px"})
+						)	
+					])
+				])
+			])
+		]),
+		m("span.flex-row", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
 				m("legend.WRAPPING_FINISH"),
 				m("table", {width: "100%"}, [
@@ -80,7 +126,7 @@ var wrapping_content = {
 				])
 			])
 		),
-		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
+		m("span.flex-row", {style: "background-color:rgba(0,255,255,0.05)"}, 
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
 				m("legend.CIGAR_APPEARANCE"),
 				m("table", {width: "100%"}, [
@@ -117,18 +163,52 @@ var wrapping_content = {
 		// save data
 		$("#wrapping input:text").blur(function () {
 			current = $.jStorage.get("handmade.current.wrapping");	
-			this.field = $(this).attr('name');
+			date = $("#wrapping [name=date]").val();
+			product = $("#wrapping [name=product]").val();
+			field = $(this).attr('name');
 			this.value = $(this).val();
 			
-			var sql = sprintf('UPDATE gwc_handmade.wrapping SET %s="%s" WHERE id=%s', this.field, this.value, current );
+			var sql = sprintf('UPDATE gwc_handmade.wrapping SET %s="%s" WHERE id=%s', field, this.value, current );
 			$.getJSON('server/send_query.php', {query: sql}, function (data) {
 				$.getJSON('server/calc_scores.php', {
 					id: current, 
 					table: "wrapping"
 				}, function (data) {
+					var spec = getSpec(product, date);
+					
 					$("#wrapping [name=score]").html(data.score);
 					$("#wrapping [name=quality]").html(data.quality);
 					
+					switch(field[0]) {
+						case "w": choice="gewicht";	break;
+						case "m": choice="moisture";	break;
+						default: return;
+					}
+
+					mini_chart("wrapping", choice, current);		// update the minichart
+					colorSeries("wrapping", choice, spec);
+					
+					if (spec != null) { // calculate and show the cpk
+						var serie = [];
+						db.wrapping[choice].field.map(function (field) {
+							var waarde = parseFloat($("#wrapping [name="+field+"]").val());
+							if (!isNaN(waarde))
+								serie.push(waarde);
+						});
+						var result = cpk(spec[db.wrapping[choice].spec[0]], spec[db.wrapping[choice].spec[1]], serie);
+						gauge = document.gauges.get("w-"+choice);
+						if (gauge != null) {
+							gauge.value = Math.min(Math.max(result, 0), 1);
+							gauge.update();
+						}
+					} else {	// product is not filled, so no specs
+						gauge = document.gauges.get("w-"+choice);
+						if (gauge != null) {
+							gauge.value = 0.0;
+							gauge.update();
+						}
+					}
+
 					var sum = 0;	// faults total
 					var allowed = 9;		// maximum allowed faults
 					var fields = ["incision","seam","empty","hole","tightness","veins","crack","splice","color","headend","wrapok","crease","spot","blot"];

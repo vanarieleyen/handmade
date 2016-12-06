@@ -32,19 +32,13 @@ function plotChart(options) {
 	});		
 }
 
-// return the raw data
-function getData(data, limit, soort) {
-	var line = Array();
-	for (var i=0; i<limit; i++) {
-		tmp = data[soort+(i+1)];
-		val = (tmp=="") ? NaN : parseFloat(tmp);
-		line.push( Array(i, val) );
-	}
-	return line;
-}
+function plotMiniChart(element, soort, line, specs) {
+	ticks = [];
+	$.each(line, function(idx, val) {
+		ticks.push(Array(idx, idx+1));
+	});
 
-function plotMiniChart(element, line, specs) {
-	$.plot( $(element), 
+	$.plot( $("#"+element+" #minichart-"+soort), 
 		[{ 
 			data: line, 
 			yaxis: 1, 
@@ -79,7 +73,7 @@ function plotMiniChart(element, line, specs) {
 				axisLabelFontFamily: "Verdana, Arial", 
 				axisLabelColour: "rgb(56, 56, 56)", 
 				axisLabelPadding: 25, 
-				ticks:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10]], 
+				ticks: ticks, 
 				font: { size: 10, weight: "light", family: "sans-serif", color: "rgb(56, 56, 56)" } 
 			}] 
 		}
@@ -87,12 +81,12 @@ function plotMiniChart(element, line, specs) {
 }
 
 function mini_chart(element, soort, id) {		// mini timechart
-	var specmin = "rol_"+soort+"_min";	
-	var specmax = "rol_"+soort+"_max";
+	var specmin = db[element][soort].spec[0];
+	var specmax = db[element][soort].spec[1];
 
-	var sql = "SELECT * FROM gwc_handmade.rolling t1 \
+	var sql = sprintf("SELECT * FROM gwc_handmade.%s t1 \
 							JOIN gwc_handmade.specs t2 ON t1.product=t2.name AND t1.date BETWEEN t2.start AND t2.end \
-						WHERE t1.id="+id;
+						WHERE t1.id=%s", element, id);
 	$.getJSON('server/get_record.php', { 
 		query: sql
 	}, function(data) {
@@ -100,44 +94,28 @@ function mini_chart(element, soort, id) {		// mini timechart
 		var specs = specLimits(data[specmin], data[specmax]);
 				
 		if (data.rowcount == '0') {		// specs not found
-			sql = "SELECT * FROM gwc_handmade.rolling WHERE id="+id;
+			sql = sprintf("SELECT * FROM gwc_handmade.%s WHERE id=%s", element, id);
 			$.getJSON('server/get_record.php', { 
 					query: sql
 			}, function(data) {
-				line = getData(data, 10, soort);
-				plotMiniChart(element, line, specs);
+				line = [];
+				db[element][soort].field.map(function (field, i) {
+					tmp = data[field];
+					val = (tmp=="") ? NaN : parseFloat(tmp);
+					line.push( Array(i, val) );
+				});
+				plotMiniChart(element, soort, line, specs);
 			});
 		} else {
-			line = getData(data, 10, soort);
-			plotMiniChart(element, line, specs);
+			line = [];
+			db[element][soort].field.map(function (field, i) {
+				tmp = data[field];
+				val = (tmp=="") ? NaN : parseFloat(tmp);
+				line.push( Array(i, val) );
+			});
+			plotMiniChart(element, soort, line, specs);
 		}
 	});
 }
 
-function mini_moistchart(element, id) {		// mini timechart
-	var	specmin = "moist_s_min";	
-	var specmax = "moist_s_max";
-	var sql = "SELECT * FROM gwc_handmade.storage t1 \
-							JOIN gwc_handmade.specs t2 ON t1.product=t2.name AND t1.date BETWEEN t2.start AND t2.end \
-						WHERE t1.id="+id;
-	$.getJSON('server/get_record.php', { 
-		query: sql
-	}, function(data) {
-		var line = Array();
-		var specs = specLimits(data[specmin], data[specmax]);
-		
-		if (data.rowcount == '0') {		// specs not found
-			sql = "SELECT * FROM gwc_handmade.storage WHERE id="+id;
-			$.getJSON('server/get_record.php', { 
-					query: sql
-			}, function(data) {
-				line = getData(data, 8, "m");
-			});
-		} else {
-			line = getData(data, 8, "m");
-		}
-				
-		plotMiniChart(element, line, specs);
-	});
-}
 

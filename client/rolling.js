@@ -49,7 +49,7 @@ var rolling_content = {
 		)
 	],
 	contents: [
-		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
+		m("span.flex-row", {style: "background-color:rgba(0,255,255,0.05)"}, [
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
 				m("legend.LENGTH"),
 				m("table", {width: "100%", border: "0"}, [
@@ -64,10 +64,10 @@ var rolling_content = {
 					]),
 					m("tr", [
 						m("td",	{colspan:"4"}, 
-							m("#chart-l.minichart",	m("canvas.flot-base"))
+							m("#minichart-lengte.minichart",	m("canvas.flot-base"))
 						),
 						m("td",	{colspan:"1"}, 
-							m("canvas#l")
+							m("canvas#r-lengte", {style:"width:100px"})
 						)		
 					])
 				])
@@ -86,16 +86,16 @@ var rolling_content = {
 					]),
 					m("tr", [
 						m("td",	{colspan:"4"}, 
-							m("#chart-c.minichart",	m("canvas.flot-base"))
+							m("#minichart-omtrek.minichart",	m("canvas.flot-base"))
 						),
 						m("td",	{colspan:"1"}, 
-							m("canvas#c")
+							m("canvas#r-omtrek", {style:"width:100px"})
 						)	
 					])
 				])
 			])
-		),
-		m("span.flex-row#data_length", {style: "background-color:rgba(0,255,255,0.05)"}, 
+		]),
+		m("span.flex-row", {style: "background-color:rgba(0,255,255,0.05)"}, [
 			m("fieldset.fieldset_header", {style: "width:50%"}, [
 				m("legend.WEIGHT"),
 				m("table", {width: "100%", border: "0"}, [
@@ -110,10 +110,10 @@ var rolling_content = {
 					]),
 					m("tr", [
 						m("td",	{colspan:"4"}, 
-							m("#chart-w.minichart", m("canvas.flot-base"))
+							m("#minichart-gewicht.minichart", m("canvas.flot-base"))
 						),
 						m("td",	{colspan:"1"}, 
-							m("canvas#w")
+							m("canvas#r-gewicht", {style:"width:100px"})
 						)	
 					])
 				])
@@ -132,15 +132,15 @@ var rolling_content = {
 					]),
 					m("tr", [
 						m("td",	{colspan:"4"}, 
-							m("#chart-p.minichart", m("canvas.flot-base"))
+							m("#minichart-pd.minichart", m("canvas.flot-base"))
 						),
 						m("td",	{colspan:"1"}, 
-							m("canvas#p")
+							m("canvas#r-pd", {style:"width:100px"})
 						)	
 					])
 				])
 			])
-		),
+		]),
 		m("fieldset.fieldset_header", {style: "width:50%"}, [
 			m("table", {width: "100%", border: "0"}, [
 				m("tr", [
@@ -181,39 +181,47 @@ var rolling_content = {
 					id: current, 
 					table: "rolling"
 				}, function (data) {
+					var spec = getSpec(product, date);
+					
 					$("#rolling [name=score]").html(data.score);
 					$("#rolling [name=quality]").html(data.quality);
-
-					var spec = getSpec(product, date);
-					mini_chart("#rolling #chart-"+field[0], field[0], current);		// update the minichart
-					colorSeries("#rolling", field[0], spec);
 					
-					if (spec != null) {
-						// calculate and show the cpk
+					["surfout","tightout","blendacc","pdacc"].map(function (label) {
+						setColor("#rolling", label, spec);
+					});
+					
+					switch(field[0]) {
+						case "l": choice="lengte";	break;
+						case "w": choice="gewicht";	break;
+						case "c": choice="omtrek";	break;
+						case "p": choice="pd";	break;
+						default: return;
+					}
+					
+					mini_chart("rolling", choice, current);		// update the minichart
+					colorSeries("rolling", choice, spec);
+					
+					if (spec != null) { // calculate and show the cpk
 						var serie = [];
-						for (i=1; i<=10; i++)	{
-							var waarde = parseFloat( $("#rolling [name="+field[0]+i+"]").val() );
+						db.rolling[choice].field.map(function (field) {
+							var waarde = parseFloat($("#rolling [name="+field+"]").val());
 							if (!isNaN(waarde))
 								serie.push(waarde);
-						}
-
-						var result = cpk(spec["rol_"+field[0]+"_min"], spec["rol_"+field[0]+"_max"], serie);
-						gauge = document.gauges.get(field[0]);
+						});
+						var result = cpk(spec[db.rolling[choice].spec[0]], spec[db.rolling[choice].spec[1]], serie);
+						gauge = document.gauges.get("r-"+choice);
 						if (gauge != null) {
 							gauge.value = Math.min(Math.max(result, 0), 1);
 							gauge.update();
 						}
 					} else {	// product is not filled, so no specs
-						gauge = document.gauges.get(field[0]);
+						gauge = document.gauges.get("r-"+choice);
 						if (gauge != null) {
 							gauge.value = 0.0;
 							gauge.update();
 						}
 					}
 
-					["surfout","tightout","blendacc","pdacc"].map(function (label) {
-						setColor("#rolling", label, spec);
-					});
 				});
 			});	
 		})
