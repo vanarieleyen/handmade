@@ -81,8 +81,8 @@ function plotMiniChart(element, soort, line, specs) {
 }
 
 function mini_chart(element, soort, id) {		// mini timechart
-	var specmin = db[element][soort].spec[0];
-	var specmax = db[element][soort].spec[1];
+	var specmin = db[element][soort].spec.min;
+	var specmax = db[element][soort].spec.max;
 
 	var sql = sprintf("SELECT * FROM gwc_handmade.%s t1 \
 							JOIN gwc_handmade.specs t2 ON t1.product=t2.name AND t1.date BETWEEN t2.start AND t2.end \

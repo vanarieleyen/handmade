@@ -195,7 +195,7 @@ var wrapping_content = {
 							if (!isNaN(waarde))
 								serie.push(waarde);
 						});
-						var result = cpk(spec[db.wrapping[choice].spec[0]], spec[db.wrapping[choice].spec[1]], serie);
+						var result = cpk(spec[db.wrapping[choice].spec.min], spec[db.wrapping[choice].spec.max], serie);
 						gauge = document.gauges.get("w-"+choice);
 						if (gauge != null) {
 							gauge.value = Math.min(Math.max(result, 0), 1);

@@ -208,7 +208,7 @@ var rolling_content = {
 							if (!isNaN(waarde))
 								serie.push(waarde);
 						});
-						var result = cpk(spec[db.rolling[choice].spec[0]], spec[db.rolling[choice].spec[1]], serie);
+						var result = cpk(spec[db.rolling[choice].spec.min], spec[db.rolling[choice].spec.max], serie);
 						gauge = document.gauges.get("r-"+choice);
 						if (gauge != null) {
 							gauge.value = Math.min(Math.max(result, 0), 1);

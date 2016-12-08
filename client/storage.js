@@ -147,7 +147,7 @@ var storage_content = {
 							if (!isNaN(waarde))
 								serie.push(waarde);
 						});
-						var result = cpk(spec[db.storage.moisture.spec[0]], spec[db.storage.moisture.spec[1]], serie);
+						var result = cpk(spec[db.storage.moisture.spec.min], spec[db.storage.moisture.spec.max], serie);
 						gauge = document.gauges.get("s-moisture");
 						if (gauge != null) {
 							gauge.value = Math.min(Math.max(result, 0), 1);

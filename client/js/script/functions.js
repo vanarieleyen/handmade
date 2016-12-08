@@ -7,175 +7,22 @@ $.ajaxSetup({ scriptCharset: "utf-8" , contentType: "Content-Type: text/html; ch
 $.ajaxSetup({async:false});
 
 
-// database structure diagram with fieldnames and corresponding specnames, used for summaries
-var dbs = {
-	product:	{field: "name"},
-	number:		{field: "nr"},
-	rolling:	{
-		lengte:		{min:"rol_l_min",	max:"rol_l_max"},
-		omtrek:		{min:"rol_c_min", max:"rol_c_max"},
-		gewicht:	{min:"rol_w_min", max:"rol_w_max"},
-		pd:				{min:"rol_p_min", max:"rol_p_max"},
-		surfout:	{norm:"rol_surfout"},
-		tightout:	{norm:"rol_tightout"},
-		blendacc:	{min:"rol_blendacc_min", max:"rol_blendacc_max"},
-		pdacc:		{min:"rol_pdacc_min", max:"rol_pdacc_max"}
-	},
-	wrapping:	{
-		gewicht:	{min:"weight_w_min", max:"weight_w_max"},
-		moisture:	{min:"moist_w_min", max:"moist_w_max"}
-	},
-	storage:	{
-		moisture:	{min:"moist_s_min", max:"moist_s_max"}
-	}
-}
-
-var db = {
-	rolling: {
-		id:						{field: ["id"],spec: []},
-		date:					{field: ["date"],spec: []},
-		product:			{field: ["product"],spec: []},
-		sampling:			{field: ["name"],spec: []},
-		lengte:				{field: ["l1","l2","l3","l4","l5","l6","l7","l8","l9","l10"], spec: [dbs.rolling.lengte.min, dbs.rolling.lengte.max]},
-		omtrek:				{field: ["c1","c2","c3","c4","c5","c6","c7","c8","c9","c10"], spec: [dbs.rolling.omtrek.min, dbs.rolling.omtrek.max]},
-		gewicht: 			{field: ["w1","w2","w3","w4","w5","w6","w7","w8","w9","w10"], spec: [dbs.rolling.gewicht.min, dbs.rolling.gewicht.max]},
-		pd:						{field: ["p1","p2","p3","p4","p5","p6","p7","p8","p9","p10"], spec: [dbs.rolling.pd.min, dbs.rolling.pd.max]},
-		surfout:			{field: ["surfout"], spec: [dbs.rolling.surfout.norm]},
-		tightout:			{field: ["tightout"], spec: [dbs.rolling.tightout.norm]},
-		blendacc:			{field: ["blendacc"], spec: [dbs.rolling.blendacc.min, dbs.rolling.blendacc.max]}, 
-		pdacc:				{field: ["pdacc"], spec: [dbs.rolling.pdacc.min, dbs.rolling.pdacc.max]}, 
-		score:				{field: ["score"],spec: []},
-		quality:			{field: ["quality"],spec: []},
-		inspector:		{field: ["inspector"],spec: []},
-		remarks:			{field: ["remarks"],spec: []}
-	},
-	wrapping: {
-		id:						{field: ["id"],spec: []},
-		date:					{field: ["date"],spec: []},
-		product:			{field: ["product"],spec: []},
-		sampling:			{field: ["name"],spec: []},
-		gewicht: 			{field: ["w1","w2","w3","w4","w5","w6","w7","w8","w9","w10"], spec: [dbs.wrapping.gewicht.min, dbs.wrapping.gewicht.max]},
-		moisture:			{field: ["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10"], spec: [dbs.wrapping.moisture.min, dbs.wrapping.moisture.max]},
-		headend:			{field: ["headend"],spec: []},
-		wrapok:				{field: ["wrapok"],spec: []},
-		incision:			{field: ["incision"],spec: []},
-		leeg:					{field: ["empty"],spec: []},
-		tightness:		{field: ["tightness"],spec: []},
-		veins:				{field: ["veins"],spec: []},
-		crease:				{field: ["crease"],spec: []},
-		spot:					{field: ["spot"],spec: []},
-		blot:					{field: ["blot"],spec: []},
-		seam:					{field: ["seam"],spec: []},
-		hole:					{field: ["hole"],spec: []},
-		crack:				{field: ["crack"],spec: []},
-		splices:			{field: ["splice"],spec: []},
-		score:				{field: ["score"],spec: []},
-		quality:			{field: ["quality"],spec: []},
-		inspector:		{field: ["inspector"],spec: []},
-		remarks:			{field: ["remarks"],spec: []}
-	},
-	cutting: {
-		id:						{field: ["id"],spec: []},
-		date:					{field: ["date"],spec: []},
-		product:			{field: ["product"],spec: []},
-		sampling:			{field: ["name"],spec: []},
-		headend:			{field: ["headend"],spec: []},
-		incision:			{field: ["incision"],spec: []},
-		leeg:					{field: ["empty"],spec: []},
-		crease:				{field: ["crease"],spec: []},
-		blot:					{field: ["blot"],spec: []},
-		seam:					{field: ["seam"],spec: []},
-		crack:				{field: ["crack"],spec: []},
-		score:				{field: ["score"],spec: []},
-		quality:			{field: ["quality"],spec: []},
-		inspector:		{field: ["inspector"],spec: []},
-		remarks:			{field: ["remarks"],spec: []}
-	},
-	storage: {
-		id:						{field: ["id"],spec: []},
-		date:					{field: ["date"],spec: []},
-		product:			{field: ["product"],spec: []},
-		start:				{field: ["start"],spec: []},
-		end:					{field: ["end"],spec: []},
-		moisture: 		{field: ["m1","m2","m3","m4","m5","m6","m7","m8"], spec: [dbs.storage.moisture.min, dbs.storage.moisture.max]},
-		deworm:				{field: ["deworm"],spec: []},
-		dopant:				{field: ["dopant"],spec: []},
-		headend:			{field: ["headend"],spec: []},
-		leeg:					{field: ["empty"],spec: []},
-		seam:					{field: ["seam"],spec: []},
-		hole:					{field: ["hole"],spec: []},
-		crack:				{field: ["break"],spec: []},
-		score:				{field: ["score"],spec: []},
-		quality:			{field: ["quality"],spec: []},
-		inspector:		{field: ["inspector"],spec: []},
-		incharge:			{field: ["incharge"],spec: []},
-		remarks:			{field: ["remarks"],spec: []}
-	},
-	stickDefects: {
-		id:						{field: ["id"],spec: []},
-		date:					{field: ["date"],spec: []},
-		product:			{field: ["product"],spec: []},
-		sample:				{field: ["sample"],spec: []},
-		score:				{field: ["score"],spec: []},
-		inspector:		{field: ["inspector"],spec: []},
-		remarks:			{field: ["remarks"],spec: []},
-		sjob:					{field: ["sjob"],spec: []},
-		judge:				{field: ["judge"],spec: []},
-		sremarks:			{field: ["sremarks"],spec: []},
-		ring:					{field: ["srd1","srd2","srd3"], spec: []},
-		ringAmount:		{field: ["srd1_nr","srd2_nr","srd3_nr"], spec: []},
-		cell:					{field: ["scd1","scd2","scd3"], spec: []},
-		cellAmount:		{field: ["scd1_nr","scd2_nr","scd3_nr"], spec: []},
-		set:					{field: ["ssd1","ssd2","ssd3"], spec: []},
-		setAmount:		{field: ["ssd1_nr","ssd2_nr","ssd3_nr"], spec: []},
-		pack:					{field: ["spd1","spd2","spd3"], spec: []},
-		packAmount:		{field: ["spd1_nr","spd2_nr","spd3_nr"], spec: []}
-	},
-	packDefects: {
-		id:						{field: ["id"],spec: []},
-		date:					{field: ["date"],spec: []},
-		product:			{field: ["product"],spec: []},
-		sample:				{field: ["sample"],spec: []},
-		score:				{field: ["score"],spec: []},
-		inspector:		{field: ["inspector"],spec: []},
-		remarks:			{field: ["remarks"],spec: []},
-		pjob:					{field: ["pjob"],spec: []},
-		judge:				{field: ["judge"],spec: []},
-		premarks:			{field: ["premarks"],spec: []},
-		quality:			{field: ["ppd1","ppd2","ppd3"], spec: []},
-		qualityAmount:{field: ["ppd1_nr","ppd2_nr","ppd3_nr"], spec: []},
-		pack:					{field: ["pm1","pm2","pm3"], spec: []},
-		packAmount:		{field: ["pm1_nr","pm2_nr","pm3_nr"], spec: []}
-	},
-	boxDefects: {
-		id:						{field: ["id"],spec: []},
-		date:					{field: ["date"],spec: []},
-		product:			{field: ["product"],spec: []},
-		sample:				{field: ["sample"],spec: []},
-		score:				{field: ["score"],spec: []},
-		inspector:		{field: ["inspector"],spec: []},
-		remarks:			{field: ["remarks"],spec: []},
-		bjob:					{field: ["bjob"],spec: []},
-		judge:				{field: ["judge"],spec: []},
-		bremarks:			{field: ["bremarks"],spec: []},
-		sleeve:				{field: ["bsd1","bsd2","bsd3"], spec: []},
-		sleeveAmount:	{field: ["bsd1_nr","bsd2_nr","bsd3_nr"], spec: []},
-		box:					{field: ["bb1","bb2","bb3"], spec: []},
-		boxAmount:		{field: ["bb1_nr","bb2_nr","bb3_nr"], spec: []},
-		pack:					{field: ["bm1","bm2","bm3"], spec: []},
-		packAmount:		{field: ["bm1_nr","bm2_nr","bm3_nr"], spec: []}
-	}
-}
 var specmin, specmax;		// fieldnames of min and max
 
 // walk through the (dbs) field tree and fill the array (t) with the fieldnames
-function getFields(obj, t) {
-	$.each(obj, function (i, k) {
-		if (typeof obj[i] == "object" && obj[i] !== null)
-			getFields(k, t);
-		else
-			t.push(k);
-	})
+function getFields(obj) {
+	var result = [];
+	zoek (obj, result);
+	return result;
+
+	function zoek(obj, t) {
+		$.each(obj, function (i, k) {
+			if (typeof obj[i] == "object" && obj[i] !== null)
+				zoek(k, t);
+			else
+				t.push(k);
+		})
+	}
 }
 
 // change the :contains-selector to match on whole words
@@ -242,47 +89,16 @@ function setButton(lbl, idx) {
 function fill_labels() {
 	show('.HISTORY', 1);
 	show('.CHARTS', 2);
-	show('.BUNCHES', 3);
-	show('.QDPT', 174);
-	show('.SWWV', 175);
-	show('.MIDS', 176);
-	show('.ACM', 177);
-	show('.REX', 178);
-	show('.TPRSE', 179);
-	show('.FL', 180);
-	show('.FLYBT2000', 181);
-	show('.PASSIM', 182);
-	show('.GDX', 183);
-	show('.MACHINE_NR', 4);
 	show('.DATE', 5);
 	show('.TIME', 34);
 	show('.DESCRIPTION', 7);
 	show('.REMARK', 8);
-	show('.WEIGHT_DL', 9);
-	show('.LENGTH_DL', 10);
 	show('.DIAMETER', 11);
-	show('.WEIGHT_L', '(10)', 12);
-	show('.WEIGHT_R', '(10)', 13);
-	show('.LENGTH_L', 14);
-	show('.LENGTH_R', 15);
-	show('.PD_L', 16);
-	show('.PD_R', 17);
 	show('.SUMMARY', 160);
-	show('.W_L', 12);
-	show('.W_R', 13);
-	show('.AVG_L', 18);
-	show('.AVG_R', 19);
 	show('.SPECS', 20);
 	show('.MIN', 21);
 	show('.NORM', 22);
 	show('.MAX', 23);
-	show('.S35', 24);
-	show('.S20', 25);
-	show('.L20', 26);
-	show('.L35', 27);
-	show('.WEIGHT_LR', 28);
-	show('.LENGTH_LR', 29);
-	show('.PD_LR', 30);
 	show('.MACHINE', 31);
 	show('.PRODUCTS', 6);
 	show('.START_DATE', 35);
@@ -291,46 +107,17 @@ function fill_labels() {
 	show('.CP', 39);
 	show('.CPK', 40);
 	show('.PACKING50', 41);
-	show('.PACKING240', 109);
-	show('.WEIGHT10', '(10)', 42);
 	show('.WEIGHT', 42);
 	show('.AVG', 43);
 	show('.MOIST', 44);
-	show('.PD1', 45);
-	show('.PD2', 46);
-	show('.FALSE_AIR', 47);
-	show('.FALSE_AIR2', '(%)', 47);
-	show('.240CHECK', 83);
-	show('.10CHECK', 82);
 	show('.CHECKED_AMOUNT', 84);
-	show('.DEFECTS_A', 85);
-	show('.DEFECTS_B', 86);
 	show('.AMOUNT', 94);
-	show('.TOT_ERR_A', '(%)', 87);
-	show('.TOT_ERR_B', '(%)', 88);
 	show('.DEFECTS', 95);
-	show('.TOTDEFECTS', '(%)', 96);
-	show('.TOT_ERR_AB', '(%)', 97);
-	show('.VIS_A', 91);
-	show('.VIS_B', 92);
-	show('.VIS_AB', 98);
-	show('.VIS_PACK', 93);
 	show('.NOTICE', 99);
 	show('.NAME', 6);
-	show('.SPECBUNCH', 100);
-	show('.SPECPACK', 101);
-	show('.SPECSNR', 393);
 	show('.LENGTH', 102);
-	show('.HEAD_DIAM', 103);
-	show('.HEAD_LENGTH', 104);
-	show('.MOIST_CUT', 105);
-	show('.MOIST_PACK', 106);
-	show('.PD_CUT', 107);
-	show('.PD_PACK', 108);
-	show('.WEIGHT_LR10', '(10)', 28);
 	show('.TYPE', 33);
 	show('.PRODUCT', 32);
-	show('.TIJD', 34);
 	show('.RANGE', 37);
 	show('.PRODNR', 344);
 	show('.YOURNAME', 110);
@@ -338,262 +125,63 @@ function fill_labels() {
 	show('.DAYSHIFT', 165);
 	show('.NIGHTSHIFT', 166);
 	show('.OPERATOR', 171);
-	show('.OLDVAL', 114);
-	show('.NEWVAL', 115);
 	show('.NAAM', 117);
 	show('.FIELD', 116);	
-	show('.DATE', 5);
 	show('.REASON', 111);
 	show('.DELETE', 172);
 	show('.NEW', 112);
 	show('.SELECT', 650);
 	
-	setButton(".calibrate", 148);
-	setButton(".calc", 145);
 	setButton(".reset", 140);
-	setButton(".search", 488);
 	setButton(".new", 112);
 	setButton(".close", 113);
 	setButton(".cancel", 414);
 	setButton(".print", 159);
 	setButton(".delete", 172);
-	setButton(".start", 438); 
 	setButton(".save", 491);
 	setButton(".import", 493);
 	setButton(".export", 494);
 	setButton(".select", 650);
 	setButton(".exportsum", 160);
 	setButton(".undo", 495);
-	setButton("#checkbutton", 535);
-	setButton("#finishedbutton", 598);
 	setButton(".edit", 593);
 
 	show('.IMPORT', 493);
-	show('.OLDVAL', 114);
-	show('.NEWVAL', 115);
 	show('.FIELD', 116);
-	show('.NAAM', 117);
-	show('.ACTIVITY', 123);
 	show('.MEASUREMENTS', 125);
 	show('.PROD_STAGE', 126);
 	show('.ADVICE', 127);
-	
-	show('._A3', 50);
-	show('._A5', 52);
-	show('._A6', 53);
-	show('._A8', 55);
-	show('._A10', 57);
-	show('._B1', 61);
-	show('._B4', 64);
-	show('._B9', 69);
-	show('._B10', 70);
-	show('._B11', 71);
-	show('._B13', 73);
-	show('._B15', 75);
-	show('._B17', 77);
-	
-	show('.FP', 141);
-	show('.FD', 142);
 	show('.PD', 146);
-	show('.CALCPD', 143);
 	show('.CALC', 145);
-	show('.SHAPE', 147);
-	show('.HEAD', 149);
-	show('.TIP', 150);
-	show('.FIXED', 151);
-	show('.MODELS', 152);
-	show('.HD_L', 184);
-	show('.HD_R', 185);
-	
 	show('.TREND', 154);
 	show('.SPREAD', 155);
 	show('.VARIATION', 156);
 	show('.QUALITY', 157);
 	show('.AVERAGE', 158);
-	show('.FILLER', ':&nbsp;', 173);
-	show('.STEMS', ' &lt;', 162);
-	show('.SPECFILLER', 161);
-	show('.PS1', ' 12.7-25.4mm', 163);
-	show('.PS2', ' 6.35-12.7mm', 163);
-	show('.PS3', ' 3.18-6.35mm', 163);
-	show('.PS4', ' &lt; 3.18mm', 163);
-	show('.FPOWER', ' &ge;', 141);
-	
-	show('._MIDS1', 209);
-	show('._MIDS2', 206);
-	show('._MIDS3', 210);
-	show('._MIDS4', 201);
-	show('._MIDS5', 211);
-	show('._MIDS6', 212);
-	show('._MIDS7', 202);
-	show('._MIDS8', 213);
-	show('._MIDS9', 214);
-	show('._MIDS10', 215);
-	show('._MIDS11', 222);
-	show('._MIDS12', 216);
-	show('._MIDS13', 217);
-	show('._MIDS14', 218);
-	show('._MIDS15', 204);
-	show('._MIDS16', 205);
-	show('._MIDS17', 207);
-	show('._MIDS18', 219);
-	
-	show('._ADV1', 223);
-	show('._ADV2', 224);
-	show('._ADV3', 225);
-	show('._ADV4', 226);
-	show('._ADV5', 227);
-	show('._ADV6', 228);
-	show('._ADV7', 229);
-	show('._ADV8', 230);
-	show('._ADV9', 231);
-	show('._ADV10', 232);
-	show('._ADV11', 233);
-	show('._ADV12', 234);
-	show('._ADV13', 235);
-	show('._ADV14', 236);
-	show('._ADV15', 237);
-	show('._ADV16', 238);
-	show('._ADV17', 239);
-	show('._ADV18', 240);
-	show('.LEFTRIGHT', 263);
-	show('.PD_HEAD', 264);
-	show('.PD_TIP', 265);
-	show('.NEWS', 266);
-	show('.TITLE', 267);
-	show('.TOTALLENGTH', 268);
-	show('.EFFICIENCY', 269);
-	show('.UNITS', 270);
-	show('.PIECES', 271);
-	show('.KILOGRAM', 272);
-	show('.TOTALPROD', 273);
-	show('.WASTEPROD', 274);
-	show('.FILLER_IN', 306);
-	show('.FILLER_LEFT', 307);
-	show('.FILLER_WASTE', 308);
-	show('.BINDER_IN', 309);
-	show('.BINDER_LEFT', 310);
 	show('.CHOICE', 403);
-	
-	show('.VISDEFECTS_A', ' (240)', 91);
-	show('.VISDEFECTS_B', ' (240)', 92);
-	show('.VISBOXDEFECTS_A', ' (50)', 260);
-	show('.VISBOXDEFECTS_B', ' (50)', 261);
-	show('.TRACKING', 286);
-	show('.NEWROUTE', 287);
-	show('.BROWSEROUTE', 288);
 	show('.LABEL', 289);
-	show('.LABELDATE', 300);
-	show('.PRINTLABEL', 301);
 	show('.WRAPPER', 302);
-	show('.PART', 303);
 	show('.PACKING', 304);
 	show('.FLAVOR', 305);
-	show('.MOIST_MIDS', 311);
-	show('.INNER', 315);
-	show('.OUTER', 316);
 	show('.STAGE', 317);
 	show('.CP_CPK', 318);
-	show('.PERFORMANCE', 319);
-	show('.COMPMACH', 320);
 	show('.AB_DEFECTS', 322);
-	show('.ABPACK_DEFECTS', 323);
 	show('.PRESSUREDROP', 312);
 	show('.DISTRIBUTION', 314);
 	show('.MOISTURE', 170);
-	show('.PD_DISTRIBUTION', 324);
-	show('.PD_AVERAGE', 325);
-	show('.PD_CP_CPK', 326);
 	show('.SPEC_SUMMARY', 327);
-	show('.MACH_PERFORMANCE', 328);
-	show('.BOBINSIDE', 329);
 	show('.PRODUCED', 332);
 	show('.MEASUREMENTS', 125);
-	show('.RUNNING', 331);
-	show('.NOT_MEASURED', 333);
-	show('.NOT_TRACKED', 334);
-	show('.MEASURE_MSG', 335);	
-	show('.MATRIX', 336);
-	show('.TRACKED_MACHINES', 337);	
-	show('.ALL_MACHINES', 338);
 	show('.SHOW', 339);
-	show('.PERFOP', 340);
 	show('.ACCURACY', 341);
 	show('.ENTERPASS', 413);
 	show('.EXPIREDPASS', 411);
 	show('.ENTERNAME', 412);
 	show('.OK', 343);
-	show('.EXAM', 436);
 	show('.SCORE', 437);
-	show('.VRAAG', 441);
-	
-	$('.RELIABILITY').html('<span class="reliability"></span>');
-	$('.RELIABILITY').prepend(LABELS[153][ $.jStorage.get("lang") ]);
- 
-	if (typeof print_access !== "undefined") 
-		if (print_access == '1')	$('.print').css('visibility', 'visible');
-
-	show('.TOBACCO', 442);
-	show('.ORIGIN', 444);
-	show('.T_NAME', 446);
-	show('.T_VARIETY', 449);
-	show('.T_TYPE', 443);
-	show('.T_GRADE', 447);
-	show('.T_YEAR', 445);
-	show('.T_STATUS', 448);
-	show('.T_APPEARANCE', 450);
-	show('.T_CONTENT', 455);
-	show('.T_CONDITION', 451);
-	show('.T_LENGTH', 453);
-	show('.T_SUGAR', 456);
-	show('.T_ALKALI', 459);
-	show('.T_COLOR', 452);
-	show('.T_WIDTH', 454);
-	show('.T_RSUGAR', 457);
-	show('.T_POT', 460);
-	show('.T_NITRO', 458);
-	show('.T_CHL', 461);
-	show('.T_SENSORY', 474);
-	show('.T_AROMA', 462);
-	show('.T_SMOKE', 469);
-	show('.T_SMOKING', 475);
-	show('.A_TYPE', 463);
-	show('.A_QUALITY', 464);
-	show('.A_QUANTITY', 465);
-	show('.A_INT', 466);
-	show('.A_BSA', 467);
-	show('.A_BST', 468);
-	show('.SC_DENS', 470);
-	show('.SC_STR', 471);
-	show('.SC_ELE', 472);
-	show('.SC_COMP', 473);
-	show('.SE_DENS', 476);
-	show('.SE_DRY', 477);
-	show('.SE_CL', 478);
-	show('.SE_MI', 479);
-	show('.SE_TI', 480);
-	show('.SE_NI', 481);
-	show('.SE_SWEETNESS', 487);
-	show('.COMBUSTION', 482);
-	show('.ASH', 483);
-	show('.T_REMARK', 484);
-	show('.T_AMOUNT', 485);
-	show('.T_PRICE', 486);
 	show('.SEARCH', 488);
-	show('.LATEST', 489);
-	show('.CREATOR', 490);
-	show('.COPY_MSG', 492);
-	
-	show('.SUPPLY_NAME', 498);
-	show('.SUPPLY_NR', 499);
-	show('.SUPPLIER_NAME', 500);
-	show('.COPY_MSG', 492);
-	
-	show('.PHYSDATA',  509);
 	show('.APPEARANCE',  510);
 	show('.PENALTY',  511);
-	show('.STICKMACHINE',  512);
-	show('.PACKMACHINE',  513);
 	show('.BATCHNR',  514);
 	show('.CIRCUMFERENCE',  515);
 	show('.VENTILATION',  516);
@@ -615,12 +203,9 @@ function fill_labels() {
 	show('.CHECKED', 535);
 	show('.PRODUCTIONSTATUS', 542);
 	show('.DISCREPANCY', 543);
-	show('.WEIGHT30L', 544);
-	show('.WEIGHT30R', 545);
 	show('.INSPECTOR', 546);
 	show('.OPERATORSTICK', 547);
 	show('.OPERATORPACK', 548);
-	
 	show('.PEN_WEIGHTDEV', 549);	// penalty weight deviation
 	show('.PEN_WEIGHTSTD', 550);	// penalty weight vs standard
 	show('.PEN_WEIGHTOUT', 551);	// penalty weight out of specs
@@ -631,7 +216,6 @@ function fill_labels() {
 	show('.PEN_LENSTD', 556);		// penalty length vs standard
 	show('.PEN_LENOUT', 557);		// penalty length out of specs
 	show('.PEN_WEIGHTLR', 558);	// penalty weight l/r difference
-	
 	show('.STICK_A_PASSED', 559);	// stick a defects passed
 	show('.STICK_A_PEN', 560);		// penalty stick a
 	show('.STICK_B_PASSED', 561);	// stick b defects passed
@@ -657,14 +241,12 @@ function fill_labels() {
 	show('.CARTON_C_PASSED', 581);	// carton c defects passed
 	show('.CARTON_C_PEN', 582);		// penalty carton c
 	show('.SYNT_SCORE', 583);			// synthesis score
-	
 	show('.MAXIMUM', 584);
 	show('.MINIMUM', 585);
 	show('.SAMPLES', 586);
 	show('.SUM', 587);
 	show('.PROPORTION', 588);	
 	show('.EVALUATE', 589);
-	show('.DIFINOUT', 590);
 	show('.STICKS', 594);
 	show('.PACKS', 595);
 	show('.SLEEVES', 596);
@@ -682,8 +264,6 @@ function fill_labels() {
 	show('.IRESULT', 607);
 	show('.DISPOSAL', 608);
 	show('.HANDLINGNR', 609);
-	show('.REGAIN_1', 610);
-	show('.REGAIN_2', 611);
 	show('.INPUTMOIST', 612);
 	show('.OUTPUTMOIST', 613);
 	show('.OUTPUTTEMP', 614);
@@ -706,24 +286,12 @@ function fill_labels() {
 	show('.MOIST_CONTENT', 631);
 	show('.MAT_INPUT', 632);
 	show('.ADDITIONAL_INSPECTIONS', 633);
-	show('.LONG_STEMS', 634);
-	show('.SHORT_STEMS', 635);
-	show('.FILLING_POWER', 636);
-	show('.CUT_STRIPS', 637);
-	show('.CUT_WIDTH', 638);
-	show('.MATREQUIREMENTS', 639);
 	show('.MOISTOK', 640);
-	show('.BATCHNOTMIXED', 641);
-	show('.CUTREQUIREMENTS', 642);
-	show('.EXPREQUIREMENTS', 643);
 	show('.QUALITYSCORE', 644);
 	show('.RAWMATOK', 645);
-	show('.NORMALPRODUCTION', 646);
-	show('.TRIALPRODUCTION', 647);
 	show('.MINSPECS', 648);
 	show('.MAXSPECS', 649);
 	show('.EXPORT', 494);
-	
 	show('.SAMPLINGPOINT', 651);
 	show('.HANDMADE_DATE', 652);
 	show('.HANDMADE_CIRCUMFERENCE', 653);
@@ -764,7 +332,6 @@ function fill_labels() {
 	show('.APPEARANCE_QUALITY', 688);
 	show('.MILDEW_WORMS', 689);
 	show('.DOPANT', 690);
-	
 	show('.JOBNR', 691);
 	show('.STICK_PACK_QUALITY', 692);
 	show('.RING', 693);
@@ -783,7 +350,6 @@ function fill_labels() {
 	show('.PACKING_SCORE', 706);
 	show('.SLEEVEBOX_SCORE', 707);
 	show('.SLEEVEBOX', 708);
-	
 	show('.L_OUTLOW', 709);
 	show('.L_OUTHIGH', 710);
 	show('.L_INSPEC', 711);
@@ -1073,8 +639,8 @@ function colorSeries(element, soort, spec) {		// set the color of a row of field
 	var totaal = 0.0;
 	var aantal = 0;
 
-	specmin = db[element][soort].spec[0];
-	specmax = db[element][soort].spec[1];
+	specmin = db[element][soort].spec.min;
+	specmax = db[element][soort].spec.max;
 	
 	db[element][soort].field.map(function (field) {
 		totaal += setColor("#"+element, field, spec);
@@ -1148,7 +714,7 @@ function show_data(table) {
 								if (!isNaN(waarde))
 									serie.push(waarde);
 							});
-							var result = cpk(spec[db.rolling[choice].spec[0]], spec[db.rolling[choice].spec[1]], serie);
+							var result = cpk(spec[db.rolling[choice].spec.min], spec[db.rolling[choice].spec.max], serie);
 							gauge = document.gauges.get("r-"+choice);
 							if (gauge != null) {
 								gauge.value = Math.min(Math.max(result, 0), 1);
@@ -1206,7 +772,7 @@ function show_data(table) {
 								if (!isNaN(waarde))
 									serie.push(waarde);
 							});
-							var result = cpk(spec[db.wrapping[choice].spec[0]], spec[db.wrapping[choice].spec[1]], serie);
+							var result = cpk(spec[db.wrapping[choice].spec.min], spec[db.wrapping[choice].spec.max], serie);
 							gauge = document.gauges.get("w-"+choice);
 							if (gauge != null) {
 								gauge.value = Math.min(Math.max(result, 0), 1);
@@ -1333,7 +899,7 @@ function show_data(table) {
 							if (!isNaN(waarde))
 								serie.push(waarde);
 						});
-						var result = cpk(spec[db.storage.moisture.spec[0]], spec[db.storage.moisture.spec[1]], serie);
+						var result = cpk(spec[db.storage.moisture.spec.min], spec[db.storage.moisture.spec.max], serie);
 						gauge = document.gauges.get("s-moisture");
 						if (gauge != null) {
 							gauge.value = Math.min(Math.max(result, 0), 1);
@@ -1674,7 +1240,7 @@ function show_spec_details(id) {
 		$.getJSON('server/get_record.php', { 
 			query: sql
 		}, function(data) {
-			getFields(dbs, fields);		// get all the field names from dbs
+			fields = getFields(dbs);		// get all the field names from dbs
 			fields.map(function(fieldname){
 				$("#specs [name="+fieldname+"]").val(data[fieldname]);
 			});
@@ -1770,15 +1336,14 @@ function calcSummary(stage, what, data, spec) {
 				if (!isNaN(waarde)) {
 					serie.push(waarde);
 					amount++;
-					if (waarde < spec[dbs.spec[0]] || waarde > spec[dbs.spec[1]])
+					if (waarde < spec[dbs.spec.min] || waarde > spec[dbs.spec.max])
 						outspec++;
 				}
 			}
 		});
 	});
-	//console.log(serie+" "+spec[dbs.spec[0]]+" - "+spec[dbs.spec[1]]);
 	$("#evaluate #"+stage+" [name="+what+"] [name=amount]").text( amount );
-	$("#evaluate #"+stage+" [name="+what+"] [name=cpk]").text( cpk(spec[dbs.spec[0]], spec[dbs.spec[1]], serie) );
+	$("#evaluate #"+stage+" [name="+what+"] [name=cpk]").text( cpk(spec[dbs.spec.min], spec[dbs.spec.max], serie) );
 	$("#evaluate #"+stage+" [name="+what+"] [name=avg]").text( jStat.mean(serie).toFixed(2) );
 	$("#evaluate #"+stage+" [name="+what+"] [name=dev]").text( jStat.stdev(serie).toFixed(2) );
 	$("#evaluate #"+stage+" [name="+what+"] [name=var]").text( jStat.variance(serie).toFixed(2) );
