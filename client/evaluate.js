@@ -76,6 +76,24 @@ var evaluate_content = {
 					)
 				]
 			])				
+		]),
+		m("#evaltabs.subtabs1", [
+			m("ul", [
+				[
+					{label:"label.CHARTS", href:"#charts_tab"},
+					{label:"label.CONTROLCHARTS", href:"#control_tab"}
+				].map(function (a) {
+					return m("li", 
+									m("a", {href: a.href, tabindex:"-1", class: "last" }, [
+										m(a.label)
+									])
+								)
+				})
+			]),
+			[			// the tabs used by ui-tabs
+				m("#charts_tab", m.component(charts_content)),
+				m("#control_tab", m.component(control_content))
+			]
 		])
 	],
 	controller: function (element, isInitialized) {		// only events and initialisation
@@ -84,7 +102,28 @@ var evaluate_content = {
 			
 		// todo: set the last field
 		$("#evaluate [name=empty]").addClass("last");		// set the last field
-					
+
+		// default tab when page is first loaded
+		var initialtab = $.jStorage.get("handmade_evaluationtab");
+
+		$( "#evaltabs" ).tabs({
+			active: initialtab,
+			activate: function( event, ui ) {
+				keus = ui.newPanel[0].id;
+				switch (keus) {
+					case "charts_tab":			
+						$.jStorage.set("handmade_evaluationtab", 0);
+						break;
+					case "control_tab": 	
+						$.jStorage.set("handmade_evaluationtab", 1);
+						break;
+				}
+			},
+			create: function( event, ui ) {
+				show_evaluation();
+			}
+		});
+
 		var nu = new Date();
 		$('#evaluate [name=start]').val(nu.format("yyyy-MM-dd") );
 		$('#evaluate [name=end]').val(nu.format("yyyy-MM-dd") );

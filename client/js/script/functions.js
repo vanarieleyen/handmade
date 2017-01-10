@@ -366,6 +366,8 @@ function fill_labels() {
 	show('.M_OUTHIGH', 722);
 	show('.M_INSPEC', 723);
 	show('.M_2INSPEC', 724);
+	show('.CONTROLCHARTS', 726);
+	show('.SAMPLESIZE', 727);
 }
 
 // prevent tabbing away from the last input field

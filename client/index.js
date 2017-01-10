@@ -69,6 +69,8 @@ include('data-tabs.js');			// parent
 
 include('history.js');
 
+include('charts.js');
+include('controlcharts.js');
 include('evaluate.js');
 
 include('specs.js');					// children of settings-tab
