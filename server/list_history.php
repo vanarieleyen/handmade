@@ -1,7 +1,5 @@
 <?php
 
-// http://localhost/handmade/server/get_history.php?lang=1&tab=rolling_sub_tab
-
 require_once 'Classes/pdo.php';
 
 $database = new Database();
@@ -15,18 +13,28 @@ $database->execute();
 
 extract($_GET);
 
+if ($page < 0)
+	return;
+
+// paging
+$start = $page*$length;
+$limit = " LIMIT ". $start .", ". $length;
+
 // set table and field names with corresponding label
 switch ($tab) {
 	case "rolling_sub_tab":
 	case "wrapping_sub_tab":
 	case "cutting_sub_tab":
 		$fields = "id, date, product, name, score, quality, inspector";
+		$selection = "id, date, product, name, score*1.0 AS score, quality*1.0 AS quality, inspector";
 		break;
 	case "storage_sub_tab":
 		$fields = "id, date, product, incharge, score, quality, inspector";
+		$selection = "id, date, product, incharge, score*1.0 AS score, quality*1.0 AS quality, inspector";
 		break;
 	case "defects_sub_tab":
 		$fields = "id, date, product, sample, judge, score, inspector";
+		$selection = "id, date, product, sample, judge, score*1.0 AS score, inspector";
 		break;
 	default:
 		echo "unknown tab";
@@ -34,7 +42,11 @@ switch ($tab) {
 }
 
 $column = explode(", ", $fields);		
-											// extract the column names from the $fields
+
+// sorting
+$order = sprintf(" ORDER BY %s %s ", $column[$sort+1], $direction);
+
+// extract the column names from the $fields
 $table = sprintf("gwc_handmade.%s", explode("_", $tab)[0]);		// get the tablename from the $tab-name
 
 if ($table == "gwc_handmade.defects") {		// er zijn 3 defects tables..
@@ -42,8 +54,7 @@ if ($table == "gwc_handmade.defects") {		// er zijn 3 defects tables..
 	$table = sprintf("gwc_handmade.%s", $type[$defects]);	
 }
 
-
-$query = sprintf("SELECT %s	FROM %s ORDER BY id DESC", $fields, $table);
+$query = sprintf("SELECT %s	FROM %s WHERE 1 %s %s", $selection, $table, $order, $limit);
 $database->query($query);
 // echo $database->getQuery($query); return;
 $rows = $database->resultset();
@@ -68,6 +79,8 @@ foreach ($rows as $aRow) {
 }
 
 $database->endTransaction();
+
+$output["crc"] = md5($regel);
 
 echo json_encode( $output );
 

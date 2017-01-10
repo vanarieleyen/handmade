@@ -29,6 +29,10 @@ html,body {
 	z-index: 1000;
 }
 
+.underline {
+	text-decoration: underline;
+}
+
 .scale {
 	font-size: 120%;	
 }

@@ -1114,46 +1114,47 @@ function show_data(table) {
 }
 		
 function show_history() {
-	var defectstab = ($.jStorage.get("handmade_defectsstab") == null) ? "stickDefects" : $.jStorage.get("handmade_defectsstab");
 	var lasttab = ($.jStorage.get("handmade_lasttab") == null) ? "rolling_sub_tab" : $.jStorage.get("handmade_lasttab");
-	var source = sprintf("server/list_history.php?lang=%s&tab=%s&defects=%s", $.jStorage.get("lang"),	lasttab, defectstab);
+	var options = $.jStorage.get("handmade.historylist");
 	
 	$("#history #lijst thead").empty();
 	$("#history #lijst thead").append('<th style="display:none">ID</th>');
-	$("#history #lijst thead").append('<th><label class="DATE"></label></th>'); 
-	$("#history #lijst thead").append('<th><label class="PRODUCT"></label></th>');
+	$("#history #lijst thead").append('<th nr="0" class="DATE underline"></th>'); 
+	$("#history #lijst thead").append('<th nr="1" class="PRODUCT"></th>');
 
 	switch (lasttab) {
 		case "rolling_sub_tab":
 		case "wrapping_sub_tab":
 		case "cutting_sub_tab":
-			$("#history #lijst thead").append('<th><label class="SAMPLINGPOINT"></label></th>');
-			$("#history #lijst thead").append('<th><label class="BATCH_SCORE"></label></th>');
-			$("#history #lijst thead").append('<th><label class="BATCH_QUALITY"></label></th>');
-			$("#history #lijst thead").append('<th><label class="INSPECTOR"></label></th>');
+			$("#history #lijst thead").append('<th nr="2" class="SAMPLINGPOINT"></th>');
+			$("#history #lijst thead").append('<th nr="3" class="BATCH_SCORE"></th>');
+			$("#history #lijst thead").append('<th nr="4" class="BATCH_QUALITY"></th>');
+			$("#history #lijst thead").append('<th nr="5" class="INSPECTOR"></th>');
 			break;
 		case "storage_sub_tab":
-			$("#history #lijst thead").append('<th><label class="IN_CHARGE"></label></th>');
-			$("#history #lijst thead").append('<th><label class="BATCH_SCORE"></label></th>');
-			$("#history #lijst thead").append('<th><label class="BATCH_QUALITY_OK"></label></th>');
-			$("#history #lijst thead").append('<th><label class="INSPECTOR"></label></th>');
+			$("#history #lijst thead").append('<th nr="2" class="IN_CHARGE"></th>');
+			$("#history #lijst thead").append('<th nr="3" class="BATCH_SCORE"></th>');
+			$("#history #lijst thead").append('<th nr="4" class="BATCH_QUALITY_OK"></th>');
+			$("#history #lijst thead").append('<th nr="5" class="INSPECTOR"></th>');
 			break;
 		case "defects_sub_tab":
-			$("#history #lijst thead").append('<th><label class="SAMPLING_FREQ"></label></th>');
-			$("#history #lijst thead").append('<th><label class="DETERMINATION"></label></th>');
-			$("#history #lijst thead").append('<th><label class="SCORE"></label></th>');
-			$("#history #lijst thead").append('<th><label class="INSPECTOR"></label></th>');
+			$("#history #lijst thead").append('<th nr="2" class="SAMPLING_FREQ"></th>');
+			$("#history #lijst thead").append('<th nr="3" class="DETERMINATION"></th>');
+			$("#history #lijst thead").append('<th nr="4" class="SCORE"></th>');
+			$("#history #lijst thead").append('<th nr="5" class="INSPECTOR"></th>');
 			break;
 	}
 
 	fill_labels();
 	
-	$.getJSON(source,	function(data) {
+	$.getJSON("server/list_history.php", options, function(data) {
+		$.jStorage.set("handmade.historylist", options);
 		$('#history #lijst tbody').empty();
 		$.each(data.records, function (key, regel) {
 			$('#history #lijst tbody').append(regel);
-		});		
-	})		
+		});
+	})
+
 }
 
 // fill the users list

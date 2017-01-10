@@ -158,6 +158,17 @@ $(document).ready(function() {
 	if ($.jStorage.get("handmade_settingstab") == null)
 		$.jStorage.set("handmade_settingstab", 0);
 
+	$.jStorage.set("handmade.historylist", {
+		lang: $.jStorage.get("lang"),
+		page: 0,
+		sort: 0,
+		direction: "DESC",
+		crc: "",
+		length: 25,
+		tab: ($.jStorage.get("handmade_lasttab") == null) ? "rolling_sub_tab" : $.jStorage.get("handmade_lasttab"),
+		defects: ($.jStorage.get("handmade_defectsstab") == null) ? "stickDefects" : $.jStorage.get("handmade_defectsstab")
+	});	
+	
 	fill_labels();
 
 	// default tab when page is first loaded
@@ -192,6 +203,7 @@ $(document).ready(function() {
 				case 1: show_history(); break;
 				case 2: show_evaluation(); break;
 			}
+			$("#history .underline").append("<span class='arrow'> &#9660;</span>"); // the sort arrow
 		}
 	});
 
