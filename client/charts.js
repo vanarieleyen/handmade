@@ -8,10 +8,6 @@ var charts_content = {
 						m("tr", m("td", {colspan:"2"} )),
 						m("tr", [
 							m("td.CHARTS"),
-							m("td", m("select#group1", {style:"width:13em"} ))
-						]),
-						m("tr", [
-							m("td"),
 							m("td", m("select#choice1", {style:"width:13em"} ))
 						]),
 						m("tr", [
@@ -33,10 +29,6 @@ var charts_content = {
 						m("tr", m("td", {colspan:"2"} )),
 						m("tr", [
 							m("td.CHARTS"),
-							m("td", m("select#group2", {style:"width:13em"} ))
-						]),
-						m("tr", [
-							m("td"),
 							m("td", m("select#choice2", {style:"width:13em"} ))
 						]),
 						m("tr", [
@@ -56,26 +48,14 @@ var charts_content = {
 		$("#charts #type2").addClass("last");		// set the last field
 	
 		// get the data that can be displayed in a chart (length, circumference, hardness, etc...)	
-		$.get('server/get_groups.php?lang='+$.jStorage.get("lang"), function(data) {$('#charts #group1').append(data);	});
-		$.get('server/get_groups.php?lang='+$.jStorage.get("lang"), function(data) {$('#charts #group2').append(data);	});
-		$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&group=regain1", function(data) {$('#charts #choice1').empty().append(data);	});
-		$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&group=regain1", function(data) {$('#charts #choice2').empty().append(data);	});
+		$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&stage=rolling", function(data) {$('#charts #choice1').empty().append(data);	});
+		$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&stage=rolling", function(data) {$('#charts #choice2').empty().append(data);	});
 		
 		// get the chart types that can be displayed (raw, average, distribution etc..)	
 		$.get('server/get_types.php?lang='+$.jStorage.get("lang")+'&name=type1', 
 			function(data) {$('#charts #type1').append(data);	});
 		$.get('server/get_types.php?lang='+$.jStorage.get("lang")+'&name=type2', 
 			function(data) {$('#charts #type2').append(data);	});
-		
-		$('#charts #group1').on('change', function () {
-			$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&group="+$(this).val(), 
-				function(data) {$('#charts #choice1').empty().append(data);	});
-		});
-		
-		$('#charts #group2').on('change', function () {
-			$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&group="+$(this).val(), 
-				function(data) {$('#charts #choice2').empty().append(data);	});
-		});
 		
 		$('#charts #type1').on('change', function () {
 			var chart = $(this).attr("id").slice(-1);
@@ -92,8 +72,8 @@ var charts_content = {
 			draw_chart(chart);
 		});		
 		
-		draw_chart("1");
-		draw_chart("2");
+		//draw_chart("1");
+		//draw_chart("2");
 
 	},
 	view: function () {

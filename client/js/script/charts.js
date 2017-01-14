@@ -1,12 +1,13 @@
    
 // draws the charts in chart.php
 function draw_chart(keus) {
-	var product = $('#evaluate [name=product] option:selected').val();
-	var group = 	$('#charts #group'+keus).val();									// regain1, regain2 etc..
-	var choice =	$('#charts #choice'+keus).val();								// inputmoist, outputmoist etc...
+	var product = $("#evaluate [name=product]").val();
+	var stage = $("#evaluate [name=stage]").val();
+	var choice =	$('#charts #choice'+keus).val();								// length, pd etc...
 	var type = 		$('#charts #type'+keus+' input:checked').val();		// raw, avg, cpk etc...
-	var data = 		$.jStorage.get("pline_rawdata");
+	var data = 		$.jStorage.get("handmade_rawdata");
 
+	//console.log(data);
 	$('#charts #graph'+keus).empty();
 	if (keus=="1") $('#charts #dist1').empty();	// empty mini distribution chart
 
@@ -17,18 +18,18 @@ function draw_chart(keus) {
 		return;
 		
 	switch (type) {
-		case 'Raw':				rawChart('#charts #graph'+keus, group, choice, product, data);
+		case 'Raw':				rawChart('#charts #graph'+keus, stage, choice, product, data);
 								break;
-		case 'Average':		averageChart('#charts #graph'+keus, group, choice, product, data);
+		case 'Average':		averageChart('#charts #graph'+keus, stage, choice, product, data);
 								break;
-		case 'Deviation':	deviationChart('#charts #graph'+keus, group, choice, product, data);
+		case 'Deviation':	deviationChart('#charts #graph'+keus, stage, choice, product, data);
 								break;
-		case 'Variance':	variationChart('#charts #graph'+keus, group, choice, product, data);
+		case 'Variance':	variationChart('#charts #graph'+keus, stage, choice, product, data);
 								break;
-		case 'Cpk':				cpkChart('#charts #graph'+keus, group, choice, product, data);
+		case 'Cpk':				cpkChart('#charts #graph'+keus, stage, choice, product, data);
 								break;
 		case 'Dist':			if (keus=="1") $('#charts #dist1').empty();	// empty mini distribution chart
-											distributionChart('#charts #graph'+keus, group, choice, product, data);
+											distributionChart('#charts #graph'+keus, stage, choice, product, data);
 								break;
 	}
 	
@@ -37,10 +38,11 @@ function draw_chart(keus) {
 	// returns the label to display on the chart
 	function label(soort) {
 		switch(soort) {
-			case 'matinmoist': 	return LABELS[612][$.jStorage.get("lang")];
-			case 'matoutmoist': return LABELS[613][$.jStorage.get("lang")];
-			case 'matouttemp': 	return LABELS[614][$.jStorage.get("lang")];
-			case 'moisture': 		return LABELS[170][$.jStorage.get("lang")];
+			case 'lengte': 		return LABELS[102][$.jStorage.get("lang")];
+			case 'omtrek': 		return LABELS[515][$.jStorage.get("lang")];
+			case 'gewicht': 	return LABELS[42][$.jStorage.get("lang")];
+			case 'pd': 				return LABELS[312][$.jStorage.get("lang")];
+			case 'moisture': 	return LABELS[170][$.jStorage.get("lang")];
 		}
 	}
 	
@@ -74,15 +76,15 @@ function draw_chart(keus) {
 	}
 	
 	// background colors
-	function background(result, what, soort, product) {
+	function background(result, stage, soort, product) {
 		var bg = [];
 		var low, high, s, spec, oldcrc=0;
 		var len = result.length;
 		
 		$.each(result, function(idx, value) {
 			spec = getSpec(product, value[2]);		// get the specs of certain date
-			low = parseFloat(spec[db[what][soort].spec.min]);
-			high = parseFloat(spec[db[what][soort].spec.max]);
+			low = parseFloat(spec[db[stage][soort].spec.min]);
+			high = parseFloat(spec[db[stage][soort].spec.max]);
 			s = specLimits(low, high);
 	
 			if (crc(JSON.stringify(spec)) != oldcrc) {
@@ -99,9 +101,9 @@ function draw_chart(keus) {
 	
 	
 	// cpk chart
-	function cpkChart(chart, what, soort, product, data) {
-		var specs = db[what][soort].spec;
-		var fields = db[what][soort].field;
+	function cpkChart(chart, stage, soort, product, data) {
+		var specs = db[stage][soort].spec;
+		var fields = db[stage][soort].field;
 		var width = Math.round(parseFloat($(chart).innerWidth()));
 		var height = Math.round(parseFloat($(chart).innerHeight()));
 		var result = [], tijd = [], raw = [];
@@ -118,8 +120,8 @@ function draw_chart(keus) {
 						length = tmp.push(parseFloat(value));
 						if (length > sample_size) {
 							var spec = getSpec(product, data[i].row['date']);		// get the specs of current data
-							var low = parseFloat(spec[db[what][soort].spec.min]);
-							var high = parseFloat(spec[db[what][soort].spec.max]);
+							var low = parseFloat(spec[db[stage][soort].spec.min]);
+							var high = parseFloat(spec[db[stage][soort].spec.max]);
 							var val = cpk(low, high, tmp);
 							if (val != '--' && val > 0) {
 								result.push(Array(idx++, val, data[i].row['date'] ));
@@ -179,9 +181,9 @@ function draw_chart(keus) {
 	}
 	
 	// variance chart
-	function variationChart(chart, what, soort, product, data) {
-		var specs = db[what][soort].spec;
-		var fields = db[what][soort].field;
+	function variationChart(chart, stage, soort, product, data) {
+		var specs = db[stage][soort].spec;
+		var fields = db[stage][soort].field;
 		var width = Math.round(parseFloat($(chart).innerWidth()));
 		var height = Math.round(parseFloat($(chart).innerHeight()));
 		var result = [], tijd = [], raw = [];
@@ -260,9 +262,9 @@ function draw_chart(keus) {
 	}
 	
 	// std. deviation chart
-	function deviationChart(chart, what, soort, product, data) {
-		var specs = db[what][soort].spec;
-		var fields = db[what][soort].field;
+	function deviationChart(chart, stage, soort, product, data) {
+		var specs = db[stage][soort].spec;
+		var fields = db[stage][soort].field;
 		var width = Math.round(parseFloat($(chart).innerWidth()));
 		var height = Math.round(parseFloat($(chart).innerHeight()));
 		var result = [], tijd = [], raw = [];
@@ -341,9 +343,9 @@ function draw_chart(keus) {
 	}
 	
 	// average chart
-	function averageChart(chart, what, soort, product, data) {
-		var specs = db[what][soort].spec;
-		var fields = db[what][soort].field;
+	function averageChart(chart, stage, soort, product, data) {
+		var specs = db[stage][soort].spec;
+		var fields = db[stage][soort].field;
 		var width = Math.round(parseFloat($(chart).innerWidth()));
 		var height = Math.round(parseFloat($(chart).innerHeight()));
 		var result = [], tijd = [], raw = [];
@@ -393,7 +395,7 @@ function draw_chart(keus) {
 					}
 				},
 				trendline: { show: true },
-				grid: {	markings: background(result, what, soort, product) },
+				grid: {	markings: background(result, stage, soort, product) },
 				xaxis: {
 					position: "bottom",
 					ticks: tijd
@@ -416,9 +418,9 @@ function draw_chart(keus) {
 	}
 	
 	// make a chart of the raw data
-	function rawChart(chart, what, soort, product, data) {
-		var specs = db[what][soort].spec;
-		var fields = db[what][soort].field;
+	function rawChart(chart, stage, soort, product, data) {
+		var specs = db[stage][soort].spec;
+		var fields = db[stage][soort].field;
 		var width = Math.round(parseFloat($(chart).innerWidth()));
 		var height = Math.round(parseFloat($(chart).innerHeight()));
 		var result = [], tijd = [], ticks = 10;
@@ -457,7 +459,7 @@ function draw_chart(keus) {
 					}
 				},
 				trendline: { show: true },
-				grid: {	markings: background(result, what, soort, product) },
+				grid: {	markings: background(result, stage, soort, product) },
 				xaxis: {
 					position: "bottom",
 					ticks: tijd
@@ -481,15 +483,15 @@ function draw_chart(keus) {
 	
 	
 	// large distribution chart
-	function distributionChart(chart, what, soort, product, data) {
-		var specs = db[what][soort].spec;
-		var fields = db[what][soort].field;
+	function distributionChart(chart, stage, soort, product, data) {
+		var specs = db[stage][soort].spec;
+		var fields = db[stage][soort].field;
 		var width = Math.round(parseFloat($(chart).innerWidth()));
 		var height = Math.round(parseFloat($(chart).innerHeight()));
 		var end = data[data.count-1].row['date'];
 		var spec = getSpec(product, end);		// get the specs for the last date
-		var low = parseFloat(spec[db[what][soort].spec.min]);
-		var high = parseFloat(spec[db[what][soort].spec.max]);
+		var low = parseFloat(spec[db[stage][soort].spec.min]);
+		var high = parseFloat(spec[db[stage][soort].spec.max]);
 		var scale = width/(high-low);		// hoeveel de waarden moeten worden aangepast om in de sample-ruimte te passen
 		var spec = specLimits(low, high);
 		var min35 = Math.round(spec.min35*scale);

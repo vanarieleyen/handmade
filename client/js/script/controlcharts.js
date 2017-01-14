@@ -1,11 +1,11 @@
 
 function draw_controlchart() {
 	var product = $('#evaluate [name=product] option:selected').val();
-	var group = 	$('#control #group').val();									// regain1, regain2 etc..
+	var stage = 	$("#evaluate [name=stage]").val();
 	var choice =	$('#control #choice').val();								// inputmoist, outputmoist etc...
 	var soort = 	$('#control #soort input:checked').val();		// controlchart soort
 	var size =		$('#control #samplesize').val(); 
-	var data = 		$.jStorage.get("pline_rawdata");
+	var data = 		$.jStorage.get("handmade_rawdata");
 
 	// empty all charts
 	$('#control #graph1').empty();
@@ -20,9 +20,9 @@ function draw_controlchart() {
 		return;
 //console.log(soort);
 	switch (soort) {
-		case 'IMR':		imrChart(group, choice, data);
+		case 'IMR':		imrChart(stage, choice, data);
 								break;
-		case 'XBAR':	xbarChart(group, choice, data);
+		case 'XBAR':	xbarChart(stage, choice, data);
 								break;
 		case 'C':			//cChart('#control #graph', group, choice, product, data);
 								break;
@@ -143,6 +143,18 @@ function draw_controlchart() {
 					return false;
 				}
 				break;
+			case "WEEK":
+				return function (data, i, len) {
+					var parts = data[i].row['date'].substr(0,10).split('-');
+					var thedate = new Date(parts[2],parts[0]-1,parts[1]); 
+					var week = thedate.weekNR();
+					if (this.last != week) {
+						this.last = week;
+						return true;
+					}
+					return false;
+				}
+				break;
 			case "2":
 				return function (data, i, len) {
 					return (len > 2);
@@ -160,15 +172,15 @@ function draw_controlchart() {
 				break;
 			case "20":
 				return function (data, i, len) {
-					return (len > 20);
+					return (len > 24);
 				}
 				break;
 		}
 	}
 	
 	// xBar (average/deviation) - moving range chart
-	function xbarChart(what, soort, data) {
-		var fields = db[what][soort].field;
+	function xbarChart(stage, soort, data) {
+		var fields = db[stage][soort].field;
 		var xChart = "#control #graph1";
 		var rChart = "#control #graph2";
 		var width = Math.round(parseFloat($(xChart).innerWidth()));
@@ -198,6 +210,7 @@ function draw_controlchart() {
 		}
 		tmp = [];
 		limit = jStat.mean(avgLen);
+		//console.log(avgLen);
 
 		// generate the data series for both charts
 		var idx = 0;
@@ -230,7 +243,7 @@ function draw_controlchart() {
 		}
 		var xMean = jStat.mean(xRaw);
 		var rMean = jStat.mean(rRaw);
-		
+		//console.log(rRaw);
 		if (xResult.length > 2) {
 			
 			tijd = setTickLabels(xResult, ticks);
@@ -316,8 +329,8 @@ function draw_controlchart() {
 	
 	
 	// individuals - moving range chart
-	function imrChart(what, soort, data) {
-		var fields = db[what][soort].field;
+	function imrChart(stage, soort, data) {
+		var fields = db[stage][soort].field;
 		var iChart = "#control #graph1";
 		var rChart = "#control #graph2";
 		var width = Math.round(parseFloat($(iChart).innerWidth()));
@@ -436,8 +449,8 @@ function draw_controlchart() {
 	// mini distribution chart
 	// uses the raw data from other charts 
 	function miniDistChart(chart, rawdata) {
-		var width = $(chart).innerWidth();
-		var height = $(chart).innerHeight();
+		var width = Math.round(parseFloat($(chart).innerWidth()));
+		var height = Math.round(parseFloat($(chart).innerHeight()));
 		var lower = Array.min(rawdata); 							// find the lowest and highest value
 		var upper = Array.max(rawdata); 
 		var scale = height/(upper-lower);
@@ -451,7 +464,7 @@ function draw_controlchart() {
 			else
 				distribution[index] = 0;
 		});
-	
+		
 		Object.keys(distribution).sort().forEach(function(key) {	// sort the distribution (on keys)
 			var value = distribution[key];
 			delete distribution[key];
@@ -462,13 +475,12 @@ function draw_controlchart() {
 		var old = 0.0;
 		var smallest=1000000.0;
 		$.each(distribution, function(key, value) {
-			if (key > 0) {
-				result.push(Array(value, key));
-				smallest = Math.min(smallest, key-old);
-				old = key;
-			}
+			result.push(Array(value, key));
+			smallest = Math.min(smallest, key-old);
+			old = key;
 		});
 		barwidth = 1/(1/smallest);
+		//console.log(result);
 	
 		var dataset = { 
 				data: result, 

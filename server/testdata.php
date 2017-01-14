@@ -18,22 +18,29 @@ $database->execute();
 $database->query("SET lc_time_names = 'zh_CN'");
 $database->execute();
 
-// return random number distributed in a bell curve (to get real-looking random data)
-// min/max: upper lower limit
-// std_deviation: width of the curve (3 is rather good)
-// step: array index increment when storing the result in an array
-function purebell($min,$max,$std_deviation,$step=1) {
-	$rand1 = (float)mt_rand()/(float)mt_getrandmax();
-	$rand2 = (float)mt_rand()/(float)mt_getrandmax();
-	$gaussian_number = sqrt(-2 * log($rand1)) * cos(2 * M_PI * $rand2);
-	$mean = ($max + $min) / 2;
-	$random_number = ($gaussian_number * $std_deviation) + $mean;
-	$random_number = round($random_number / $step) * $step;
-	if($random_number < $min || $random_number > $max) {
-		$random_number = purebell($min, $max,$std_deviation);
-	}
-  return $random_number;
+// generate a random number distributed in a bell curve (to get real-looking random data)
+function gaussrand() {
+	do {
+		$U1 = (float)mt_rand()/(float)mt_getrandmax();
+		$U2 = (float)mt_rand()/(float)mt_getrandmax();
+		
+		$V1 = 2 * $U1 - 1;
+		$V2 = 2 * $U2 - 1;
+		$S = $V1 * $V1 + $V2 * $V2;
+	} while($S >= 1 || $S == 0);
+	
+	$X = $V1 * sqrt(-2 * log($S) / $S);
+	return $X;	// 0..1
 }
+function bell($ll, $ul, $deviation) {
+	$delta = $ul-$ll;
+	$mean = ($ul+$ll)/2;
+	$delta = $delta*($deviation/2);
+	$rand = $delta * gaussrand();
+	return $mean+$rand;
+}
+//////////////////////////////////
+
 
 // remove test product from specs and data
 $database->query("DELETE FROM gwc_handmade.specs WHERE name='test' ");		
@@ -79,16 +86,11 @@ function generate($specmin, $specmax, $date) {
 	$database->query($sql);
 	$spec = $database->single();
 	
-	$ll = 100*$spec[$specmin];					// exact spec
-	$ul = 100*$spec[$specmax];
-	$ll = $ll-($ll/100*rand(1, 13));		// expand the spec to generate more realistic data
-	$ul = $ul+($ul/100*rand(1, 13));
-	
-	return purebell($ll, $ul, 3)/100;
+	return bell($spec[$specmin], $spec[$specmax], 0.2);
 }
 
 
-$amount = 90 * 24;		// 90 days, 24 hours
+$amount = 100 * 24;		// 100 days, 24 hours
 for ($i = 0; $i < $amount; $i++) {
 	
 	$t = new DateTime();

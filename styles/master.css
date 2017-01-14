@@ -167,7 +167,7 @@ select {
 }
 
 .subtabs1 { 
-    background: transparent; 
+    background: transparent !important; 
     border: none; 
 } 
 .subtabs1 .ui-widget-header { 

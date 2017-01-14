@@ -8,10 +8,6 @@ var control_content = {
 						m("tr", m("td", {colspan:"2"} )),
 						m("tr", [
 							m("td.CHARTS"),
-							m("td", m("select#group", {style:"width:13em"} ))
-						]),
-						m("tr", [
-							m("td"),
 							m("td", m("select#choice", {style:"width:13em"} ))
 						]),
 						m("tr", [
@@ -49,9 +45,7 @@ var control_content = {
 		$("#control #samplesize").addClass("last");		// set the last field
 
 		// get the data that can be displayed in a chart (length, circumference, hardness, etc...)	
-		$.get('server/get_groups.php?lang='+$.jStorage.get("lang"), function(data) {$('#control #group').append(data);	});
-		$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&group=regain1", function(data) {$('#control #choice').empty().append(data);	});
-
+		$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&stage=rolling", function(data) {$('#control #choice').empty().append(data);	});
 		
 		// get the chart types that can be displayed (raw, average, distribution etc..)	
 		$.get('server/get_controltypes.php?name=soort', 

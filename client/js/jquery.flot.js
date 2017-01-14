@@ -1312,8 +1312,7 @@ Licensed under the MIT license.
                     return !$(this).hasClass("flot-overlay") && !$(this).hasClass('flot-base');
                 }).remove();
 
-						// 29/11/2016: removed because it sometimes causes wrong placement of chart
-            //if (placeholder.css("position") == 'static')
+            if (placeholder.css("position") == 'static')
                 placeholder.css("position", "relative"); // for positioning labels and overlay
 
             surface = new Canvas("flot-base", placeholder);
@@ -1566,8 +1565,9 @@ Licensed under the MIT license.
                 }
             });
 
+						// changed plotOffset.right to 2 to remove the empty space on the right side
             plotOffset.left = Math.ceil(Math.max(margins.left, plotOffset.left));
-            plotOffset.right = Math.ceil(Math.max(margins.right, plotOffset.right));
+            plotOffset.right = 2; //Math.ceil(Math.max(margins.right, plotOffset.right));
             plotOffset.top = Math.ceil(Math.max(margins.top, plotOffset.top));
             plotOffset.bottom = Math.ceil(Math.max(margins.bottom, plotOffset.bottom));
         }

@@ -1,12 +1,76 @@
-/*
-functies om de labels te setten
-functies om de inputvelden van data uit de database te voorzien
-*/
+$(document).ajaxStop(function(){
+  $( ".spinner" ).remove();	// remove the spinner
+  $( "#spinner" ).remove();
+});
 
-$.ajaxSetup({ scriptCharset: "utf-8" , contentType: "Content-Type: text/html; charset=utf-8"});
-$.ajaxSetup({async:false});
+$.ajaxSetup({
+	async:false, 
+	scriptCharset: "utf-8" , 
+	contentType: "Content-Type: text/html; charset=utf-8"
+});
 
+// spinner options
+var spin_opts = {	// options for the spinner symbol
+	lines: 12,					// The number of lines to draw
+	length: 12, 				// The length of each line
+	width: 7, 					// The line thickness
+	radius: 20, 				// The radius of the inner circle
+	corners: 1, 				// Corner roundness (0..1)
+	rotate: 10, 				// The rotation offset
+	color: '#000', 			// #rgb or #rrggbb
+	speed: 1, 					// Rounds per second
+	trail: 90, 					// Afterglow percentage
+	shadow: false, 			// Whether to render a shadow
+	hwaccel: false,			// Whether to use hardware acceleration
+	className: 'spinner', 	// The CSS class to assign to the spinner
+	zIndex: 2e9, 				// The z-index (defaults to 2000000000)
+	top: 'auto', 				// Top position relative to parent in px
+	left: 'auto' 				// Left position relative to parent in px
+};
 
+function spin() {
+	if ($('#spinner').length == 0) {
+	  $("<div'>&nbsp;</div>")							// create waiting div
+			.attr("id", "spinner")
+			.css("position", "fixed")
+			.css("left", "50%")
+			.css("top", "50%")
+			.css("z-index", "100000")
+			.appendTo('body');
+		var spinner = $('#spinner').get(0);
+		var busy = new Spinner(spin_opts).spin(spinner);	// show busy spinner
+	}
+}
+
+// returns a simple checksum of a string
+function crc(str) {
+	var i, kar, hash = 0;
+	for (i = 0; i < str.length; i++) {
+		kar = str.charCodeAt(i);
+		hash = kar + (hash << 6) + (hash << 16) - hash;
+	}
+	return hash;
+}
+
+function isEmpty(str) {
+	return (!str || 0 === str.length);
+}
+
+// functions to return the min and max of an array
+Array.max = function( array ){
+	return Math.max.apply( Math, array );
+};
+
+Array.min = function( array ){
+	return Math.min.apply( Math, array );
+};
+
+// gets week number
+Date.prototype.weekNR = function() {
+	var onejan = new Date(this.getFullYear(), 0, 1);
+	return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+}
+    
 var specmin, specmax;		// fieldnames of min and max
 
 // walk through the (dbs) field tree and fill the array (t) with the fieldnames
@@ -1298,8 +1362,11 @@ function show_evaluation() {
 			var zd = $(this).data('Zebra_DatePicker');
 			zd.update({
 			  onSelect: function () { 
-					var start_date = $("#evaluate [name=start]").val();
-					var end_date = $("#evaluate [name=end]").val();
+					var start = 	$('#evaluate [name=start]').val();
+					var end = 		$('#evaluate [name=end]').val();
+					var product = $("#evaluate [name=product]").val();
+					var table = 	$("#evaluate [name=stage]").val();
+					var sampling = $("#evaluate [name=sampling]").val();
 					
 					$("#evaluate .summaries table").css("display","none");		// hide all summaries
 					
@@ -1309,8 +1376,8 @@ function show_evaluation() {
 
 					// fill the selectbox options
 					$.getJSON('server/get_evalselect.php', {
-						start: start_date,
-						end: end_date,
+						start: start,
+						end: end,
 						prod: 0,
 						samp: 0,
 						step: 0,
@@ -1318,7 +1385,28 @@ function show_evaluation() {
 					},function(data) {	
 						$('#evaluate [name=sampling]').empty().append(data.sampling);	
 						$('#evaluate [name=product]').empty().append(data.product);
-						$('#evaluate [name=stage]').empty().append(data.stage);	
+						
+						if (table != '0') {
+							var pSelect = (product != '0') ? " AND product='"+product+"'" : "";
+							var sSelect = (sampling != '0') ? " AND name='"+sampling+"'" : "";
+							var sql = sprintf("SELECT * FROM gwc_handmade.%s WHERE (DATE(date) BETWEEN '%s' AND '%s') %s %s ORDER BY date",
+													table, start, end, pSelect, sSelect);
+							$.ajax({
+						   	type: "GET",
+						    url: "server/get_range.php",
+							  contentType: "application/x-www-form-urlencoded",
+							  async: true,
+						   	data: {query: sql},
+						   	dataType: 'json',
+						   	beforeSend: spin,	// start the spinner
+								success: function(data) {
+									$.jStorage.set("handmade_rawdata", data);
+									draw_controlchart();
+									draw_chart("1");
+									draw_chart("2");									
+								}
+							});
+						}
 					});
 			  }
 			});
