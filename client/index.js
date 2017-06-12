@@ -71,6 +71,7 @@ include('history.js');
 
 include('charts.js');
 include('controlcharts.js');
+include('export.js');
 include('evaluate.js');
 
 include('specs.js');					// children of settings-tab
@@ -115,6 +116,29 @@ var handmade = {
 }
 
 $(document).ready(function() {
+	
+	// returns the callers arguments as objects
+	function Getparams() {
+		var scripts = document.getElementsByTagName('script');
+		var myScript = scripts[scripts.length - 1];
+		var query = myScript.src.replace(/^[^\?]+\??/, '');
+		var Params = new Object();
+
+		if (query) {
+			var Pairs = query.split(/[;&]/);
+			for (var i = 0; i < Pairs.length; i++) {
+				var KeyVal = Pairs[i].split('=');
+				if (!KeyVal || KeyVal.length != 2) continue;
+				var key = unescape(KeyVal[0]);
+				var val = unescape(KeyVal[1]);
+				val = val.replace(/\+/g, ' ');
+				Params[key] = val;
+			}
+		}
+		return Params;
+	}
+	console.log(Getparams());
+
 	m.mount(document.body, handmade );
 
 	$.getJSON('server/get_server.php', function (data) {
@@ -155,20 +179,38 @@ $(document).ready(function() {
 		$.jStorage.set("handmade_maintab", 0);
 	if ($.jStorage.get("handmade_datatab") == null)
 		$.jStorage.set("handmade_datatab", 0);
-	if ($.jStorage.get("handmade_defectsstab") == null)
-		$.jStorage.set("handmade_defectsstab", 0);
+	if ($.jStorage.get("handmade_defectstab") == null)
+		$.jStorage.set("handmade_defectstab", 0);
 	if ($.jStorage.get("handmade_settingstab") == null)
 		$.jStorage.set("handmade_settingstab", 0);
+	if ($.jStorage.get("handmade_lasttab") == null)
+		$.jStorage.set("handmade_lasttab", "rolling_sub_tab");
+	
+	// make sure all record pointers are set
+	["rolling","wrapping","cutting","storage","stickDefects","packDefects","boxDefects"].map(function (table) {	
+		get_current("gwc_handmade."+table);
+	});
 
 	$.jStorage.set("handmade.historylist", {
 		lang: $.jStorage.get("lang"),
 		page: 0,
-		sort: 0,
+		sort: 0,						// date
 		direction: "DESC",
 		crc: "",
 		length: 25,
 		tab: ($.jStorage.get("handmade_lasttab") == null) ? "rolling_sub_tab" : $.jStorage.get("handmade_lasttab"),
-		defects: ($.jStorage.get("handmade_defectsstab") == null) ? "stickDefects" : $.jStorage.get("handmade_defectsstab")
+		defects: ($.jStorage.get("handmade_defectstab") == null) ? "stickDefects" : $.jStorage.get("handmade_defectstab")
+	});	
+	
+	$.jStorage.set("handmade.statuslist", {
+		lang: $.jStorage.get("lang"),
+		page: 0,
+		sort: 2,					// status
+		direction: "ASC",
+		crc: "",
+		length: 17,
+		tab: ($.jStorage.get("handmade_lasttab") == null) ? "rolling_sub_tab" : $.jStorage.get("handmade_lasttab"),
+		defects: ($.jStorage.get("handmade_defectstab") == null) ? "stickDefects" : $.jStorage.get("handmade_defectstab")
 	});	
 	
 	fill_labels();
@@ -205,7 +247,6 @@ $(document).ready(function() {
 				case 1: show_history(); break;
 				case 2: show_evaluation(); break;
 			}
-			$("#history .underline").append("<span class='arrow'> &#9660;</span>"); // the sort arrow
 		}
 	});
 

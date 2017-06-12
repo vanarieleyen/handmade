@@ -48,7 +48,7 @@ var data_content = {
 												break;
 					case "storage_sub_tab": 	$.jStorage.set("handmade_datatab", 3);	load_data("storage");
 												break;
-					case "defects_sub_tab": 	$.jStorage.set("handmade_datatab", 4);
+					case "defects_sub_tab": 	$.jStorage.set("handmade_datatab", 4);	load_defects_data();
 												break;
 				}
 			},
@@ -58,6 +58,7 @@ var data_content = {
 					//case 1: load_data("wrapping"); break;
 					//case 2: load_data("cutting"); break;
 					//case 3: load_data("storage"); break;
+					case 4: load_defects_data();
 				}
 			}
 		});

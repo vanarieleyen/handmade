@@ -1,6 +1,6 @@
 <?php
 
-// http://localhost/handmade/server/get_history.php?lang=1&tab=rolling_sub_tab
+// list the small status history ans skips rows with status=finished(2) 
 
 require_once 'Classes/pdo.php';
 
@@ -19,23 +19,19 @@ extract($_GET);
 switch ($tab) {
 	case "rolling_sub_tab":
 	case "wrapping_sub_tab":
-		$fields = "id, date, product, name, score, quality, inspector, status";
-		$selection = "id, date, product, name, score*1.0 AS score, quality*1.0 AS quality, inspector, ((status+1)%2)*(status+1) AS status";
-		break;
-	case "cutting_sub_tab":
-		$fields = "id, date, product, name, score, quality, inspector";
-		$selection = "id, date, product, name, score*1.0 AS score, quality*1.0 AS quality, inspector";
+		$fields = "id, date, name, status";
+		$selection = "id, date, name, ((status+1)%2)*(status+1) AS status";
 		break;
 	case "storage_sub_tab":
-		$fields = "id, date, product, incharge, score, quality, inspector, status";
-		$selection = "id, date, product, incharge, score*1.0 AS score, quality*1.0 AS quality, inspector, ((status+1)%2)*(status+1) AS status";
+		$fields = "id, date, incharge, status";
+		$selection = "id, date, incharge, ((status+1)%2)*(status+1) AS status";
 		break;
 	case "defects_sub_tab":
-		$fields = "id, date, product, sample, score, inspector, status";
-		$selection = "id, date, product, sample, score*1.0 AS score, inspector, ((status+1)%2)*(status+1) AS status";
+		$fields = "id, date, sample, status";
+		$selection = "id, date, sample*1 AS sample,((status+1)%2)*(status+1) AS status";
 		break;
 	default:
-		console.log("list_history: unknown tab");
+		console.log("list_status: unknown tab");
 		$fields = "";
 		return;
 }
@@ -54,9 +50,10 @@ $start = $page*$length;
 $limit = " LIMIT ". $start .", ". $length;
 
 // sorting
-$order = sprintf(" ORDER BY %s %s ", $column[$sort+1], $direction);
+$sort = min([$sort, count($column)-2]);
+$order = sprintf(" ORDER BY %s %s, date DESC ", $column[$sort+1], $direction);
 
-$query = sprintf("SELECT %s FROM %s WHERE 1 %s %s", $selection, $table, $order, $limit);
+$query = sprintf("SELECT %s FROM %s WHERE status<2 %s %s", $selection, $table, $order, $limit);
 $database->query($query);
 $rows = $database->resultset();
 $count = $database->rowCount();
@@ -72,10 +69,6 @@ foreach ($rows as $aRow) {
 									$aRow[$field] == 0 ? "yellowBackground" : ($aRow[$field] == 1 ? "redBackground" : "greenBackground"), str_pad("", 5, "_", STR_PAD_BOTH));
 			$block = str_replace("_", "&nbsp;&nbsp;", $txt); 
 			$regel = sprintf("%s<td style='height:1.3em'>%s</td>", $regel, $block);
-		} elseif (strstr($field, "score")) {
-			$score = $aRow[$field];
-			$txt = sprintf("<center><span class='%s'>%s</span></center>", $score<95?'red':($score<97?'orange':'green' ), $score);
-			$regel = sprintf("%s<td>%s</td>", $regel, $txt);
 		} elseif ($field =='id') {
 			$regel = sprintf("%s<td style='display:none'>%s</td>", $regel, $aRow[$field]);
 		} else {

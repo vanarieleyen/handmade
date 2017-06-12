@@ -26,7 +26,10 @@ $database->endTransaction();
 // return the option list
 echo sprintf("<option value='%s'>%s</option>", "0", "---");
 foreach ($rows AS $row) {
-	echo sprintf("<option value='%s'>%s</option>", $row['code'], $row['text']);
+	if ($type == "pack mark")
+		echo sprintf("<option value='%s'>%s</option>", $row['code'], $row['text']);
+	else
+		echo sprintf("<option value='%s'>%s%s</option>", $row['code'], $row['code'], $row['text']);
 }
 
 ?>

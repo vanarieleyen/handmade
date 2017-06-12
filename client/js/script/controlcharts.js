@@ -38,7 +38,8 @@ function draw_controlchart() {
 
 	// show 'none' (for products that have no defects)
 	function none(chart) {
-		var msg = LABELS[321][$.jStorage.get("lang")];
+		var lang = ($.jStorage.get("lang") == null) ? 0 : $.jStorage.get("lang");
+		var msg = LABELS[321][lang];
 		var height = $(chart).css("height");
 		var width = $(chart).css("width");
 		var t = $.plot($(chart), [], {grid: {borderWidth: {top: 0, right: 0, bottom: 0, left: 0}}});

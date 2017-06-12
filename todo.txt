@@ -1,0 +1,15 @@
+
+last activity: developmenty of export_packing which is not ready...
+
+problems:
+how to determine sampling 1 and 2 from a list of data
+facts:
+job nr is the name of the operator
+always 2x50 sticks taken for measuring abc defects (these are divided in sample nr 1 and 2)
+both samples are not taken at the same time but originate from the same operator
+
+again discussion about the job number and determination that is currently split
+alex says the determination should not be split, however during the last meeting it was decided
+to split it together with the jobnr (operator)
+
+there should be another meeting to make those things clear

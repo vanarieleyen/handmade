@@ -43,9 +43,11 @@ var control_content = {
 			return;
 
 		$("#control #samplesize").addClass("last");		// set the last field
+		
+		var lang = ($.jStorage.get("lang") == null) ? 0 : $.jStorage.get("lang");
 
 		// get the data that can be displayed in a chart (length, circumference, hardness, etc...)	
-		$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&stage=rolling", function(data) {$('#control #choice').empty().append(data);	});
+		$.get('server/get_choice.php?lang='+lang+"&stage=rolling", function(data) {$('#control #choice').empty().append(data);	});
 		
 		// get the chart types that can be displayed (raw, average, distribution etc..)	
 		$.get('server/get_controltypes.php?name=soort', 

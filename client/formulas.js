@@ -69,6 +69,31 @@ var formulas_content = {
 						m("tr", [ m("td", {width: "20%"}, m("", "A52")),	m("td", m("label.BATCH_SCORE" )) ]),
 						
 						m("tr", [	m("td", {width: "20%"}, m("", "F1:F8")),		m("td", m("label.MOISTURE" )) ]),
+						
+						m("tr", m("td[colspan=2]", {align:"center"}, m("label.STICK_PACK_QUALITY")) ),
+						m("tr", [	m("td", {width: "20%"}, m("", "A60")),	m("td", m("label.DEFECTS_A" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "A61")),	m("td", m("label.DEFECTS_B" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "A62")),	m("td", m("label.DEFECTS_C" )) ]),
+						m("tr", m("td[colspan=2]", {align:"center"}, m("label.PACKING_MARK")) ),
+						m("tr", [	m("td", {width: "20%"}, m("", "A63")),	m("td", m("label.DEFECTS_A" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "A64")),	m("td", m("label.DEFECTS_B" )) ]),
+						
+						m("tr", m("td[colspan=2]", {align:"center"}, m("label.PACKAPPEARANCE")) ),
+						m("tr", [	m("td", {width: "20%"}, m("", "A65")),	m("td", m("label.DEFECTS_A" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "A66")),	m("td", m("label.DEFECTS_B" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "A67")),	m("td", m("label.DEFECTS_C" )) ]),
+						m("tr", m("td[colspan=2]", {align:"center"}, m("label.PACKING_MARK")) ),
+						m("tr", [	m("td", {width: "20%"}, m("", "A68")),	m("td", m("label.DEFECTS_A" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "A69")),	m("td", m("label.DEFECTS_B" )) ]),
+						
+						m("tr", m("td[colspan=2]", {align:"center"}, m("label.SLEEVEBOX")) ),
+						m("tr", [	m("td", {width: "20%"}, m("", "A70")),	m("td", m("label.DEFECTS_A" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "A71")),	m("td", m("label.DEFECTS_B" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "A72")),	m("td", m("label.DEFECTS_C" )) ]),
+						m("tr", m("td[colspan=2]", {align:"center"}, m("label.PACKING_MARK")) ),
+						m("tr", [	m("td", {width: "20%"}, m("", "A73")),	m("td", m("label.DEFECTS_A" )) ]),
+						m("tr", [	m("td", {width: "20%"}, m("", "A74")),	m("td", m("label.DEFECTS_B" )) ]),
+						
 						m("tr", m("td[colspan=2]", {align:"center"}, m("label.SPECS")) ),
 						m("tr", [	m("td", {width: "20%"}, m("", "S1 (min)")),	m("td", m("label.LENGTH" )) ]),
 						m("tr", [	m("td", {width: "20%"}, m("", "S2 (max)")),	m("td", m("label.LENGTH" )) ]),
@@ -120,7 +145,11 @@ var formulas_content = {
 						m("tr", [	m("td", m("label.M_INSPEC")),		m("td", m("input[name=m_inspec].formula" )) ]),
 						m("tr", [	m("td", m("label.M_2INSPEC")),	m("td", m("input[name=m_2inspec].formula" )) ]),
 						m("tr", [	m("td", m("label.BATCH_SCORE")),		m("td", m("input[name=s_batch_score].formula" )) ]),
-						m("tr", [	m("td", m("label.BATCH_QUALITY")),	m("td", m("input[name=s_batch_quality].formula" )) ])
+						m("tr", [	m("td", m("label.BATCH_QUALITY")),	m("td", m("input[name=s_batch_quality].formula" )) ]),
+						m("tr", m("td[colspan=2]", {align:"center"}, m("label.APPEARANCE")) ),
+						m("tr", [ m("td", m("label.STICK_PACKING_SCORE")),		m("td", m("input[name=stick_score].formula" )) ]),
+						m("tr", [	m("td", m("label.PACKING_SCORE")), 	m("td", m("input[name=box_score].formula" )) ]),
+						m("tr", [	m("td", m("label.SLEEVEBOX_SCORE")),		m("td", m("input[name=sleeve_score].formula" )) ])
 					])
 				)
 			])
@@ -164,14 +193,17 @@ var formulas_content = {
 			var c_batch_quality = $("#formulas [name=c_batch_quality]").val();
 			var s_batch_score = 	$("#formulas [name=s_batch_score]").val();
 			var s_batch_quality = $("#formulas [name=s_batch_quality]").val();
+			var stick_score = 		$("#formulas [name=stick_score]").val();
+			var box_score = 			$("#formulas [name=box_score]").val();
+			var sleeve_score = 		$("#formulas [name=sleeve_score]").val();
 
 			sql = sprintf("UPDATE gwc_handmade.formulas SET l_outlow='%s', l_outhigh='%s', l_inspec='%s', c_outlow='%s', c_outhigh='%s', c_inspec='%s', \
 					w_outlow='%s', w_outhigh='%s', w_inspec='%s', p_outlow='%s', p_outhigh='%s', p_inspec='%s', m_outlow='%s', m_outhigh='%s', m_inspec='%s', m_2inspec='%s', \
 					r_batch_score='%s', r_batch_quality='%s', w_batch_score='%s', w_batch_quality='%s', c_batch_score='%s', c_batch_quality='%s', \
-					s_batch_score='%s', s_batch_quality='%s' WHERE id=1",
+					s_batch_score='%s', s_batch_quality='%s', stick_score='%s', box_score='%s', sleeve_score='%s' WHERE id=1",
 					l_outlow, l_outhigh, l_inspec, c_outlow, c_outhigh, c_inspec, w_outlow, w_outhigh, w_inspec,  p_outlow, p_outhigh, p_inspec,
 					m_outlow, m_outhigh, m_inspec, m_2inspec, r_batch_score, r_batch_quality, w_batch_score, w_batch_quality,
-					c_batch_score, c_batch_quality, s_batch_score, s_batch_quality );
+					c_batch_score, c_batch_quality, s_batch_score, s_batch_quality, stick_score, box_score, sleeve_score );
 
 			$.getJSON('server/send_query.php', {	query: sql	});	
 		})

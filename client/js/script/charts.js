@@ -6,6 +6,7 @@ function draw_chart(keus) {
 	var choice =	$('#charts #choice'+keus).val();								// length, pd etc...
 	var type = 		$('#charts #type'+keus+' input:checked').val();		// raw, avg, cpk etc...
 	var data = 		$.jStorage.get("handmade_rawdata");
+	var lang = ($.jStorage.get("lang") == null) ? 0 : $.jStorage.get("lang");
 
 	//console.log(data);
 	$('#charts #graph'+keus).empty();
@@ -38,18 +39,18 @@ function draw_chart(keus) {
 	// returns the label to display on the chart
 	function label(soort) {
 		switch(soort) {
-			case 'lengte': 		return LABELS[102][$.jStorage.get("lang")];
-			case 'omtrek': 		return LABELS[515][$.jStorage.get("lang")];
-			case 'gewicht': 	return LABELS[42][$.jStorage.get("lang")];
-			case 'pd': 				return LABELS[312][$.jStorage.get("lang")];
-			case 'moisture': 	return LABELS[170][$.jStorage.get("lang")];
+			case 'lengte': 		return LABELS[102][lang];
+			case 'omtrek': 		return LABELS[515][lang];
+			case 'gewicht': 	return LABELS[42][lang];
+			case 'pd': 				return LABELS[312][lang];
+			case 'moisture': 	return LABELS[170][lang];
 		}
 	}
 	
 	
 	// show 'none' (for products that have no defects)
 	function none(chart) {
-		var msg = LABELS[321][$.jStorage.get("lang")];
+		var msg = LABELS[321][lang];
 		var height = $(chart).css("height");
 		var width = $(chart).css("width");
 		var t = $.plot($(chart), [], {grid: {borderWidth: {top: 0, right: 0, bottom: 0, left: 0}}});

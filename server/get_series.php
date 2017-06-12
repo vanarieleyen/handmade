@@ -18,6 +18,7 @@ function between($date, $start, $end) {
 }
 
 $database = new Database();
+$database->beginTransaction();
 
 $machine_condition = ($machine > -1) ? sprintf(" AND t1.packing_m='%s' ", $machine ) : "";
 $station_condition = ($station > -1) ? sprintf(" AND t1.origin='%s' ", $station ) : "";
@@ -259,6 +260,8 @@ function background($specs) {
 	$result = substr($result, 0, -1);		// remove last comma
 	return $result;
 }
+
+$database->endTransaction();
 
 // set the remaining options
 $options = sprintf('

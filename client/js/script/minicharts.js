@@ -1,7 +1,8 @@
 
 // show 'not available' (for charts that are not available)
 function none(chart) {
-	var msg = LABELS[321][$.jStorage.get("lang")];
+	var lang = ($.jStorage.get("lang") == null) ? 0 : $.jStorage.get("lang");
+	var msg = LABELS[321][lang];
 	var height = $(chart).css("height");
 	var width = $(chart).css("width");
 	var t = $.plot($(chart), [], {grid: {borderWidth: {top: 0, right: 0, bottom: 0, left: 0}}});
@@ -14,28 +15,10 @@ function none(chart) {
 	return true;
 }
 
-// basic call to draw a chart
-function plotChart(options) {
-	$.ajax({
-   	type: "POST",
-   	async: false,
-    	url: "ajax/get_series.php",
-	  	contentType: "application/x-www-form-urlencoded",
-   	data: options,
-		success: function(data) {
-			if (data != "") {
-				eval(data);								// plot the chart
-			} else {
-				notAvailable(options.element, 0);	// show not available
-			}
-   	}
-	});		
-}
-
 function plotMiniChart(element, soort, line, specs) {
 	ticks = [];
 	$.each(line, function(idx, val) {
-		ticks.push(Array(idx, idx+1));
+		ticks.push(Array(idx, "")); // hide the ticks
 	});
 
 	$.plot( $("#"+element+" #minichart-"+soort), 
@@ -73,7 +56,7 @@ function plotMiniChart(element, soort, line, specs) {
 				axisLabelFontFamily: "Verdana, Arial", 
 				axisLabelColour: "rgb(56, 56, 56)", 
 				axisLabelPadding: 25, 
-				ticks: ticks, 
+				ticks: ticks,
 				font: { size: 10, weight: "light", family: "sans-serif", color: "rgb(56, 56, 56)" } 
 			}] 
 		}
@@ -116,6 +99,7 @@ function mini_chart(element, soort, id) {		// mini timechart
 			plotMiniChart(element, soort, line, specs);
 		}
 	});
+	$('.flot-overlay').remove();
 }
 
 

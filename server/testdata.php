@@ -3,11 +3,15 @@
 // generates a test product with 3 spec periods (3 months in the past)
 // generates test data with data for every hour / 90 days
 // the product is called 'test' and automatically removed and populated with random data
-// http://192.168.56.10/pline/server/testdata.php
+// http://192.168.56.10/handmade/server/testdata.php
 
 require_once 'Classes/pdo.php';
 
 extract($_GET);
+
+set_time_limit(0);
+
+$days = 40;			// number of days to generate data
 
 $database = new Database();
 
@@ -54,11 +58,15 @@ $database->execute();
 $database->query("DELETE FROM gwc_handmade.storage WHERE product='test' ");
 $database->execute();
 
+$database->endTransaction();
+
+$database->beginTransaction();
+
 // insert test specs of 3 time periods
 $sql = "INSERT INTO gwc_handmade.specs (name, start, end, pid, 
 	rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, rol_p_min, rol_p_max, moist_s_min, moist_s_max,
 	moist_w_min, moist_w_max, weight_w_min, weight_w_max)  
-		VALUES('test', DATE_SUB(NOW(), INTERVAL 30 DAY), '3000-01-01 00:00:00', 88888888,
+		VALUES('test', DATE_SUB(NOW(), INTERVAL ".round($days*0.3)." DAY), '3000-01-01 00:00:00', 88888888,
 		104, 106, 71, 73, 11.5, 13.5, 30, 90, 12.5, 14, 12.5, 14, 11.5, 13.5) ";
 $database->query($sql);
 $database->execute();
@@ -66,7 +74,7 @@ $database->execute();
 $sql = "INSERT INTO gwc_handmade.specs (name, start, end, pid, 
 	rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, rol_p_min, rol_p_max, moist_s_min, moist_s_max,
 	moist_w_min, moist_w_max, weight_w_min, weight_w_max) 
-		VALUES('test', DATE_SUB(NOW(), INTERVAL 60 DAY), DATE_SUB(NOW(), INTERVAL 30 DAY), 88888888, 
+		VALUES('test', DATE_SUB(NOW(), INTERVAL ".round($days*0.6)." DAY), DATE_SUB(NOW(), INTERVAL ".round($days*0.3)." DAY), 88888888, 
 		103, 105, 70, 72, 10.5, 12.5, 25, 80, 11.5, 13, 11.5, 14, 10.5, 12.5) ";
 $database->query($sql);
 $database->execute();
@@ -74,10 +82,14 @@ $database->execute();
 $sql = "INSERT INTO gwc_handmade.specs (name, start, end, pid, 
 	rol_l_min, rol_l_max, rol_c_min, rol_c_max, rol_w_min, rol_w_max, rol_p_min, rol_p_max, moist_s_min, moist_s_max,
 	moist_w_min, moist_w_max, weight_w_min, weight_w_max) 
-		VALUES('test', DATE_SUB(NOW(), INTERVAL 90 DAY), DATE_SUB(NOW(), INTERVAL 60 DAY), 88888888, 
+		VALUES('test', DATE_SUB(NOW(), INTERVAL ".$days." DAY), DATE_SUB(NOW(), INTERVAL ".round($days*0.6)." DAY), 88888888, 
 		105, 107, 72, 74, 12.5, 14.5, 50, 95, 13.5, 15, 13.5, 15, 12.5, 14.5) ";
 $database->query($sql);
 $database->execute();
+
+$database->endTransaction();
+
+$database->beginTransaction();
 
 function generate($specmin, $specmax, $date) {
 	global $database;
@@ -90,7 +102,7 @@ function generate($specmin, $specmax, $date) {
 }
 
 
-$amount = 100 * 24;		// 100 days, 24 hours
+$amount = ($days-1) * 24;
 for ($i = 0; $i < $amount; $i++) {
 	
 	$t = new DateTime();

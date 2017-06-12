@@ -46,15 +46,16 @@ var charts_content = {
 			return;
 
 		$("#charts #type2").addClass("last");		// set the last field
+		var lang = ($.jStorage.get("lang") == null) ? 0 : $.jStorage.get("lang");
 	
 		// get the data that can be displayed in a chart (length, circumference, hardness, etc...)	
-		$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&stage=rolling", function(data) {$('#charts #choice1').empty().append(data);	});
-		$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&stage=rolling", function(data) {$('#charts #choice2').empty().append(data);	});
+		$.get('server/get_choice.php?lang='+lang+"&stage=rolling", function(data) {$('#charts #choice1').empty().append(data);	});
+		$.get('server/get_choice.php?lang='+lang+"&stage=rolling", function(data) {$('#charts #choice2').empty().append(data);	});
 		
 		// get the chart types that can be displayed (raw, average, distribution etc..)	
-		$.get('server/get_types.php?lang='+$.jStorage.get("lang")+'&name=type1', 
+		$.get('server/get_types.php?lang='+lang+'&name=type1', 
 			function(data) {$('#charts #type1').append(data);	});
-		$.get('server/get_types.php?lang='+$.jStorage.get("lang")+'&name=type2', 
+		$.get('server/get_types.php?lang='+lang+'&name=type2', 
 			function(data) {$('#charts #type2').append(data);	});
 		
 		$('#charts #type1').on('change', function () {

@@ -19,7 +19,7 @@ var evaluate_content = {
 						].map(function (a) {							
 							return m("tr", [
 											m("td",	m(a.label)),
-											m("td",	m("select", {name: a.name}))
+											m("td",	m("select.last", {name: a.name}))
 										])
 						})
 					])
@@ -83,7 +83,8 @@ var evaluate_content = {
 			m("ul", [
 				[
 					{label:"label.CHARTS", href:"#charts_tab"},
-					{label:"label.CONTROLCHARTS", href:"#control_tab"}
+					{label:"label.CONTROLCHARTS", href:"#control_tab"},
+					{label:"label.EXPORT", href:"#export_tab"}
 				].map(function (a) {
 					return m("li", 
 									m("a", {href: a.href, tabindex:"-1", class: "last" }, [
@@ -94,7 +95,8 @@ var evaluate_content = {
 			]),
 			[			// the tabs used by ui-tabs
 				m("#charts_tab", m.component(charts_content)),
-				m("#control_tab", m.component(control_content))
+				m("#control_tab", m.component(control_content)),
+				m("#export_tab", m.component(export_content))
 			]
 		])
 	],
@@ -119,6 +121,9 @@ var evaluate_content = {
 					case "control_tab": 	
 						$.jStorage.set("handmade_evaluationtab", 1);
 						break;
+					case "export_tab": 	
+						$.jStorage.set("handmade_evaluationtab", 2);
+						break;
 				}
 			},
 			create: function( event, ui ) {
@@ -136,6 +141,7 @@ var evaluate_content = {
 			var product = $("#evaluate [name=product]").val();
 			var sampling = $("#evaluate [name=sampling]").val();
 			var stage = $("#evaluate [name=stage]").val();
+			var lang = ($.jStorage.get("lang") == null) ? 0 : $.jStorage.get("lang");
 			
 			//console.log('eval select change');
 			$("#evaluate .summaries th[name]").each(function () {
@@ -149,13 +155,13 @@ var evaluate_content = {
 				prod: product,
 				samp: sampling,
 				step: stage,
-				lang: $.jStorage.get("lang")
+				lang: lang
 			},function(data) {	
 				$('#evaluate [name=sampling]').empty().append(data.sampling);	
 				$('#evaluate [name=product]').empty().append(data.product);
 				
-				$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&stage="+stage, function(data) {$('#charts #choice1').empty().append(data);	});
-				$.get('server/get_choice.php?lang='+$.jStorage.get("lang")+"&stage="+stage, function(data) {$('#charts #choice2').empty().append(data);	});	
+				$.get('server/get_choice.php?lang='+lang+"&stage="+stage, function(data) {$('#charts #choice1').empty().append(data);	});
+				$.get('server/get_choice.php?lang='+lang+"&stage="+stage, function(data) {$('#charts #choice2').empty().append(data);	});	
 
 				$("#evaluate .summaries table").css("display","none");		// hide all summaries
 				switch (stage) {

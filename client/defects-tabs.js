@@ -34,20 +34,17 @@ var defects_content = {
 			activate: function( event, ui ) {
 				keus = ui.newPanel[0].id;
 				switch (keus) {
-					case "stick_sub_tab":		$.jStorage.set("handmade_defectstab", 0);	load_data("stickDefects"); 
+					case "stick_sub_tab":		$.jStorage.set("handmade_defectstab", 0);	
 												break;	
-					case "pack_sub_tab": 		$.jStorage.set("handmade_defectstab", 1);	load_data("packDefects"); 
+					case "pack_sub_tab": 		$.jStorage.set("handmade_defectstab", 1);	
 												break;	
-					case "sleeve_sub_tab": 	$.jStorage.set("handmade_defectstab", 2);	load_data("boxDefects"); 
+					case "sleeve_sub_tab": 	$.jStorage.set("handmade_defectstab", 2);	
 												break;
 				}
+				load_defects_data();
 			},
 			create: function( event, ui ) {
-				switch (initialtab) {
-					case 0: load_data("stickDefects"); break;
-					case 1: load_data("packDefects"); break;
-					case 2: load_data("boxDefects"); break;
-				}
+				load_defects_data();
 			}
 		});
 	},

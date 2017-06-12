@@ -13,11 +13,12 @@ $database->query("SET NAMES 'utf8'");
 $database->execute();
 $database->query("SET lc_time_names = 'zh_CN'");
 $database->execute();
-$database->endTransaction();
 
 $query = "SELECT * FROM gwc_handmade.names";
 $database->query($query);
 $row = $database->single();
+
+$database->endTransaction();
 
 $inspectors = explode(PHP_EOL, $row['inspector']);
 $sampling = explode(PHP_EOL, $row['name']);

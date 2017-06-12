@@ -129,6 +129,8 @@ switch($table) {
 		echo "table not found";
 }
 
+$database->endTransaction();
+
 // save the result
 $sql = sprintf("UPDATE gwc_handmade.%s SET score='%s', quality='%s' WHERE id=%s", $table, $result['score'], $result['quality'], $id);
 $database->query($sql);

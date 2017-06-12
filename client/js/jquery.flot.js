@@ -1708,7 +1708,7 @@ Licensed under the MIT license.
 
             var magn = Math.pow(10, -dec),
                 norm = delta / magn, // norm is between 1.0 and 10.0
-                size;
+                size = 0;
 
             if (norm < 1.5) {
                 size = 1;
@@ -1856,6 +1856,7 @@ Licensed under the MIT license.
                 if (!isNaN(v))
                     axis.ticks.push({ v: v, label: label });
             }
+            //console.log(axis.ticks);
         }
 
         function snapRangeToTicks(axis, ticks) {
@@ -2227,7 +2228,6 @@ Licensed under the MIT license.
                             x = box.left + box.padding;
                         }
                     }
-
                     surface.addText(layer, x, y, tick.label, font, null, null, halign, valign);
                 }
             });

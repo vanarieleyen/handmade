@@ -3,10 +3,14 @@ var history_content = {
 	contents: [
 		m("div", {style: "height:33em; overflow:auto"},
 			m("table#lijst", {width: "99%"}, [
-					m("thead.header", {style:"cursor:hand"}),
+				m("thead.header", {style:"cursor:hand"}, [
+					m("th", {style:"display:none"}, m("label", "ID")),
+						["th.DATE.underline","th.PRODUCT","th.SAMPLINGPOINT","th.BATCH_SCORE","th.BATCH_QUALITY","th.INSPECTOR","th.FINISHED"].map(function (label, idx) {
+							return m(label, {nr:idx});
+						})					
+					]),
 					m("tbody")		// the lines in the list
-				]
-			)
+				])
 		),
 		m("div.buttonrow", [
 			m("input[type=button].prev", {value: " <<< ", tabindex:"-1"}),
@@ -39,9 +43,9 @@ var history_content = {
 				length: options.length,
 				direction: options.direction,
 				tab: $.jStorage.get("handmade_lasttab"),
-				defects: $.jStorage.get("handmade_defectsstab")
+				defects: $.jStorage.get("handmade_defectstab")
 			}, function(data) {
-				if (data.crc != options.crc) {
+				if (data.crc != options.crc && data.count>0) {
 					options.crc = data.crc;
 					options.page++;
 					$.jStorage.set("handmade.historylist", options);
@@ -58,14 +62,14 @@ var history_content = {
 			
 			$.getJSON("server/list_history.php",	{
 				lang: options.lang,
-				page: options.page-1,
+				page: options.page<1 ? 0 : options.page-1,
 				sort: options.sort,
 				length: options.length,
 				direction: options.direction,
 				tab: $.jStorage.get("handmade_lasttab"),
-				defects: $.jStorage.get("handmade_defectsstab")
+				defects: $.jStorage.get("handmade_defectstab")
 			}, function(data) {
-				if (data.crc != options.crc) {
+				if (data.crc != options.crc && data.count>0) {
 					options.crc = data.crc;
 					options.page--;
 					$.jStorage.set("handmade.historylist", options);
@@ -85,18 +89,18 @@ var history_content = {
 			options.page = 0;
 			options.crc = "";
 
-			// remove sort indicator from all columns
+			// update sort indicator....
 			$(this).parent().find("th").each(function () {
 				$(this).removeClass("underline");
 				$(this).find('.arrow').remove();
+				if ($(this).attr("nr")==options.sort) {
+					$(this).addClass("underline");
+					if (options.direction == "ASC") 
+						$(this).append("<span class='arrow'> &#9650;</span>");
+					else
+						$(this).append("<span class='arrow'> &#9660;</span>");
+				}
 			})
-
-			// add new sort indicator
-			$(this).addClass("underline");
-			if (options.direction == "ASC") 
-				$(this).append("<span class='arrow'> &#9650;</span>");
-			else
-				$(this).append("<span class='arrow'> &#9660;</span>");
 
 			// get the data
 			$.getJSON("server/list_history.php",	{
@@ -106,7 +110,7 @@ var history_content = {
 				length: options.length,
 				direction: options.direction,
 				tab: $.jStorage.get("handmade_lasttab"),
-				defects: $.jStorage.get("handmade_defectsstab")
+				defects: $.jStorage.get("handmade_defectstab")
 			}, function(data) {
 				$.jStorage.set("handmade.historylist", options);
 				$('#history #lijst tbody').empty();

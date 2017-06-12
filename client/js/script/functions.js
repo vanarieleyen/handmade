@@ -42,6 +42,15 @@ function spin() {
 	}
 }
 
+// returns the number of lines that fit in the element
+function getHeight(element){
+	other = element.clone();
+	other.html('aQ[P}支汉邦<br>HL|何[}民霞').hide().appendTo('body');
+	size = other.height() / 2;
+	other.remove();
+	return Math.floor(element.height()/size);
+}
+
 // returns a simple checksum of a string
 function crc(str) {
 	var i, kar, hash = 0;
@@ -209,6 +218,13 @@ function fill_labels() {
 	setButton(".exportsum", 160);
 	setButton(".undo", 495);
 	setButton(".edit", 593);
+	setButton(".finishedbutton", 598);
+	
+	setButton(".rolling", 654);
+	setButton(".wrapping", 662);
+	setButton(".cutting", 680);
+	setButton(".storage", 681);
+	setButton(".packing", 304);
 
 	show('.IMPORT', 493);
 	show('.FIELD', 116);
@@ -466,11 +482,14 @@ function specLimits(lower, upper) {
 // return the specifications for a product on a certain date
 function getSpec(product, date) {
 	var specs = $.jStorage.get("handmade.specs");
+	var pdate = new Date(date).getTime();
 
 	for (i=0; specs[i]; i++) {
 		row = specs[i];
 		if (row.name == product) {
-			if ( (date < row.end) && (date >= row.start)) {
+			start = new Date(row.start).getTime();
+			end = new Date(row.end).getTime();
+			if (pdate < end && pdate >= start) {
 				return row;
 			}
 		}
@@ -525,54 +544,48 @@ function get_current (table) {
 // go to the next record
 function next_rec(table) {
 	var name = table.split('.')[1];
+	var current = $.jStorage.get("handmade.current."+name);
 	
-	this.current = $.jStorage.get("handmade.current."+name);
-	$.getJSON('server/get_record.php', { 
-		query: 'SELECT * FROM '+table+' WHERE id = ' + this.current + ' LIMIT 1'
-	}, function(data) {
-		if (data.rowcount != 0) {
-			$.getJSON('server/get_record.php', { 
-				query: 'SELECT * FROM '+table+' WHERE id > "' + data.id + '" ORDER BY id ASC LIMIT 1'
-			}, function(data) {
-				if (data.rowcount != 0) {	// als er nog records worden gevonden...
-					$.jStorage.set("handmade.current."+name, data.id);
-				}	
-			});
-		} else {
-			$.getJSON('server/get_record.php', { 
-				query: 'SELECT max(id) AS id FROM '+table
-			},	function(data) {
-				$.jStorage.set("handmade.current."+name, data.id);	// NULL when none found
-			});
-		}		
-	});
+	if (isNaN(current)) {
+		$.getJSON('server/get_record.php', { 
+			query: 'SELECT max(id) AS id FROM '+table
+		},	function(data) {
+			$.jStorage.set("handmade.current."+name, data.id);	// NULL when none found
+		});
+	}	else {
+		$.getJSON('server/get_record.php', { 
+			query: 'SELECT id FROM '+table+' WHERE date > '+
+						'(SELECT date FROM '+table+' WHERE id = '+ current +') ORDER BY date ASC LIMIT 1'
+		}, function(data) {
+			if (data.rowcount != 0) {	// als er nog records worden gevonden...
+				$.jStorage.set("handmade.current."+name, data.id);
+			}	
+		});
+	}
 	show_data(name);
 }	
 
 // go to the previous record
 function prev_rec(table) {
 	var name = table.split('.')[1];
+	var current = $.jStorage.get("handmade.current."+name);
 	
-	this.current = $.jStorage.get("handmade.current."+name);
-	$.getJSON('server/get_record.php', { 
-		query: 'SELECT * FROM '+table+' WHERE id = ' + this.current + ' LIMIT 1'
-	}, function(data) {
-		if (data.rowcount != 0) {
-			$.getJSON('server/get_record.php', { 
-				query: 'SELECT * FROM '+table+' WHERE id < "' + data.id + '" ORDER BY id DESC LIMIT 1'
-			}, function(data) {
-				if (data.rowcount != 0) {	// als er nog records worden gevonden...
-					$.jStorage.set("handmade.current."+name, data.id);
-				}	
-			});		
-		} else {
-			$.getJSON('server/get_record.php', { 
-				query: 'SELECT min(id) AS id FROM '+table
-			},	function(data) {
-				$.jStorage.set("handmade.current."+name, data.id);	// NULL when none found
-			});
-		}		
-	});
+	if (isNaN(current)) {
+		$.getJSON('server/get_record.php', { 
+			query: 'SELECT min(id) AS id FROM '+table
+		},	function(data) {
+			$.jStorage.set("handmade.current."+name, data.id);	// NULL when none found
+		});
+	}	else {
+		$.getJSON('server/get_record.php', { 
+			query: 'SELECT id FROM '+table+' WHERE date < '+
+						'(SELECT date FROM '+table+' WHERE id = '+ current +') ORDER BY date DESC LIMIT 1'
+		}, function(data) {
+			if (data.rowcount != 0) {	// als er nog records worden gevonden...
+				$.jStorage.set("handmade.current."+name, data.id);
+			}	
+		});
+	}
 	show_data(name);
 }
 
@@ -721,6 +734,18 @@ function load_data(table) {
 	show_data(table); 
 }
 
+// load data for the defects subtab
+function load_defects_data() {
+	var initialtab = $.jStorage.get("handmade_defectstab");
+
+	switch (initialtab) {
+		case 0: load_data("stickDefects"); break;
+		case 1: load_data("packDefects"); break;
+		case 2: load_data("boxDefects"); break;
+		default: load_data("stickDefects");
+	}
+}
+
 // shows the data from a table
 function show_data(table) {
 	
@@ -771,6 +796,7 @@ function show_data(table) {
 					var spec = getSpec(data.product, data.date);
 					["lengte","omtrek","gewicht","pd"].map(function(choice) {
 						mini_chart("rolling", choice, id);		// show minichart
+						
 						colorSeries("rolling", choice, spec);								// color the inputs
 						
 						if (spec != null) { // calculate and show the cpk
@@ -798,6 +824,15 @@ function show_data(table) {
 					["surfout","tightout","blendacc","pdacc"].map(function (label) {
 						setColor("#rolling", label, spec);
 					});
+					
+					switch (data['status']) {
+						case '0': $("#rolling .finishedbutton").css({"color": "red"});			break;
+						case '1': $("#rolling .finishedbutton").css({"color": "yellow"});		break;
+						case '2': $("#rolling .finishedbutton").css({"color": "green"});		break;
+					}
+					$("#rolling .finishedbutton").attr("status", data['status']);
+					
+					show_statuslist("#rolling");	// status history list				
 					break;
 				case "wrapping":
 					// no records found - disable all input fields
@@ -869,6 +904,15 @@ function show_data(table) {
 					});
 
 					["score","quality"].map(function (label) {	$("#wrapping [name="+label+"]").html(data[label]);	});		
+					
+					switch (data['status']) {
+						case '0': $("#wrapping .finishedbutton").css({"color": "red"});			break;
+						case '1': $("#wrapping .finishedbutton").css({"color": "yellow"});		break;
+						case '2': $("#wrapping .finishedbutton").css({"color": "green"});		break;
+					}
+					$("#wrapping .finishedbutton").attr("status", data['status']);
+					
+					show_statuslist("#wrapping");	// status history list
 					break;
 				case "cutting":
 					// no records found - disable all input fields
@@ -978,7 +1022,15 @@ function show_data(table) {
 							gauge.update();
 						}
 					}
-											
+								
+					switch (data['status']) {
+						case '0': $("#storage .finishedbutton").css({"color": "red"});			break;
+						case '1': $("#storage .finishedbutton").css({"color": "yellow"});		break;
+						case '2': $("#storage .finishedbutton").css({"color": "green"});		break;
+					}
+					$("#storage .finishedbutton").attr("status", data['status']);
+					
+					show_statuslist("#storage");	// status history list			
 					break;
 				case "stickDefects":
 					// no records found - disable all input fields
@@ -990,16 +1042,18 @@ function show_data(table) {
 					
 					// fill the selectbox options
 					$.get('server/get_defects.php?type=stick ring', function(data) {
-						db.stickDefects.ring.field.map(function(field){	$('#stickDefects [name='+field+']').append(data);	});
+						db.stickDefects.ring.field.map(function(field){	$('#stickDefects [name='+field+']').empty().append(data);	});
 					});
 					$.get('server/get_defects.php?type=stick cel', function(data) {
-						db.stickDefects.cell.field.map(function(field){	$('#stickDefects [name='+field+']').append(data);	});
+						db.stickDefects.cell.field.map(function(field){	$('#stickDefects [name='+field+']').empty().append(data);	});
 					});
 					$.get('server/get_defects.php?type=stick set', function(data) {
-						db.stickDefects.set.field.map(function(field){	$('#stickDefects [name='+field+']').append(data);	});
+						db.stickDefects.set.field.map(function(field){	$('#stickDefects [name='+field+']').empty().append(data);	});
 					});
 					$.get('server/get_defects.php?type=pack mark', function(data) {
-						db.stickDefects.pack.field.map(function(field){	$('#stickDefects [name='+field+']').append(data);	});
+						db.stickDefects.pack_a.field.map(function(field){	$('#stickDefects [name='+field+']').empty().append(data);	});
+						db.stickDefects.pack_b.field.map(function(field){	$('#stickDefects [name='+field+']').empty().append(data);	});
+						db.stickDefects.pack_c.field.map(function(field){	$('#stickDefects [name='+field+']').empty().append(data);	});
 					});
 					$.getJSON('server/get_names.php', function(data) {
 						$('#stickDefects [name=inspector]').empty().append(data.inspectors);	
@@ -1015,14 +1069,14 @@ function show_data(table) {
 						}
 					});
 
-					["date","product","sample","inspector","remarks","sjob","judge","sremarks"].map(function (label) {
+					["date","product","sample","inspector","remarks","sjob1","sdet1","srem1","sjob2","sdet2","srem2","sjob3","sdet3","srem3"].map(function (label) {
 						$("#stickDefects [name="+label+"]").val(data[label]);
 					});
 					$("#stickDefects [name=score]").html(data.score);
 
 					var sum = 0;
-					var allowed = 6;		// maximum allowed faults
-					var fields = ["ringAmount","cellAmount","setAmount","packAmount"];
+					var allowed = 7;		// maximum allowed faults
+					var fields = ["ringAmount","cellAmount","setAmount","packAmount_a","packAmount_b","packAmount_c"];
 					fields.map(function(label){
 						db.stickDefects[label].field.map(function(field) {
 							nr = data[field];
@@ -1038,6 +1092,14 @@ function show_data(table) {
 						});
 					});
 					
+					switch (data['status']) {
+						case '0': $("#stickDefects .finishedbutton").css({"color": "red"});			break;
+						case '1': $("#stickDefects .finishedbutton").css({"color": "yellow"});		break;
+						case '2': $("#stickDefects .finishedbutton").css({"color": "green"});		break;
+					}
+					$("#stickDefects .finishedbutton").attr("status", data['status']);
+					
+					show_statuslist("#stickDefects");	// status history list
 					break;
 				case "packDefects":
 					// no records found - disable all input fields
@@ -1049,10 +1111,10 @@ function show_data(table) {
 					
 					// fill the selectbox options
 					$.get('server/get_defects.php?type=pack pack', function(data) {
-						for (var i=1; i<=3; i++)	$('#packDefects [name=ppd'+i+']').append(data);	
+						for (var i=1; i<=3; i++)	$('#packDefects [name=ppd'+i+']').empty().append(data);	
 					});
 					$.get('server/get_defects.php?type=pack mark', function(data) {
-						for (var i=1; i<=3; i++)	$('#packDefects [name=pm'+i+']').append(data);
+						for (var i=1; i<=3; i++)	$('#packDefects [name=pm'+i+']').empty().append(data);
 					});
 					$.getJSON('server/get_names.php', function(data) {
 						$('#packDefects [name=inspector]').empty().append(data.inspectors);	
@@ -1068,7 +1130,7 @@ function show_data(table) {
 						}
 					});
 
-					["date","product","sample","inspector","remarks","pjob","judge","premarks"].map(function (label) {
+					["date","product","sample","inspector","remarks","pjob1","pdet1","prem1"].map(function (label) {
 						$("#packDefects [name="+label+"]").val(data[label]);
 					});
 					$("#packDefects [name=score]").html(data.score);
@@ -1091,6 +1153,15 @@ function show_data(table) {
 						});
 					});
 					
+					switch (data['status']) {
+						case '0': $("#packDefects .finishedbutton").css({"color": "red"});			break;
+						case '1': $("#packDefects .finishedbutton").css({"color": "yellow"});		break;
+						case '2': $("#packDefects .finishedbutton").css({"color": "green"});		break;
+					}
+					$("#packDefects .finishedbutton").attr("status", data['status']);
+					
+					show_statuslist("#packDefects");	// status history list
+					
 					break;
 				case "boxDefects":
 					// no records found - disable all input fields
@@ -1102,13 +1173,14 @@ function show_data(table) {
 					
 					// fill the selectbox options
 					$.get('server/get_defects.php?type=sleeve', function(data) {
-						for (var i=1; i<=3; i++)	$('#boxDefects [name=bsd'+i+']').append(data);	
+						for (var i=1; i<=3; i++)	$('#boxDefects [name=bsd'+i+']').empty().append(data);	
 					});
 					$.get('server/get_defects.php?type=box box', function(data) {
-						for (var i=1; i<=3; i++)	$('#boxDefects [name=bb'+i+']').append(data);	
+						for (var i=1; i<=3; i++)	$('#boxDefects [name=bb'+i+']').empty().append(data);	
 					});
 					$.get('server/get_defects.php?type=pack mark', function(data) {
-						for (var i=1; i<=3; i++) 	$('#boxDefects [name=bm'+i+']').append(data);
+						for (var i=1; i<=3; i++) 	$('#boxDefects [name=bpd_a'+i+']').empty().append(data);
+						for (var i=1; i<=3; i++) 	$('#boxDefects [name=bpd_b'+i+']').empty().append(data);
 					});
 					$.getJSON('server/get_names.php', function(data) {
 						$('#boxDefects [name=inspector]').empty().append(data.inspectors);	
@@ -1124,14 +1196,14 @@ function show_data(table) {
 						}
 					});
 
-					["date","product","sample","inspector","remarks","bjob","judge","bremarks"].map(function (label) {
+					["date","product","sample","inspector","remarks","bjob1","bdet1","brem1","bjob2","bdet2","brem2"].map(function (label) {
 						$("#boxDefects [name="+label+"]").val(data[label]);
 					});
 					$("#boxDefects [name=score]").html(data.score);
 					
 					var sum = 0;
-					var allowed = 6;		// maximum allowed faults
-					var fields = ["sleeveAmount","boxAmount","packAmount"];
+					var allowed = 7;		// maximum allowed faults
+					var fields = ["sleeveAmount","boxAmount","packAmount_a","packAmount_b"];
 					fields.map(function(label){
 						db.boxDefects[label].field.map(function(field) {
 							nr = data[field];
@@ -1146,6 +1218,16 @@ function show_data(table) {
 							setColor("#boxDefects", field, Math.max(Math.min(allowed-sum+1, allowed+1), 0.1));
 						});
 					});
+					
+					switch (data['status']) {
+						case '0': $("#boxDefects .finishedbutton").css({"color": "red"});			break;
+						case '1': $("#boxDefects .finishedbutton").css({"color": "yellow"});		break;
+						case '2': $("#boxDefects .finishedbutton").css({"color": "green"});		break;
+					}
+					$("#boxDefects .finishedbutton").attr("status", data['status']);
+					
+					show_statuslist("#boxDefects");	// status history list
+					
 					break;
 				case "specs":
 					// no records found - disable all input fields
@@ -1158,7 +1240,8 @@ function show_data(table) {
 				case "formulas":
 					["l_outlow","l_outhigh","l_inspec","c_outlow","c_outhigh","c_inspec","w_outlow","w_outhigh","w_inspec",
 								"p_outlow","p_outhigh","p_inspec","m_outlow","m_outhigh","m_inspec","m_2inspec","r_batch_score","r_batch_quality",
-								"w_batch_score","w_batch_quality","c_batch_score","c_batch_quality","s_batch_score","s_batch_quality"].map(function (label) {
+								"w_batch_score","w_batch_quality","c_batch_score","c_batch_quality","s_batch_score","s_batch_quality",
+								"stick_score", "box_score", "sleeve_score"].map(function (label) {
 						$("#formulas [name="+label+"]").val(data[label]);
 					});
 					break;
@@ -1182,6 +1265,9 @@ function show_data(table) {
 function show_history() {
 	var lasttab = ($.jStorage.get("handmade_lasttab") == null) ? "rolling_sub_tab" : $.jStorage.get("handmade_lasttab");
 	var options = $.jStorage.get("handmade.historylist");
+	var lasthistory = $.jStorage.get("handmade.lasthistory");
+	
+	console.log("show_history");
 	
 	$("#history #lijst thead").empty();
 	$("#history #lijst thead").append('<th style="display:none">ID</th>');
@@ -1191,6 +1277,12 @@ function show_history() {
 	switch (lasttab) {
 		case "rolling_sub_tab":
 		case "wrapping_sub_tab":
+			$("#history #lijst thead").append('<th nr="2" class="SAMPLINGPOINT"></th>');
+			$("#history #lijst thead").append('<th nr="3" class="BATCH_SCORE"></th>');
+			$("#history #lijst thead").append('<th nr="4" class="BATCH_QUALITY"></th>');
+			$("#history #lijst thead").append('<th nr="5" class="INSPECTOR"></th>');
+			$("#history #lijst thead").append('<th nr="6" class="FINISHED"></th>');
+			break;
 		case "cutting_sub_tab":
 			$("#history #lijst thead").append('<th nr="2" class="SAMPLINGPOINT"></th>');
 			$("#history #lijst thead").append('<th nr="3" class="BATCH_SCORE"></th>');
@@ -1202,25 +1294,96 @@ function show_history() {
 			$("#history #lijst thead").append('<th nr="3" class="BATCH_SCORE"></th>');
 			$("#history #lijst thead").append('<th nr="4" class="BATCH_QUALITY_OK"></th>');
 			$("#history #lijst thead").append('<th nr="5" class="INSPECTOR"></th>');
+			$("#history #lijst thead").append('<th nr="6" class="FINISHED"></th>');
 			break;
 		case "defects_sub_tab":
 			$("#history #lijst thead").append('<th nr="2" class="SAMPLING_FREQ"></th>');
-			$("#history #lijst thead").append('<th nr="3" class="DETERMINATION"></th>');
-			$("#history #lijst thead").append('<th nr="4" class="SCORE"></th>');
-			$("#history #lijst thead").append('<th nr="5" class="INSPECTOR"></th>');
+			$("#history #lijst thead").append('<th nr="3" class="SCORE"></th>');
+			$("#history #lijst thead").append('<th nr="4" class="INSPECTOR"></th>');
+			$("#history #lijst thead").append('<th nr="5" class="FINISHED"></th>');
 			break;
 	}
 
 	fill_labels();
+
+	options.length = getHeight($('#history'))-2;		// set the number of lines to display
+
+	if (lasthistory != lasttab) {
+		options.page = 0;	// start with the last page
+		options.sort = 0;	// sort on date
+		options.direction = 'DESC';
+	}
+
+	$.getJSON("server/list_history.php",	{
+		lang: options.lang,
+		page: options.page,
+		sort: options.sort,
+		length: options.length,
+		direction: options.direction,
+		tab: $.jStorage.get("handmade_lasttab"),
+		defects: $.jStorage.get("handmade_defectstab")
+	}, function(data) {
+		if (data.crc != options.crc) {
+			options.crc = data.crc;
+			$.jStorage.set("handmade.historylist", options);
+			$('#history #lijst tbody').empty();
+			$.each(data.records, function (key, regel) {
+				$('#history #lijst tbody').append(regel);
+			});
+		}
+	})
 	
-	$.getJSON("server/list_history.php", options, function(data) {
-		$.jStorage.set("handmade.historylist", options);
-		$('#history #lijst tbody').empty();
-		$.each(data.records, function (key, regel) {
-			$('#history #lijst tbody').append(regel);
-		});
+	// update sort indicator....
+	$('#history #lijst').find("th").each(function () {
+		$(this).removeClass("underline");
+		$(this).find('.arrow').remove();
+		if ($(this).attr("nr")==options.sort) {
+			$(this).addClass("underline");
+			if (options.direction == "ASC") 
+				$(this).append("<span class='arrow'> &#9650;</span>");
+			else
+				$(this).append("<span class='arrow'> &#9660;</span>");
+		}
 	})
 
+	$.jStorage.set("handmade.lasthistory", lasttab);
+}
+
+// show the status history list
+function show_statuslist(element) {
+	var options = $.jStorage.get("handmade.statuslist");
+	var lasttab = $.jStorage.get("handmade_lasttab");
+	var lastdefects = $.jStorage.get("handmade_defectstab");
+		
+	$.getJSON("server/list_status.php",	{
+		lang: options.lang,
+		page: options.page,
+		sort: options.sort,
+		length: options.length,
+		direction: options.direction,
+		tab: lasttab,
+		defects: lastdefects
+	}, function(data) {
+		options.crc = data.crc;
+		$.jStorage.set("handmade.statuslist", options);
+		$(element+' #lijst tbody').empty();
+		$.each(data.records, function (key, regel) {
+			$(element+' #lijst tbody').append(regel);
+		});
+	})
+	
+	// update sort indicator....
+	$(element+' #lijst').find("th").each(function () {
+		$(this).removeClass("underline");
+		$(this).find('.arrow').remove();
+		if ($(this).attr("nr")==options.sort) {
+			$(this).addClass("underline");
+			if (options.direction == "ASC") 
+				$(this).append("<span class='arrow'> &#9650;</span>");
+			else
+				$(this).append("<span class='arrow'> &#9660;</span>");
+		}
+	})
 }
 
 // fill the users list
@@ -1385,7 +1548,7 @@ function show_evaluation() {
 					},function(data) {	
 						$('#evaluate [name=sampling]').empty().append(data.sampling);	
 						$('#evaluate [name=product]').empty().append(data.product);
-						
+
 						if (table != '0') {
 							var pSelect = (product != '0') ? " AND product='"+product+"'" : "";
 							var sSelect = (sampling != '0') ? " AND name='"+sampling+"'" : "";
